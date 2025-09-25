@@ -3,22 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import useInput from '../../../common/hook/useInput';
 import '../../../asset/css/WritePost.css';
 
-function WritePost({ setPosts }) {
+function WritePost() {
     const [title, handleTitleChange] = useInput('');
     const [content, setContent] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newPost = {
-            id: Date.now(), // Simple unique ID for now
-            title,
-            content,
-            author: 'Anonymous', // Placeholder author
-            date: new Date().toISOString().slice(0, 10), // Current date
-        };
-        setPosts(prevPosts => [...prevPosts, newPost]);
-        navigate('/posts');
+        // TODO: Implement API call to create a post
+        console.log("Title:", title);
+        console.log("Content:", content);
     };
 
     const handleContentChange = (e) => {
