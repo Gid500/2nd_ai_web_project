@@ -2,7 +2,7 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import { useState } from 'react';
 import Header from './common/Header';
-import Sidebar from './common/Sidebar';
+import Menubar from './common/Menubar';
 import Footer from './common/Footer';
 import Home from './pages/home/Home';
 import SignUp from './pages/signup/SignUp';
@@ -15,13 +15,12 @@ import NotFound from './pages/error/NotFound';
 import Forbidden from './pages/error/Forbidden';
 
 function App() {
-  const [posts, setPosts] = useState([]);
 
   return (
     <div className="App-container">
       <Header/>
 
-      <Sidebar/>
+      <Menubar/>
 
       <main>
           <Routes>

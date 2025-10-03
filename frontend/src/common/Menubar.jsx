@@ -1,10 +1,10 @@
 import React from 'react'
 
-function Sidebar() {
+function Menubar() {
     return (
         <div>
         </div>
     );
 }
 
-export default Sidebar
+export default Menubar
