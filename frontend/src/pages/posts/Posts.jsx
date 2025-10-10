@@ -10,14 +10,6 @@ function Posts({ posts }) {
                 <Link to="/posts/write" className="write-post-link">Write Post</Link>
             </div>
             <ul className="posts-list">
-                {posts.map(post => (
-                    <li key={post.id} className="post-item">
-                        <Link to={`/posts/${post.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <h2>{post.title}</h2>
-                            <p>{post.content}</p>
-                        </Link>
-                    </li>
-                ))}
             </ul>
         </div>
     );
