@@ -1,6 +1,9 @@
 -- cmd에서 root으로 mysql 접속
 mysql -u root -p
 
+-- mysql 스키마 조회
+SHOW SCHEMAS;
+
 -- mysql 스키마 선택
 use mysql;
 
