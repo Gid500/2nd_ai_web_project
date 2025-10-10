@@ -13,32 +13,34 @@ import PostDetail from './pages/posts/components/PostDetail';
 import WritePost from './pages/posts/components/WritePost';
 import NotFound from './pages/error/NotFound';
 import Forbidden from './pages/error/Forbidden';
+import FindPassword from "./pages/signin/FindPassword";
 
 function App() {
+  //  posts 정의 (초기값 빈 배열)
+  const [posts, setPosts] = useState([]);
 
   return (
     <div className="App-container">
       <Header/>
-
       <Menubar/>
 
       <main>
-          <Routes>
-              <Route path='/' element={<Home/>}/>
-              <Route path='/posts' element={<Posts posts={posts}/>}/>
-              <Route path='/posts/write' element={<WritePost />}/>
-              <Route path='/posts/:id' element={<PostDetail posts={posts}/>}/>
-              <Route path='/signUp' element={<SignUp/>}/>
-              <Route path='/signIn' element={<SignIn/>}/>
-              <Route path='/about' element={<About/>}/>
-              <Route path='/forbidden' element={<Forbidden/>}/>
-              <Route path='/*' element={<NotFound/>}/>
-          </Routes>
+        <Routes>
+          <Route path='/' element={<Home/>}/>
+          <Route path='/posts' element={<Posts posts={posts}/>}/>
+          <Route path='/posts/write' element={<WritePost />}/>
+          <Route path='/posts/:id' element={<PostDetail posts={posts}/>}/>
+          <Route path='/signUp' element={<SignUp/>}/>
+          <Route path='/signIn' element={<SignIn/>}/>
+          <Route path='/about' element={<About/>}/>
+          <Route path='/forbidden' element={<Forbidden/>}/>
+          <Route path='/*' element={<NotFound/>}/>
+          <Route path='password/reset' element={<FindPassword />}/>
+        </Routes>
       </main>
 
       <Footer/>
     </div>
-
   );
 }
 

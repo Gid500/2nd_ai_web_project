@@ -1,64 +1,247 @@
-import React from 'react';
-import useInput from '../../common/hook/useInput';
-import '../../asset/css/SignUp.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useInput from "../../common/hook/useInput";
+import api from "../../common/api/axios";
+import "../../asset/css/SignUp.css";
 
-function SignUp() {
-    const [ID, handleIDChange] = useInput('');
-    const [email, handleEmailChange] = useInput('');
-    const [verifyCode, handleVerifyCodeChange] = useInput('');
-    const [pwd, handlePwdChange] = useInput('');
-    const [confirmPwd, handleConfirmPwdChange] = useInput('');
+export default function SignUp() {
+  const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Handle signup logic here, e.g., API call
-        console.log({ ID, email, verifyCode, pwd, confirmPwd });
-        alert('Sign Up functionality not implemented yet!');
-    };
+  // inputs
+  const [email, onChangeEmail] = useInput("");
+  const [code, onChangeCode] = useInput("");
+  const [pwd, onChangePwd] = useInput("");
+  const [pwd2, onChangePwd2] = useInput("");
+  const [nickname, onChangeNickname] = useInput("");
+  const [name, onChangeName] = useInput("");
 
-    return (
-        <div className="signup-container">
-            <form className="signup-form" onSubmit={handleSubmit}>
-                <h2>Sign Up</h2>
+  // ui state
+  const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [pwdOk, setPwdOk] = useState(false);
+  const [nickChecked, setNickChecked] = useState(false);
 
-                <div className="form-group">
-                    <label htmlFor="ID">ID</label>
-                    <div className="form-group-flex">
-                        <input name="ID" type="text" id="ID" value={ID} onChange={handleIDChange} />
-                        <button type="button">중복확인</button>
-                    </div>
-                </div>
+  const canSubmit = emailVerified && pwdOk && nickChecked && !!name;
 
-                <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <div className="form-group-flex">
-                        <input name="email" type="email" id="email" value={email} onChange={handleEmailChange} />
-                        <button type="button">이메일 인증</button>
-                    </div>
-                </div>
+  const handleSendEmail = async () => {
+    if (!email) return alert("이메일을 입력하세요.");
+    try {
+      setLoading(true);
+      await api.post(`/auth/email/send`, { email });
+      setEmailSent(true);
+      alert("인증 메일을 전송했습니다.");
+    } catch (e) {
+      console.error(e);
+      alert("이메일 전송 실패");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                <div className="form-group">
-                    <label htmlFor="verifyCode">Verification Code</label>
-                     <div className="form-group-flex">
-                        <input name="verifyCode" type="text" id="verifyCode" value={verifyCode} onChange={handleVerifyCodeChange} />
-                        <button type="button">코드 확인</button>
-                    </div>
-                </div>
+  const handleVerifyCode = async () => {
+    if (!emailSent) return alert("먼저 이메일 인증을 요청하세요.");
+    if (!code) return alert("인증코드를 입력하세요.");
+    try {
+      setLoading(true);
+      const { data } = await api.post(`/auth/email/verify`, { email, code });
+      if (data?.verified) {
+        setEmailVerified(true);
+        alert("이메일 인증 완료");
+      } else {
+        setEmailVerified(false);
+        alert("인증코드가 올바르지 않습니다.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("이메일 인증 실패");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                <div className="form-group">
-                    <label htmlFor="pwd">Password</label>
-                    <input name="pwd" type="password" id="pwd" value={pwd} onChange={handlePwdChange} />
-                </div>
+  const handlePwdCheck = () => {
+    if (!pwd || !pwd2) return setPwdOk(false);
+    const ok = pwd.length >= 6 && pwd === pwd2;
+    setPwdOk(ok);
+    if (!ok) alert("비밀번호는 6자 이상, 두 값이 일치해야 합니다.");
+  };
 
-                <div className="form-group">
-                    <label htmlFor="confirmPwd">Confirm Password</label>
-                    <input name="confirmPwd" type="password" id="confirmPwd" value={confirmPwd} onChange={handleConfirmPwdChange} />
-                </div>
+  const handleCheckNickname = async () => {
+    if (!nickname) return alert("닉네임을 입력하세요.");
+    try {
+      setLoading(true);
+      const { data } = await api.get(`/auth/check-nickname`, { params: { nickname } });
+      if (data?.available) {
+        setNickChecked(true);
+        alert("사용 가능한 닉네임입니다.");
+      } else {
+        setNickChecked(false);
+        alert("이미 사용 중인 닉네임입니다.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("닉네임 중복확인 실패");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                <button type="submit" className="signup-button">Sign Up</button>
-            </form>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!canSubmit) return alert("필수 확인을 모두 완료하세요.");
+    try {
+      setLoading(true);
+      await api.post("/auth/signup", {
+        email,
+        password: pwd,
+        nickname,
+        name,
+      });
+      alert("회원가입이 완료되었습니다.");
+      navigate("/signIn");
+    } catch (e) {
+      console.error(e);
+      alert("회원가입 실패");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="signup-container">
+      <form className="signup-form" onSubmit={handleSubmit}>
+        <h2>Sign Up</h2>
+
+        {/* Email + 인증요청 */}
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <div className="form-group-flex">
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmailSent(false);
+                setEmailVerified(false);
+                onChangeEmail(e);
+              }}
+            />
+            <button
+              type="button"
+              className="btn-ghost"
+              onClick={handleSendEmail}
+              disabled={loading || !email}
+            >
+              {emailSent ? "재전송" : "인증요청"}
+            </button>
+          </div>
         </div>
-    );
-}
 
-export default SignUp;
+        {/* 인증코드 + 확인 */}
+        <div className="form-group">
+          <label htmlFor="code">인증코드</label>
+          <div className="form-group-flex">
+            <input
+              id="code"
+              name="code"
+              type="text"
+              value={code}
+              onChange={onChangeCode}
+              disabled={!emailSent}
+              placeholder={emailSent ? "" : "이메일 인증요청 먼저"}
+            />
+            <button
+              type="button"
+              className="btn-ghost"
+              onClick={handleVerifyCode}
+              disabled={loading || !emailSent || !code}
+            >
+              확인
+            </button>
+          </div>
+          {emailVerified && <p className="hint ok">이메일 인증 완료</p>}
+        </div>
+
+        {/* 비밀번호 / 재입력 + 일치확인 */}
+        <div className="form-group">
+          <label htmlFor="pwd">비밀번호</label>
+          <input
+            id="pwd"
+            name="pwd"
+            type="password"
+            value={pwd}
+            onChange={onChangePwd}
+            onBlur={handlePwdCheck}
+            placeholder="6자 이상"
+            autoComplete="new-password"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="pwd2">비밀번호 재입력</label>
+          <div className="form-group-flex">
+            <input
+              id="pwd2"
+              name="pwd2"
+              type="password"
+              value={pwd2}
+              onChange={onChangePwd2}
+              onBlur={handlePwdCheck}
+              autoComplete="new-password"
+            />
+          </div>
+        {!pwdOk && pwd2.length > 0 && (
+            <p className="hint error">비밀번호가 일치하지 않습니다.</p>)}
+        {pwdOk && pwd2.length > 0 && (
+            <p className="hint ok">비밀번호 일치</p>)}
+        
+        </div>
+
+        {/* 닉네임 + 중복확인 */}
+        <div className="form-group">
+          <label htmlFor="nickname">닉네임</label>
+          <div className="form-group-flex">
+            <input
+              id="nickname"
+              name="nickname"
+              type="text"
+              value={nickname}
+              onChange={(e) => {
+                setNickChecked(false);
+                onChangeNickname(e);
+              }}
+            />
+            <button
+              type="button"
+              className="btn-ghost"
+              onClick={handleCheckNickname}
+              disabled={loading || !nickname}
+            >
+              중복확인
+            </button>
+          </div>
+          {nickChecked && <p className="hint ok">사용 가능한 닉네임</p>}
+        </div>
+
+        {/* 이름 */}
+        <div className="form-group">
+          <label htmlFor="name">이름</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            value={name}
+            onChange={onChangeName}
+          />
+        </div>
+
+        {/* 회원가입 버튼 */}
+        <button type="submit" className="signup-button" disabled={loading || !canSubmit}>
+          회원가입
+        </button>
+      </form>
+    </div>
+  );
+}

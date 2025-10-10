@@ -1,0 +1,19 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "124.58.88.184",
+            "port": 3317,
+            "driver": "MySQL",
+            "name": "lastdance",
+            "database": "lastdance",
+            "username": "lastdance",
+            "password": "0001"
+        }
+    ]
+}
