@@ -16,9 +16,6 @@ import Forbidden from './pages/error/Forbidden';
 import FindPassword from "./pages/signin/FindPassword";
 
 function App() {
-  //  posts 정의 (초기값 빈 배열)
-  const [posts, setPosts] = useState([]);
-
   return (
     <div className="App-container">
       <Header/>
@@ -27,9 +24,9 @@ function App() {
       <main>
         <Routes>
           <Route path='/' element={<Home/>}/>
-          <Route path='/posts' element={<Posts posts={posts}/>}/>
+          <Route path='/posts' element={<Posts/>}/>
           <Route path='/posts/write' element={<WritePost />}/>
-          <Route path='/posts/:id' element={<PostDetail posts={posts}/>}/>
+          <Route path='/posts/:id' element={<PostDetail/>}/>
           <Route path='/signUp' element={<SignUp/>}/>
           <Route path='/signIn' element={<SignIn/>}/>
           <Route path='/about' element={<About/>}/>
