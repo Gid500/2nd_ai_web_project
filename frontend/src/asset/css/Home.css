@@ -1,6 +1,336 @@
-.home-container {
-    padding: 20px;
-    text-align: center;
-    font-size: 24px;
-    color: #333;
+/* REIVA 스타일 전체 페이지 CSS
+   - 반응형: desktop / tablet / mobile
+   - 평균 글자크기: 본문(클램프 사용) / 계층별 타이포그래피
+   - 주요 레이아웃: 헤더, 히어로, 카드/이미지 검색 박스, 하단 네비게이션
+*/
+
+/* ---------------------------
+   변수 (테마 & 기본값)
+   --------------------------- */
+:root{
+  --page-max-width: 1100px;
+  --container-padding: 16px;
+
+  --color-bg: #ffffff;
+  --color-surface: #f8f7f6;
+  --color-primary: #0b0b0b;      /* 블랙 텍스트/헤더 */
+  --color-muted: #6b6b6b;
+  --color-accent: #e6d8c8;       /* 배너 톤 */
+  --color-border: #e2e2e2;
+
+  --radius: 8px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+
+  /* 접근성 대비 폰트 스케일 (clamp 사용) */
+  --fs-xs: clamp(12px, 1.0vw, 13px);
+  --fs-sm: clamp(13px, 1.25vw, 14px);
+  --fs-base: clamp(15px, 1.4vw, 16px);   /* 일반 본문: 평균 15~16px */
+  --fs-lg: clamp(17px, 1.8vw, 18px);
+  --fs-xl: clamp(20px, 2.6vw, 22px);
+  --fs-xxl: clamp(24px, 3.4vw, 28px);
 }
+
+/* ---------------------------
+   리셋 / 박스사이징
+   --------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+  font-size: 16px;
+}
+
+/* 전체 컨테이너 중앙 정렬, 모바일에선 full-width */
+.container {
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+/* ---------------------------
+   공통 타이포그래피
+   --------------------------- */
+h1, .heading-1 { font-size: var(--fs-xxl); margin: 0 0 8px 0; font-weight: 700; }
+h2, .heading-2 { font-size: var(--fs-xl); margin: 0 0 8px 0; font-weight: 700; }
+h3, .heading-3 { font-size: var(--fs-lg); margin: 0 0 6px 0; font-weight: 600; }
+
+p, .text { font-size: var(--fs-base); margin: 0 0 12px 0; color: var(--color-primary); }
+.small { font-size: var(--fs-sm); color: var(--color-muted); }
+
+/* 링크/버튼 기본 */
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+
+/* ---------------------------
+   헤더 (상단 내비)
+   --------------------------- */
+.header {
+  background: linear-gradient(180deg, #000000, #000000);
+  color: #fff;
+  padding: 12px 0;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.header .container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+/* 로고 / 네비 */
+.header .logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.header .logo .brand {
+  font-weight: 800;
+  font-size: var(--fs-xl);
+  letter-spacing: 0.6px;
+}
+
+/* 상단 메뉴 (데스크탑 표시) */
+.header .nav {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+.header .nav a { color: #fff; font-size: var(--fs-sm); padding: 6px 8px; border-radius: 6px; }
+
+/* 로그인 버튼 */
+.header .login-btn {
+  background: #fff;
+  color: #000;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ---------------------------
+   히어로 / 배너 영역
+   --------------------------- */
+.hero {
+  background: var(--color-surface);
+  padding: 18px 0;
+  margin-bottom: 12px;
+}
+.hero .inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+/* 히어로 카드 */
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+}
+
+/* ---------------------------
+   이미지 검색 박스 (중앙)
+   --------------------------- */
+.image-search {
+  max-width: 520px;
+  margin: 18px auto;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.image-search .title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #000;
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--fs-sm);
+}
+.image-search .preview {
+  padding: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+}
+.image-search .preview img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* ---------------------------
+   콘텐츠 그리드 / 카드 리스트
+   --------------------------- */
+.grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 84px; /* 하단 네비 위해 여유 */
+}
+.item-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  text-align: left;
+}
+
+/* ---------------------------
+   하단 고정 네비게이션 (모바일 중심)
+   --------------------------- */
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 64px;
+  background: #fff;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.04);
+}
+.bottom-nav .nav-inner {
+  width: 100%;
+  max-width: var(--page-max-width);
+  display: flex;
+  justify-content: space-around;
+  gap: 12px;
+  padding: 6px 12px;
+}
+.bottom-nav button {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-sm);
+  color: var(--color-primary);
+}
+
+/* ---------------------------
+   유틸리티 클래스
+   --------------------------- */
+.center { display:flex; align-items:center; justify-content:center; }
+.text-center { text-align: center; }
+.mt-8 { margin-top: 8px; }
+.mb-12 { margin-bottom: 12px; }
+
+/* ---------------------------
+   반응형 브레이크포인트
+   - 데스크탑: >=1024px
+   - 태블릿: 768px ~ 1023px
+   - 모바일: <=767px
+   --------------------------- */
+
+/* 태블릿 조정 */
+@media (max-width: 1023px) {
+  :root {
+    --page-max-width: 900px;
+  }
+  .hero .inner { grid-template-columns: 1fr; gap: 12px; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .image-search { max-width: 420px; }
+}
+
+/* 모바일 레이아웃 */
+@media (max-width: 767px) {
+  :root {
+    --page-max-width: 100%;
+    --container-padding: 12px;
+  }
+
+  html, body { font-size: 15px; } /* 모바일에서 텍스트 과도하게 작아지는 것 방지 */
+
+  /* 헤더 간소화: 메뉴 숨김, 로고 중앙 */
+  .header .container { gap: 8px; }
+  .header .nav { display: none; }
+  .header .logo { justify-content: flex-start; }
+
+  .hero { padding: 12px 0; }
+  .hero .inner { grid-template-columns: 1fr; }
+
+  /* 이미지 검색 박스 모바일 최적화 */
+  .image-search { margin: 12px 6px 84px; width: calc(100% - 12px); max-width: 720px; border-width: 1px; }
+  .image-search .title { font-size: var(--fs-sm); padding: 8px 10px; }
+
+  /* 그리드 한 칸으로 */
+  .grid { grid-template-columns: 1fr; gap: 10px; }
+
+  /* 하단 네비 고정, 아이콘 크기 키움 */
+  .bottom-nav { height: 72px; }
+  .bottom-nav .nav-inner { gap: 6px; padding: 8px 6px; }
+  .bottom-nav button { font-size: var(--fs-sm); }
+}
+
+/* 아주 작은 화면(가로세로 비율 등) 추가 안전장치 */
+@media (max-width: 420px) {
+  :root {
+    --container-padding: 10px;
+  }
+  .header .brand { font-size: var(--fs-lg); }
+  .image-search { margin: 10px; }
+}
+
+/* ---------------------------
+   접근성 / 터치 요소 (터치대응)
+   --------------------------- */
+button, .clickable {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0,0,0,0.06);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+/* 포커스 스타일 (키보드 사용성 향상) */
+a:focus, button:focus, input:focus {
+  outline: 3px solid rgba(0,120,212,0.16);
+  outline-offset: 2px;
+}
+
+/* ---------------------------
+   예시: 이미지 비율 고정용 클래스
+   --------------------------- */
+.aspect-portrait {
+  position: relative;
+  width: 100%;
+  padding-top: 140%; /* 세로형 이미지 비율 */
+  overflow: hidden;
+}
+.aspect-portrait img {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+}
+
+/* ---------------------------
+   끝
+   --------------------------- */
