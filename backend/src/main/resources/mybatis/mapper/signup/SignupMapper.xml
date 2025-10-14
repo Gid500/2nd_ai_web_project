@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.revia.lastdance.signup.dao.SignupMapper">
+
+    <insert id="insertUser" parameterType="com.revia.lastdance.signup.vo.UserVO">
+        INSERT INTO tb_user (
+            user_id,
+            user_nickname,
+            user_email,
+            user_pwd,
+            <if test="userImgUrl != null">user_img_url,</if>
+            <if test="isAdmin != null">is_admin,</if>
+            created_id,
+            updated_id
+        ) VALUES (
+            #{userId},
+            #{userNickname},
+            #{userEmail},
+            #{userPwd},
+            <if test="userImgUrl != null">#{userImgUrl},</if>
+            <if test="isAdmin != null">#{isAdmin},</if>
+            #{createdId},
+            #{updatedId}
+        )
+    </insert>
+
+    <select id="countByUserEmail" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM tb_user WHERE user_email = #{userEmail}
+    </select>
+
+    <select id="countByUserNickname" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM tb_user WHERE user_nickname = #{userNickname}
+    </select>
+
+    <resultMap id="emailVerificationResultMap" type="com.revia.lastdance.signup.vo.EmailVerificationVO">
+        <id property="userEmail" column="user_email"/>
+        <result property="emailCode" column="email_code"/>
+        <result property="verifiTime" column="verifi_time"/>
+    </resultMap>
+
+    <!-- 이메일 인증 코드 저장 -->
+    <insert id="insertEmailVerificationCode" parameterType="com.revia.lastdance.signup.vo.EmailVerificationVO" flushCache="true">
+        INSERT INTO tb_email_verification (
+            user_email,
+            email_code,
+            verifi_time
+        ) VALUES (
+            #{userEmail},
+            #{emailCode},
+            #{verifiTime}
+        )
+    </insert>
+
+    <!-- 이메일 인증 코드 조회 -->
+    <select id="getEmailVerificationCode" parameterType="string" resultMap="emailVerificationResultMap" useCache="false">
+        SELECT
+            user_email,
+            email_code,
+            verifi_time
+        FROM
+            tb_email_verification
+        WHERE
+            user_email = #{userEmail}
+    </select>
+
+    <!-- 이메일 인증 코드 삭제 (user_id만으로) -->
+    <delete id="deleteEmailVerificationCodeByUserEmail" parameterType="string">
+        DELETE FROM
+            tb_email_verification
+        WHERE
+            user_email = #{userEmail}
+    </delete>
+
+</mapper>

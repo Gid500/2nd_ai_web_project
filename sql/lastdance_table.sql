@@ -7,6 +7,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema lastdance
 -- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `lastdance` ;
 
 -- -----------------------------------------------------
 -- Schema lastdance
@@ -17,20 +18,23 @@ USE `lastdance` ;
 -- -----------------------------------------------------
 -- Table `lastdance`.`tb_user`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lastdance`.`tb_user` ;
+
 CREATE TABLE IF NOT EXISTS `lastdance`.`tb_user` (
   `user_id` VARCHAR(128) NOT NULL,
-  `user_nickname` VARCHAR(45) NOT NULL,
-  `user_email` VARCHAR(256) NOT NULL,
-  `user_pwd` VARCHAR(128) NOT NULL,
+  `user_name` VARCHAR(128) NULL,
+  `user_nickname` VARCHAR(128) NOT NULL,
+  `user_email` VARCHAR(256) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NOT NULL,
+  `user_pwd` VARCHAR(128) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NOT NULL,
   `user_img_url` BLOB NULL,
   `is_admin` TINYINT NULL,
   `created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  `created_id` VARCHAR(128) NULL,
+  `created_id` VARCHAR(128) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NULL,
   `updated_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_id` VARCHAR(45) NULL,
+  `updated_id` VARCHAR(128) NULL,
+  PRIMARY KEY (`user_id`),
   UNIQUE INDEX `user_email_UNIQUE` (`user_email` ASC) VISIBLE,
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE,
-  PRIMARY KEY (`user_id`),
   UNIQUE INDEX `user_nickname_UNIQUE` (`user_nickname` ASC) VISIBLE)
 ENGINE = InnoDB;
 
@@ -38,10 +42,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `lastdance`.`tb_post`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lastdance`.`tb_post` ;
+
 CREATE TABLE IF NOT EXISTS `lastdance`.`tb_post` (
   `post_id` INT NOT NULL AUTO_INCREMENT,
   `user_id` VARCHAR(128) NOT NULL,
-  `post_content` TEXT NOT NULL,
+  `post_content` BLOB NOT NULL,
   `created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `created_id` VARCHAR(128) NULL,
   `updated_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
@@ -53,6 +59,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `lastdance`.`tb_file`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lastdance`.`tb_file` ;
+
 CREATE TABLE IF NOT EXISTS `lastdance`.`tb_file` (
   `file_id` INT NOT NULL AUTO_INCREMENT,
   `post_id` INT NOT NULL,
@@ -66,6 +74,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `lastdance`.`tb_comment`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lastdance`.`tb_comment` ;
+
 CREATE TABLE IF NOT EXISTS `lastdance`.`tb_comment` (
   `comment_id` INT NOT NULL AUTO_INCREMENT,
   `user_id` VARCHAR(128) NOT NULL,
@@ -82,6 +92,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `lastdance`.`tb_like`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lastdance`.`tb_like` ;
+
 CREATE TABLE IF NOT EXISTS `lastdance`.`tb_like` (
   `post_id` INT NOT NULL,
   `user_id` VARCHAR(128) NOT NULL,
@@ -92,6 +104,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `lastdance`.`tb_history`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lastdance`.`tb_history` ;
+
 CREATE TABLE IF NOT EXISTS `lastdance`.`tb_history` (
   `his_id` INT NOT NULL AUTO_INCREMENT,
   `user_id` VARCHAR(128) NOT NULL,
@@ -105,17 +119,21 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `lastdance`.`tb_email_verification`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lastdance`.`tb_email_verification` ;
+
 CREATE TABLE IF NOT EXISTS `lastdance`.`tb_email_verification` (
-  `user_id` VARCHAR(128) NOT NULL,
+  `user_email` VARCHAR(128) NOT NULL,
   `email_code` VARCHAR(128) NOT NULL,
   `verifi_time` TIMESTAMP NOT NULL,
-  PRIMARY KEY (`user_id`, `email_code`, `verifi_time`))
+  PRIMARY KEY (`user_email`, `email_code`, `verifi_time`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `lastdance`.`tb_report`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lastdance`.`tb_report` ;
+
 CREATE TABLE IF NOT EXISTS `lastdance`.`tb_report` (
   `report_id` INT NOT NULL AUTO_INCREMENT,
   `user_id` VARCHAR(128) NOT NULL,

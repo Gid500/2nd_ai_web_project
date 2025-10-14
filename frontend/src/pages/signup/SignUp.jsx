@@ -20,6 +20,7 @@ export default function SignUp() {
   const [emailSent, setEmailSent] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
   const [pwdOk, setPwdOk] = useState(false);
+  const [pwdTouched, setPwdTouched] = useState(false);
   const [nickChecked, setNickChecked] = useState(false);
 
   const canSubmit = emailVerified && pwdOk && nickChecked && !!name;
@@ -28,7 +29,7 @@ export default function SignUp() {
     if (!email) return alert("이메일을 입력하세요.");
     try {
       setLoading(true);
-      await api.post(`/auth/email/send`, { email });
+      await api.post(`/signup/send-verification-email`, { userEmail: email });
       setEmailSent(true);
       alert("인증 메일을 전송했습니다.");
     } catch (e) {
@@ -44,7 +45,7 @@ export default function SignUp() {
     if (!code) return alert("인증코드를 입력하세요.");
     try {
       setLoading(true);
-      const { data } = await api.post(`/auth/email/verify`, { email, code });
+      const { data } = await api.post(`/signup/verify-email`, { userEmail: email, code });
       if (data?.verified) {
         setEmailVerified(true);
         alert("이메일 인증 완료");
@@ -61,17 +62,17 @@ export default function SignUp() {
   };
 
   const handlePwdCheck = () => {
+    setPwdTouched(true);
     if (!pwd || !pwd2) return setPwdOk(false);
-    const ok = pwd.length >= 6 && pwd === pwd2;
+    const ok = pwd.length >= 8 && pwd === pwd2;
     setPwdOk(ok);
-    if (!ok) alert("비밀번호는 6자 이상, 두 값이 일치해야 합니다.");
   };
 
   const handleCheckNickname = async () => {
     if (!nickname) return alert("닉네임을 입력하세요.");
     try {
       setLoading(true);
-      const { data } = await api.get(`/auth/check-nickname`, { params: { nickname } });
+      const { data } = await api.get(`/signup/check-nickname`, { params: { nickname } });
       if (data?.available) {
         setNickChecked(true);
         alert("사용 가능한 닉네임입니다.");
@@ -92,11 +93,11 @@ export default function SignUp() {
     if (!canSubmit) return alert("필수 확인을 모두 완료하세요.");
     try {
       setLoading(true);
-      await api.post("/auth/signup", {
-        email,
-        password: pwd,
-        nickname,
-        name,
+      await api.post("/signup", {
+        userEmail: email,
+        userPwd: pwd,
+        userNickname: nickname,
+        userName: name,
       });
       alert("회원가입이 완료되었습니다.");
       navigate("/signIn");
@@ -174,7 +175,7 @@ export default function SignUp() {
             value={pwd}
             onChange={onChangePwd}
             onBlur={handlePwdCheck}
-            placeholder="6자 이상"
+            placeholder="8자 이상"
             autoComplete="new-password"
           />
         </div>
@@ -187,16 +188,18 @@ export default function SignUp() {
               name="pwd2"
               type="password"
               value={pwd2}
-              onChange={onChangePwd2}
+              onChange={(e) => {
+                setPwdTouched(false);
+                onChangePwd2(e);
+              }}
               onBlur={handlePwdCheck}
               autoComplete="new-password"
             />
           </div>
-        {!pwdOk && pwd2.length > 0 && (
+        {!pwdOk && pwd2.length > 0 && pwdTouched && (
             <p className="hint error">비밀번호가 일치하지 않습니다.</p>)}
-        {pwdOk && pwd2.length > 0 && (
+        {pwdOk && pwd2.length > 0 && pwdTouched && (
             <p className="hint ok">비밀번호 일치</p>)}
-        
         </div>
 
         {/* 닉네임 + 중복확인 */}
