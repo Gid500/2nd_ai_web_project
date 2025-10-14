@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import axios from 'axios';
+import api from '../api/axios'; // Import the configured axios instance
 
 const useAxios = () => {
   const [data, setData] = useState(null);
@@ -10,7 +10,7 @@ const useAxios = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios(config);
+      const response = await api(config); // Use the imported 'api' instance
       setData(response.data);
       return response.data;
     } catch (err) {

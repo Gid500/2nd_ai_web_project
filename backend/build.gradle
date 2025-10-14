@@ -39,16 +39,17 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework.data/spring-data-commons
 	implementation 'org.springframework.data:spring-data-commons:3.5.4'
 
-	implementation 'org.springframework.security:spring-security-crypto:6.2.0'
+	implementation 'org.springframework.boot:spring-boot-starter-security' // Spring Security Starter 추가
 
-	// https://mvnrepository.com/artifact/com.auth0/java-jwt
-	implementation 'com.auth0:java-jwt:4.4.0'
+	implementation 'javax.servlet:javax.servlet-api:4.0.1'
 	
 	// Spring Boot Starter Mail for email sending
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 
+
 tasks.withType(JavaCompile) {
     options.compilerArgs << "-parameters"
 }
+
