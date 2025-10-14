@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useInput from '../../common/hook/useInput';
-import api from '../../common/api/axios'; // baseURL, withCredentials=true
 import TermsModal from './TermsModal';
 import '../../asset/css/SignIn.css';
+import { useAuth } from '../../context/AuthContext'; // useAuth 훅 import
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const { login } = useAuth(); // useAuth 훅을 사용하여 login 함수 가져오기
   const [Email, handleEmailChange] = useInput('');
   const [Pwd, handlePwdChange] = useInput('');
   const [loading, setLoading] = useState(false);
@@ -18,9 +19,9 @@ export default function SignIn() {
 
     try {
       setLoading(true);
-      const response = await api.post('/api/login', { identifier: Email, userPwd: Pwd }); 
-      
-      if (response.status === 200) {
+      const success = await login(Email, Pwd); // AuthContext의 login 함수 호출
+
+      if (success) {
         navigate('/');
       } else {
         alert('로그인 실패: 이메일 또는 비밀번호를 확인하세요.');

@@ -1,37 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import api from './api/axios';
 import '../asset/css/Header.css'
+import { useAuth } from '../context/AuthContext'; // useAuth 훅 import
 
 function Header() {
     const navigate = useNavigate();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userId, setUserId] = useState(null);
-
-    useEffect(() => {
-        const checkSession = async () => {
-            try {
-                const response = await api.get('/api/checkSession');
-                if (response.status === 200 && response.data.startsWith("세션 유효")) {
-                    setIsLoggedIn(true);
-                    setUserId(response.data.split(": ")[1]); // "세션 유효: userId" 에서 userId 추출
-                } else {
-                    setIsLoggedIn(false);
-                    setUserId(null);
-                }
-            } catch (error) {
-                setIsLoggedIn(false);
-                setUserId(null);
-            }
-        };
-        checkSession();
-    }, []);
+    const { isAuthenticated, user, logout } = useAuth(); // AuthContext에서 상태와 함수 가져오기
 
     const handleLogout = async () => {
         try {
-            await api.post('/api/logout');
-            setIsLoggedIn(false);
-            setUserId(null);
+            await logout(); // AuthContext의 logout 함수 호출
             navigate('/signin');
         } catch (error) {
             console.error("로그아웃 실패:", error);
@@ -46,9 +24,9 @@ function Header() {
             <nav className="header-nav">
                 <ul>
                     <li><Link to="/posts">Posts</Link></li>
-                    {isLoggedIn ? (
+                    {isAuthenticated ? (
                         <>
-                            <li><span>Welcome, {userId}</span></li>
+                            <li><span>Welcome, {user?.id}</span></li>
                             <li><button onClick={handleLogout} className="text-btn">Logout</button></li>
                         </>
                     ) : (
