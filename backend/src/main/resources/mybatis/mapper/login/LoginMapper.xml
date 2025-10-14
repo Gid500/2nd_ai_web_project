@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.revia.lastdance.login.dao.LoginMapper">
+
+    <select id="findUserByEmail" parameterType="string" resultType="com.revia.lastdance.signup.vo.UserVO">
+        SELECT
+            user_id,
+            user_name,
+            user_nickname,
+            user_email,
+            user_pwd,
+            user_img_url,
+            is_admin,
+            created_date,
+            created_id,
+            updated_date,
+            updated_id
+        FROM
+            tb_user
+        WHERE
+            user_email = #{userEmail}
+    </select>
+
+    <select id="findUserByEmailOrUserId" parameterType="string" resultType="com.revia.lastdance.signup.vo.UserVO">
+        SELECT
+            user_id,
+            user_name,
+            user_nickname,
+            user_email,
+            user_pwd,
+            user_img_url,
+            is_admin,
+            created_date,
+            created_id,
+            updated_date,
+            updated_id
+        FROM
+            tb_user
+        WHERE
+            user_email = #{identifier} OR user_id = #{identifier}
+    </select>
+
+</mapper>

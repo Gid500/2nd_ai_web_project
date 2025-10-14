@@ -18,19 +18,23 @@ export default function SignIn() {
 
     try {
       setLoading(true);
-      await api.post('/auth/login', { email: Email, password: Pwd });
-      await api.get('/auth/me'); // 쿠키 인증 확인
-      navigate('/');
+      const response = await api.post('/api/login', { identifier: Email, userPwd: Pwd }); 
+      
+      if (response.status === 200) {
+        navigate('/');
+      } else {
+        alert('로그인 실패: 이메일 또는 비밀번호를 확인하세요.');
+      }
     } catch (err) {
       console.error(err);
-      alert('로그인 실패: 이메일/비밀번호를 확인하세요.');
+      alert('로그인 실패: 이메일 또는 비밀번호를 확인하세요.');
     } finally {
       setLoading(false);
     }
   };
 
   // 백엔드 OAuth2 엔드포인트 (Spring Security 표준 경로 가정)
-  const API = process.env.REACT_APP_API_URL;
+  const API = process.env.REACT_APP_API_URL || "http://localhost:8080";
   const KAKAO_AUTH = `${API}/oauth2/authorization/kakao`;
   const GOOGLE_AUTH = `${API}/oauth2/authorization/google`;
 
@@ -40,7 +44,7 @@ export default function SignIn() {
         <h2>Sign In</h2>
 
         <div className="form-group">
-          <label htmlFor="Email">Email</label>
+          <label htmlFor="Email">Email or User ID</label>
           <input
             name="Email"
             type="text"

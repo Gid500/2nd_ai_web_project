@@ -6,8 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "jwt")
-public class JwtProperties {
-    private String secret;
-    private Long expiration;
+@ConfigurationProperties(prefix = "email.verification")
+public class EmailVerificationProperties {
+    private long expiration;
 }

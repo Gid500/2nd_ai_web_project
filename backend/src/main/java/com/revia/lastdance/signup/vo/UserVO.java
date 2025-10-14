@@ -6,11 +6,12 @@ import java.sql.Timestamp;
 @Data
 public class UserVO {
     private String userId;
+    private String userName;
     private String userNickname;
     private String userEmail;
     private String userPwd;
-    private byte[] userImgUrl; // BLOB 타입은 byte 배열로 매핑
-    private Integer isAdmin; // TINYINT는 Integer로 매핑
+    private byte[] userImgUrl;
+    private Integer isAdmin;
     private Timestamp createdDate;
     private String createdId;
     private Timestamp updatedDate;

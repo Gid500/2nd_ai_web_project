@@ -15,12 +15,15 @@ public interface SignupMapper {
     // 닉네임 중복 확인
     int countByUserNickname(String userNickname);
 
+    // 사용자 ID 중복 확인
+    int countByUserId(String userId);
+
     // 이메일 인증 코드 저장
     void insertEmailVerificationCode(EmailVerificationVO emailVerificationVO);
 
     // 이메일 인증 코드 조회
     EmailVerificationVO getEmailVerificationCode(String userEmail);
 
-    // 이메일 인증 코드 삭제 (user_email만으로)
+    // 이메일 인증 코드 삭제
     void deleteEmailVerificationCodeByUserEmail(String userEmail);
 }

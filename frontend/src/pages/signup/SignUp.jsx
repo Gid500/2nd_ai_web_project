@@ -10,6 +10,7 @@ export default function SignUp() {
   // inputs
   const [email, onChangeEmail] = useInput("");
   const [code, onChangeCode] = useInput("");
+  const [userId, onChangeUserId] = useInput(""); // userId 상태 추가
   const [pwd, onChangePwd] = useInput("");
   const [pwd2, onChangePwd2] = useInput("");
   const [nickname, onChangeNickname] = useInput("");
@@ -19,17 +20,18 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
+  const [userIdChecked, setUserIdChecked] = useState(false); // userId 중복 확인 상태 추가
   const [pwdOk, setPwdOk] = useState(false);
   const [pwdTouched, setPwdTouched] = useState(false);
   const [nickChecked, setNickChecked] = useState(false);
 
-  const canSubmit = emailVerified && pwdOk && nickChecked && !!name;
+  const canSubmit = emailVerified && userIdChecked && pwdOk && nickChecked && !!name; // canSubmit 로직 업데이트
 
   const handleSendEmail = async () => {
     if (!email) return alert("이메일을 입력하세요.");
     try {
       setLoading(true);
-      await api.post(`/signup/send-verification-email`, { userEmail: email });
+      await api.post(`/api/signup/send-verification`, { email: email }); // 엔드포인트 변경
       setEmailSent(true);
       alert("인증 메일을 전송했습니다.");
     } catch (e) {
@@ -45,8 +47,8 @@ export default function SignUp() {
     if (!code) return alert("인증코드를 입력하세요.");
     try {
       setLoading(true);
-      const { data } = await api.post(`/signup/verify-email`, { userEmail: email, code });
-      if (data?.verified) {
+      const { data } = await api.post(`/api/signup/verify-code`, { email: email, code }); // 엔드포인트 변경
+      if (data?.isVerified) { // 필드명 변경
         setEmailVerified(true);
         alert("이메일 인증 완료");
       } else {
@@ -72,8 +74,8 @@ export default function SignUp() {
     if (!nickname) return alert("닉네임을 입력하세요.");
     try {
       setLoading(true);
-      const { data } = await api.get(`/signup/check-nickname`, { params: { nickname } });
-      if (data?.available) {
+      const { data } = await api.get(`/api/signup/check-nickname`, { params: { nickname } }); // 엔드포인트 변경
+      if (data?.isDuplicated === false) { // 필드명 변경 및 로직 반전
         setNickChecked(true);
         alert("사용 가능한 닉네임입니다.");
       } else {
@@ -88,16 +90,37 @@ export default function SignUp() {
     }
   };
 
+  const handleCheckUserId = async () => {
+    if (!userId) return alert("아이디를 입력하세요.");
+    try {
+      setLoading(true);
+      const { data } = await api.get(`/api/signup/check-userid`, { params: { userId } });
+      if (data?.isDuplicated === false) {
+        setUserIdChecked(true);
+        alert("사용 가능한 아이디입니다.");
+      } else {
+        setUserIdChecked(false);
+        alert("이미 사용 중인 아이디입니다.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("아이디 중복확인 실패");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!canSubmit) return alert("필수 확인을 모두 완료하세요.");
     try {
       setLoading(true);
-      await api.post("/signup", {
+      await api.post("/api/signup/register", {
         userEmail: email,
         userPwd: pwd,
         userNickname: nickname,
         userName: name,
+        userId: userId, // userId 추가
       });
       alert("회원가입이 완료되었습니다.");
       navigate("/signIn");
@@ -163,6 +186,32 @@ export default function SignUp() {
             </button>
           </div>
           {emailVerified && <p className="hint ok">이메일 인증 완료</p>}
+        </div>
+
+        {/* 아이디 + 중복확인 */}
+        <div className="form-group">
+          <label htmlFor="userId">아이디</label>
+          <div className="form-group-flex">
+            <input
+              id="userId"
+              name="userId"
+              type="text"
+              value={userId}
+              onChange={(e) => {
+                setUserIdChecked(false);
+                onChangeUserId(e);
+              }}
+            />
+            <button
+              type="button"
+              className="btn-ghost"
+              onClick={handleCheckUserId}
+              disabled={loading || !userId}
+            >
+              중복확인
+            </button>
+          </div>
+          {userIdChecked && <p className="hint ok">사용 가능한 아이디</p>}
         </div>
 
         {/* 비밀번호 / 재입력 + 일치확인 */}
