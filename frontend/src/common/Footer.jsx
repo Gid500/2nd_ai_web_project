@@ -5,20 +5,12 @@ function Footer() {
     return (
         <footer className='footer-container'>
             <div className='footer-inner'>
-                <div className='footer-left'>
-                    <h2 className='footer-logo'>REIVA</h2>
-                    <p className='footer-desc'>
-                        Simple & Modern Fashion Platform<br/>
-                        Your style begins here.
-                    </p>
-                </div>
-
-                <div className='footer-right'>
+                <div className='footer-side'>
                     <ul>
-                        <li>About</li>
-                        <li>Terms</li>
-                        <li>Privacy</li>
-                        <li>Contact</li>
+                        <li>MAIN</li>
+                        <li>STYLE</li>
+                        <li>고객센터</li>
+                        <li>MY</li>
                     </ul>
                 </div>
             </div>
