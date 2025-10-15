@@ -6,3 +6,5 @@ CREATE TABLE IF NOT EXISTS `lastdance`.`tb_role` (
   `role_type` VARCHAR(128) NOT NULL,
   PRIMARY KEY (`role_id`))
 ENGINE = InnoDB;
+
+INSERT INTO tb_role(role_type) VALUES ('user'),('admin');

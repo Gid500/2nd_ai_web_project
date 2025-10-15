@@ -11,7 +11,8 @@ public class UserVO {
     private String userEmail;
     private String userPwd;
     private byte[] userImgUrl;
-    private Integer isAdmin;
+    private Integer roleId;
+    private String roleType;
     private Timestamp createdDate;
     private String createdId;
     private Timestamp updatedDate;

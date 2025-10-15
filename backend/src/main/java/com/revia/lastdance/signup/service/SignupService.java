@@ -9,7 +9,6 @@ import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.password.PasswordEncoder; // PasswordEncoder import 추가
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,14 +28,9 @@ public class SignupService {
     @Autowired
     private EmailVerificationProperties emailVerificationProperties;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder; // PasswordEncoder 주입
-
     // 회원가입 처리
     @Transactional
     public void registerUser(UserVO userVO) {
-        // 비밀번호 암호화
-        userVO.setUserPwd(passwordEncoder.encode(userVO.getUserPwd()));
         
         // 사용자 ID는 userVO에 이미 설정되어 있다고 가정하고 UUID 생성 로직 제거
         String userId = userVO.getUserId();

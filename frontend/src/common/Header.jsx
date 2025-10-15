@@ -1,41 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import api from './api/axios';
+import { useAuth } from '../context/AuthContext';
 import '../asset/css/Header.css';
 
 function Header() {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userId, setUserId] = useState(null);
-
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const response = await api.get('/api/checkSession');
-        if (response.status === 200 && response.data.startsWith("세션 유효")) {
-          setIsLoggedIn(true);
-          setUserId(response.data.split(": ")[1]);
-        } else {
-          setIsLoggedIn(false);
-          setUserId(null);
-        }
-      } catch {
-        setIsLoggedIn(false);
-        setUserId(null);
-      }
-    };
-    checkSession();
-  }, []);
+  const { isAuthenticated, user, logout } = useAuth();
 
   const handleLogout = async () => {
-    try {
-      await api.post('/api/logout');
-      setIsLoggedIn(false);
-      setUserId(null);
-      navigate('/signin');
-    } catch (error) {
-      console.error("로그아웃 실패:", error);
-    }
+    await logout();
+    navigate('/signin');
   };
 
   return (
@@ -45,9 +19,9 @@ function Header() {
           <Link to="/">REIVA</Link>
         </div>
         <div className="auth-btn">
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <>
-              <span className="welcome">안녕하세요, {userId}님</span>
+              <span className="welcome">안녕하세요, {user?.userId}님</span>
               <button className="logout-btn" onClick={handleLogout}>로그아웃</button>
             </>
           ) : (

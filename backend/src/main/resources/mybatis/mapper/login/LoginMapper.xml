@@ -4,40 +4,68 @@
 
     <select id="findUserByEmail" parameterType="string" resultType="com.revia.lastdance.signup.vo.UserVO">
         SELECT
-            user_id,
-            user_name,
-            user_nickname,
-            user_email,
-            user_pwd,
-            user_img_url,
-            is_admin,
-            created_date,
-            created_id,
-            updated_date,
-            updated_id
+            tu.user_id,
+            tu.user_name,
+            tu.user_nickname,
+            tu.user_email,
+            tu.user_pwd,
+            tu.user_img_url,
+            tu.role_id,
+            tr.role_type,
+            tu.created_date,
+            tu.created_id,
+            tu.updated_date,
+            tu.updated_id
         FROM
-            tb_user
+            tb_user tu
+        LEFT JOIN
+            tb_role tr ON tu.role_id = tr.role_id
         WHERE
-            user_email = #{userEmail}
+            tu.user_email = #{userEmail}
     </select>
 
     <select id="findUserByEmailOrUserId" parameterType="string" resultType="com.revia.lastdance.signup.vo.UserVO">
         SELECT
-            user_id,
-            user_name,
-            user_nickname,
-            user_email,
-            user_pwd,
-            user_img_url,
-            is_admin,
-            created_date,
-            created_id,
-            updated_date,
-            updated_id
+            tu.user_id,
+            tu.user_name,
+            tu.user_nickname,
+            tu.user_email,
+            tu.user_pwd,
+            tu.user_img_url,
+            tu.role_id,
+            tr.role_type,
+            tu.created_date,
+            tu.created_id,
+            tu.updated_date,
+            tu.updated_id
         FROM
-            tb_user
+            tb_user tu
+        LEFT JOIN
+            tb_role tr ON tu.role_id = tr.role_id
         WHERE
-            user_email = #{identifier} OR user_id = #{identifier}
+            tu.user_email = #{identifier} OR tu.user_id = #{identifier}
+    </select>
+
+    <select id="findUserByUserId" parameterType="string" resultType="com.revia.lastdance.signup.vo.UserVO">
+        SELECT
+            tu.user_id,
+            tu.user_name,
+            tu.user_nickname,
+            tu.user_email,
+            tu.user_pwd,
+            tu.user_img_url,
+            tu.role_id,
+            tr.role_type,
+            tu.created_date,
+            tu.created_id,
+            tu.updated_date,
+            tu.updated_id
+        FROM
+            tb_user tu
+        LEFT JOIN
+            tb_role tr ON tu.role_id = tr.role_id
+        WHERE
+            tu.user_id = #{userId}
     </select>
 
 </mapper>

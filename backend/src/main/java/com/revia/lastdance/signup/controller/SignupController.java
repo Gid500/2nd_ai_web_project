@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api") // 변경: /api/signup -> /api
+@RequestMapping("/api")
 public class SignupController {
 
     @Autowired
     private SignupService signupService;
 
-    @PostMapping("/signup/register") // 변경: /register -> /signup/register
+    @PostMapping("/signup/register")
     public ResponseEntity<?> registerUser(@RequestBody UserVO userVO) {
         if (signupService.isEmailDuplicated(userVO.getUserEmail())) {
             return ResponseEntity.badRequest().body("이미 사용중인 이메일입니다.");
@@ -31,13 +31,13 @@ public class SignupController {
         return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
 
-    @GetMapping("/signup/check-email") // 변경: /check-email -> /signup/check-email
+    @GetMapping("/signup/check-email")
     public ResponseEntity<?> checkEmail(@RequestParam String email) {
         boolean isDuplicated = signupService.isEmailDuplicated(email);
         return ResponseEntity.ok(Map.of("isDuplicated", isDuplicated));
     }
 
-    @GetMapping("/signup/check-nickname") // 변경: /check-nickname -> /signup/check-nickname
+    @GetMapping("/signup/check-nickname")
     public ResponseEntity<?> checkNickname(@RequestParam String nickname) {
         boolean isDuplicated = signupService.isNicknameDuplicated(nickname);
         return ResponseEntity.ok(Map.of("isDuplicated", isDuplicated));
@@ -50,14 +50,14 @@ public class SignupController {
         return ResponseEntity.ok(Map.of("isDuplicated", isDuplicated));
     }
 
-    @PostMapping("/signup/send-verification") // 변경: /send-verification -> /signup/send-verification
+    @PostMapping("/signup/send-verification")
     public ResponseEntity<?> sendVerificationEmail(@RequestBody Map<String, String> payload) {
         String email = payload.get("email");
         signupService.sendVerificationEmail(email);
         return ResponseEntity.ok("인증 코드가 발송되었습니다.");
     }
 
-    @PostMapping("/signup/verify-code") // 변경: /verify-code -> /signup/verify-code
+    @PostMapping("/signup/verify-code")
     public ResponseEntity<?> verifyCode(@RequestBody Map<String, String> payload) {
         String email = payload.get("email");
         String code = payload.get("code");
