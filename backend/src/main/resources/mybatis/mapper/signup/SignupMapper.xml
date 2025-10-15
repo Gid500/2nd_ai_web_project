@@ -10,8 +10,9 @@
             user_email,
             user_pwd,
             <if test="userImgUrl != null">user_img_url,</if>
-            <if test="isAdmin != null">is_admin,</if>
+            created_date,
             created_id,
+            updated_date,
             updated_id
         ) VALUES (
             #{userId},
@@ -20,8 +21,9 @@
             #{userEmail},
             #{userPwd},
             <if test="userImgUrl != null">#{userImgUrl},</if>
-            <if test="isAdmin != null">#{isAdmin},</if>
+            #{createdDate},
             #{createdId},
+            #{updatedDate},
             #{updatedId}
         )
     </insert>

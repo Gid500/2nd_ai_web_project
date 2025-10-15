@@ -36,6 +36,8 @@ public class SignupService {
         String userId = userVO.getUserId();
         userVO.setCreatedId(userId);
         userVO.setUpdatedId(userId);
+        userVO.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+        userVO.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
         
         signupMapper.insertUser(userVO);
     }
