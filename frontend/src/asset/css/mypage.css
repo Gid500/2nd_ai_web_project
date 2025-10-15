@@ -1,0 +1,51 @@
+/* src/asset/css/MyPage.css */
+.mypage-wrap {
+  max-width: 960px;          /* Header/BottomNav와 균형 */
+  margin: 0 auto;
+  padding: 24px 16px 24px;
+}
+
+.mypage-header {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: #eee;
+}
+
+.userbox .nickname {
+  font-size: 18px; font-weight: 600;
+}
+.userbox .email {
+  margin-top: 2px; color: #666; font-size: 13px;
+}
+
+.quick-actions { display: flex; gap: 8px; }
+.chip {
+  border: 1px solid #ddd; border-radius: 999px;
+  padding: 8px 12px; background: #fff; font-size: 13px; cursor: pointer;
+}
+
+.links {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px; margin: 20px 0;
+}
+.link-item {
+  height: 48px; border-radius: 8px; border: 1px solid #e8e8e8;
+  background: #fafafa; font-weight: 600; cursor: pointer;
+}
+
+.cs { margin-top: 24px; }
+.cs-title { font-weight: 700; margin-bottom: 8px; }
+.cs-list { list-style: none; padding: 0; margin: 0; }
+.cs-list li { margin: 6px 0; }
+.cs-list button {
+  background: none; border: 0; padding: 0; cursor: pointer; color: #222;
+}
