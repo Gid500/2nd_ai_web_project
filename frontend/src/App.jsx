@@ -15,6 +15,7 @@ import Forbidden from './pages/error/Forbidden';
 import FindPassword from "./pages/signin/FindPassword";
 import { AuthProvider } from './context/AuthContext'; // AuthProvider import
 import MyPage from './pages/mypage/mypage';
+import Admin from './pages/admin/Admin';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path='/*' element={<NotFound/>}/>
             <Route path='password/reset' element={<FindPassword />}/>
             <Route path='/mypage' element={<MyPage/>}/>
+            <Route path='/admin' element={<Admin/>}/>
           </Routes>
         </main>
         

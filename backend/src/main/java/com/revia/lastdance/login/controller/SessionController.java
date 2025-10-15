@@ -2,8 +2,11 @@ package com.revia.lastdance.login.controller;
 
 import com.revia.lastdance.signup.vo.UserVO;
 import com.revia.lastdance.login.dao.LoginMapper;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -21,25 +25,39 @@ public class SessionController {
     private final LoginMapper loginMapper;
 
     @GetMapping("/checkSession")
-    public ResponseEntity<?> checkSession(HttpSession session) {
+    public ResponseEntity<?> checkSession(HttpSession session, HttpServletResponse response) {
+        log.info("Checking session. Session ID: {}", session.getId());
         String userId = (String) session.getAttribute("userId");
         if (userId != null) {
+            log.info("Session valid for user: {}", userId);
             UserVO user = loginMapper.findUserByUserId(userId); // Assuming you have a method to find user by userId
             if (user != null) {
-                Map<String, Object> response = new HashMap<>();
-                response.put("isAuthenticated", true);
-                response.put("user", user);
-                return ResponseEntity.ok(response);
+                Map<String, Object> responseBody = new HashMap<>();
+                responseBody.put("isAuthenticated", true);
+                responseBody.put("user", user);
+                responseBody.put("roleType", user.getRoleType()); // Add roleType to response body
+                return ResponseEntity.ok(responseBody);
             }
         }
-        Map<String, Object> response = new HashMap<>();
-        response.put("isAuthenticated", false);
-        return ResponseEntity.ok(response);
+        log.info("Session invalid or no user found. Returning 401 Unauthorized.");
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("isAuthenticated", false);
+        return ResponseEntity.status(401).body(responseBody);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session) {
+    public ResponseEntity<String> logout(HttpSession session, HttpServletResponse response) {
+        log.info("Attempting to logout. Session ID before invalidate: {}", session.getId());
         session.invalidate(); // Invalidate the current session
+
+        // Explicitly delete the JSESSIONID cookie
+        Cookie cookie = new Cookie("JSESSIONID", null);
+        cookie.setMaxAge(0); // Expire the cookie immediately
+        cookie.setPath("/"); // Set the path to the root context
+        cookie.setHttpOnly(true); // Important for security
+        response.addCookie(cookie);
+
+        log.info("Session invalidated and JSESSIONID cookie deleted.");
         return ResponseEntity.ok("Logout successful");
     }
 }

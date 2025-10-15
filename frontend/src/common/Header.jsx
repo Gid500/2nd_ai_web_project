@@ -5,7 +5,7 @@ import '../asset/css/Header.css';
 
 function Header() {
   const navigate = useNavigate();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, logout, roleType } = useAuth();
 
   const handleLogout = async () => {
     await logout();
@@ -23,6 +23,9 @@ function Header() {
             <>
               <span className="welcome">안녕하세요, {user?.userId}님</span>
               <button className="logout-btn" onClick={handleLogout}>로그아웃</button>
+              {roleType === 'admin' && (
+                <Link to="/admin" className="admin-btn">관리자 페이지</Link>
+              )}
             </>
           ) : (
             <button className="login-btn" onClick={() => navigate('/signin')}>로그인</button>
