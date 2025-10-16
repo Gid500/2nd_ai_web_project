@@ -6,7 +6,7 @@ import Footer from './common/Footer';
 import About from './pages/about/About';
 import SignUp from './pages/signup/SignUp';
 import SignIn from './pages/signin/SignIn';
-import Home from './pages/home/home';
+import Home from './pages/home/Home';
 import Style from './pages/styler/Style';  // ✅ Style 페이지 추가
 import Posts from './pages/posts/Posts';
 import PostDetail from './pages/posts/components/PostDetail';
