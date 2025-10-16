@@ -3,10 +3,10 @@ import { Route, Routes } from 'react-router-dom';
 import Header from './common/Header';
 import Menubar from './common/Menubar';
 import Footer from './common/Footer';
-import Home from './pages/home/Home';
+import About from './pages/about/About';
 import SignUp from './pages/signup/SignUp';
 import SignIn from './pages/signin/SignIn';
-import About from './pages/about/About';
+import Home from './pages/home/home';
 import Posts from './pages/posts/Posts';
 import PostDetail from './pages/posts/components/PostDetail';
 import WritePost from './pages/posts/components/WritePost';
@@ -26,7 +26,7 @@ function App() {
 
         <main>
           <Routes>
-            <Route path='/' element={<Home/>}/>
+            <Route path="/category/:type" element={<Home />} />
             <Route path='/posts' element={<Posts/>}/>
             <Route path='/posts/write' element={<WritePost />}/>
             <Route path='/posts/:id' element={<PostDetail/>}/>

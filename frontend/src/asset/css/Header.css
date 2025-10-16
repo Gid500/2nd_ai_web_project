@@ -11,8 +11,9 @@
 .header-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center;      /* 높이 기준 중앙 정렬 */
   padding: 15px 40px;
+  height: 70px;             /* 헤더 높이 지정 */
 }
 
 /* 로고 */
@@ -26,8 +27,9 @@
 /* 로그인/환영 메시지 */
 .auth-btn {
   display: flex;
-  align-items: center;
+  align-items: center;      /* 버튼과 텍스트 세로 중앙 정렬 */
   gap: 10px;
+  height: 100%;             /* 부모 높이에 맞춤 */
 }
 
 .welcome {
@@ -59,7 +61,7 @@
   display: flex;
   flex-wrap: wrap;
   list-style: none;
-  padding: 10px 40px;
+  padding: 20px 40px;
   margin: 0;
   gap: 20px;
 }
@@ -73,16 +75,27 @@
   color: #C9A678;
 }
 
-/* 모바일 반응형 */
+/* ---------------------------
+   모바일 반응형
+--------------------------- */
 @media (max-width: 768px) {
   .header-top {
+    flex-direction: column;   /* 로고 + 로그인 버튼 세로 정렬 */
+    justify-content: center;  /* 상하 중앙 */
+    align-items: center;
     padding: 10px 20px;
+    gap: 10px;
+    height: auto;             /* 높이 자동 */
+  }
+
+  .auth-btn {
+    justify-content: center;  /* 버튼도 중앙 정렬 */
   }
 
   .nav ul.main-menu {
     padding: 10px 20px;
-    gap: 15px;
-    justify-content: flex-start;
+    gap: 10px;
+    justify-content: center;  /* 메뉴 중앙 정렬 */
   }
 
   .nav a {

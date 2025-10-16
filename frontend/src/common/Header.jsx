@@ -16,7 +16,7 @@ function Header() {
     <header className="header">
       <div className="header-top">
         <div className="logo">
-          <Link to="about">REIVA</Link>
+          <Link to="About">REVIA</Link>
         </div>
         <div className="auth-btn">
           {isAuthenticated ? (
@@ -35,9 +35,12 @@ function Header() {
 
       <nav className="nav">
         <ul className="main-menu">
-          <li><Link to="/">원피스</Link></li>
-          <li><Link to="/top">상의</Link></li>
-          <li><Link to="/bottom">하의</Link></li>
+          <li><Link to="/category/onepiece">원피스</Link></li>
+          <li><Link to="/category/top">상의</Link></li>
+          <li><Link to="/category/bottom">하의</Link></li>
+          <li><Link to="/STYLE">스타일</Link></li>
+          <li><Link to="/bottom">고객센터</Link></li>
+          <li><Link to="/my">마이페이지</Link></li>
         </ul>
       </nav>
     </header>
