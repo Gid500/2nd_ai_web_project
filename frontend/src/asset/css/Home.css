@@ -1,7 +1,7 @@
 /* 전체 컨테이너 */
 .home-container {
   max-width: 1800px;
-  padding: 0px;
+  padding: 0;
   font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
   background-color: #fdfdfd;
   border-radius: 10px;
@@ -33,17 +33,17 @@
   flex-wrap: wrap;
 }
 
-/* 안내 영역 */
+/* 왼쪽 안내 */
 .home-guide {
   flex: 1 1 45%;
-  border: 3px solid #000000; /* 테두리 색상과 두께 */
-  padding: 40px; /* 내부 여백 */
-  display: flex;           /* Flexbox 활성화 */
-  flex-direction: column;  /* 세로 방향 정렬 */
-  justify-content: center; /* 수직 중앙 정렬 */
-  align-items: center;     /* 수평 중앙 정렬 */
-  text-align: center;      /* 텍스트도 가운데 */
-  gap: 3px;               /* 제목과 문단 사이 간격 */
+  border: 3px solid #000000;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 3px;
 }
 .home-guide h2 {
   font-size: 24px;
@@ -59,22 +59,62 @@
   line-height: 1.6;
 }
 
-/* 업로드 영역 */
+/* 오른쪽 업로드 */
 .home-upload {
   flex: 1 1 45%;
-  border: 3px solid #000000; /* 테두리 색상과 두께 */
-  padding: 20px; /* 안쪽 여백 */
+  border: 3px solid #000000;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* 수직 중앙 정렬 */
-  align-items: center;     /* 수평 중앙 정렬 */
+  justify-content: center;
+  align-items: center;
   gap: 15px;
-  text-align: center;      /* 텍스트도 가운데 */
+  text-align: center;
 }
 
-/* 숨긴 파일 input */
-#file-upload {
-  display: none;
+/* 고정된 이미지 영역 */
+.home-preview {
+  width: 100%;
+  height: 250px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: #f9f9f9;
+  position: relative;
+}
+
+/* 업로드된 이미지 */
+.home-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* ===================== 버튼 관련 ===================== */
+
+/* 버튼 그룹 - Cropper 안팎 모두 적용 */
+.btn-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+  position: relative;
+}
+
+/* 취소 / 초기화 버튼 */
+.remove-btn {
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
 }
 
 /* 업로드 버튼 */
@@ -85,36 +125,46 @@
   border-radius: 20px;
   cursor: pointer;
   font-weight: 600;
-  text-align: center;
+  transition: all 0.2s ease-in-out;
 }
-
-/* 미리보기 */
-.home-preview img {
-  max-width: 100%;
-  max-height: 250px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-}
-/* 기존 업로드 버튼, AI 버튼 스타일과 맞춤 */
-.remove-btn {
-  padding: 10px 20px;
-  background-color: #ffffff;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
 
 /* AI 조회 버튼 */
 .ai-btn {
   padding: 10px 20px;
-  background-color: #000000;
+  background-color: #000;
   color: #fff;
   border-radius: 20px;
   font-weight: 600;
+  transition: all 0.2s ease-in-out;
 }
 
-/* AI 결과 */
+/* 버튼 hover 모션 */
+.upload-btn:hover,
+.ai-btn:hover,
+.remove-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Cropper 영역 */
+.cropper-container {
+  width: 100%;
+  max-width: 350px;
+  height: 350px;
+  background-color: #eee;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Cropper 아래 버튼 정렬 */
+.cropper-container + .btn-group {
+  justify-content: center;
+}
+
+/* 결과 */
 .home-ai-result {
   margin-top: 20px;
   padding: 15px;
@@ -135,11 +185,24 @@
   .home-box {
     flex-direction: column;
   }
-  .home-guide, .home-upload {
+  .home-guide,
+  .home-upload {
     flex: 1 1 100%;
   }
   .home-banner {
     flex: 1 1 100%;
     height: 100px;
+  }
+}
+
+/* 모바일 Cropper 높이 및 버튼 */
+@media (max-width: 480px) {
+  .cropper-container {
+    height: 250px;
+  }
+  .btn-group {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
   }
 }
