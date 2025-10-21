@@ -15,5 +15,6 @@
             "username": "lastdance",
             "password": "0001"
         }
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
