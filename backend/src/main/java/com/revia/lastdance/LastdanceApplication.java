@@ -11,5 +11,4 @@ public class LastdanceApplication {
 			LastdanceApplication.class, args
 		);
 	}
-
 }
