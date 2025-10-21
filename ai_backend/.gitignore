@@ -1,1 +1,3 @@
 /.venv
+/uploaded_img
+.env

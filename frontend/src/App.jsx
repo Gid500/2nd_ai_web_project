@@ -22,7 +22,9 @@ function App() {
   return (
     <AuthProvider> {/* AuthProvider로 전체 애플리케이션 감싸기 */}
       <div className="App-container">
+
         <Header/>
+
         <Menubar/>
 
         <main>
@@ -35,15 +37,17 @@ function App() {
             <Route path='/signUp' element={<SignUp/>}/>
             <Route path='/signIn' element={<SignIn/>}/>
             <Route path='/about' element={<About/>}/>
-            <Route path='/forbidden' element={<Forbidden/>}/>
-            <Route path='/*' element={<NotFound/>}/>
-            <Route path='password/reset' element={<FindPassword />}/>
+            <Route path='/password/reset' element={<FindPassword />}/>
             <Route path='/mypage' element={<MyPage/>}/>
             <Route path='/admin' element={<Admin/>}/>
+
+            <Route path='/forbidden' element={<Forbidden/>}/>
+            <Route path='/*' element={<NotFound/>}/>
           </Routes>
         </main>
         
         <Footer/>
+
       </div>
     </AuthProvider>
   );
