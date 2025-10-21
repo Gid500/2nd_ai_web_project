@@ -1,7 +1,7 @@
 // src/pages/mypage/MyPage.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../asset/css/mypage.css";
+import "../../asset/css/Mypage.css";
 
 export default function MyPage() {
   const navigate = useNavigate();
