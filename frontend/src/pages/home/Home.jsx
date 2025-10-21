@@ -3,6 +3,7 @@ import Cropper from 'react-easy-crop';
 import getCroppedImg from './cropImage'; // 캔버스 기반 크롭 함수
 import '../../asset/css/Home.css';
 import { Camera, RefreshCcw, Check, UploadCloud, X } from 'lucide-react';
+import useAxios from '../../common/hook/useAxios';
 
 const defaultCropArea = { x: 0, y: 0, width: 250, height: 250 };
 const CATEGORY_MAP = { top: '상의', bottom: '하의', onepiece: '원피스' };
@@ -20,6 +21,7 @@ function Home() {
   const [message, setMessage] = useState('');
 
   const categoryName = CATEGORY_MAP[type] || '기타';
+  const { request, loading, error } = useAxios();
 
   // ====================== 이미지 업로드 ======================
   const handleFileChange = (e) => {
@@ -91,13 +93,11 @@ function Home() {
       const base64 = await toBase64(blob);
 
       // 백엔드 호출
-      const res = await fetch('http://localhost:8080/api/ai/analyze', {
+      const data = await request({
+        url: '/api/ai/analyze',
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageBase64: base64, category: type }),
+        data: { imageBase64: base64, category: type },
       });
-
-      const data = await res.json();
 
       // GPT 응답 JSON 객체 확인
       let parsed = {};

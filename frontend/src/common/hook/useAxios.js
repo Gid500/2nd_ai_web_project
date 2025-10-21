@@ -1,25 +1,29 @@
 import { useState, useCallback } from 'react';
-import api from '../api/axios'; // Import the configured axios instance
+import axios from 'axios';
 
 const useAxios = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const axiosInstance = axios.create({
+    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8080',
+  });
+
   const request = useCallback(async (config) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api(config); // Use the imported 'api' instance
+      const response = await axiosInstance(config);
       setData(response.data);
+      setLoading(false);
       return response.data;
     } catch (err) {
       setError(err);
-      throw err;
-    } finally {
       setLoading(false);
+      throw err;
     }
-  }, []);
+  }, [axiosInstance]);
 
   return { data, error, loading, request };
 };

@@ -6,26 +6,26 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
-  const [roleType, setRoleType] = useState(null); // Add roleType state
+  const [roleType, setRoleType] = useState(null); // roleType 상태 추가
   const [loading, setLoading] = useState(true);
 
   const checkSession = useCallback(async () => {
     try {
-      const response = await api.get('/api/checkSession'); // Assuming a backend endpoint to check session validity
+      const response = await api.get('/api/checkSession'); // 세션 유효성 검사를 위한 백엔드 엔드포인트 가정
       if (response.status === 200 && response.data.isAuthenticated) {
         setIsAuthenticated(true);
-        setUser(response.data.user); // Assuming backend returns user info if authenticated
-        setRoleType(response.data.roleType); // Get roleType from response body
+        setUser(response.data.user); // 인증된 경우 백엔드가 사용자 정보를 반환한다고 가정
+        setRoleType(response.data.roleType); // 응답 본문에서 roleType 가져오기
       } else {
         setIsAuthenticated(false);
         setUser(null);
-        setRoleType(null); // Clear roleType if not authenticated
+        setRoleType(null); // 인증되지 않은 경우 roleType 초기화
       }
     } catch (error) {
       console.error('Session check failed:', error);
       setIsAuthenticated(false);
       setUser(null);
-      setRoleType(null); // Clear roleType on error
+      setRoleType(null); // 오류 발생 시 roleType 초기화
     } finally {
       setLoading(false);
     }
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
       if (response.status === 200) {
         setIsAuthenticated(true);
         await checkSession(); 
-        // checkSession will now update roleType from the response body
+        // 이제 checkSession이 응답 본문에서 roleType을 업데이트합니다.
         return true;
       }
       return false;
@@ -49,17 +49,17 @@ export const AuthProvider = ({ children }) => {
       console.error("Login failed:", error);
       setIsAuthenticated(false);
       setUser(null);
-      setRoleType(null); // Clear roleType on login failure
+      setRoleType(null); // 로그인 실패 시 roleType 초기화
       throw error;
     }
   };
 
   const logout = useCallback(async () => {
     try {
-      await api.post('/api/logout'); // Assuming a backend endpoint to invalidate session
+      await api.post('/api/logout'); // 세션 무효화를 위한 백엔드 엔드포인트 가정
       setIsAuthenticated(false);
       setUser(null);
-      setRoleType(null); // Clear roleType on logout
+      setRoleType(null); // 로그아웃 시 roleType 초기화
     } catch (error) {
       console.error('Logout failed:', error);
     }
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider value={{
       isAuthenticated,
       user,
-      roleType, // Provide roleType in context
+      roleType, // 컨텍스트에 roleType 제공
       loading,
       login,
       logout,

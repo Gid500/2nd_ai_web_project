@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useInput from "../../common/hook/useInput";
-import api from "../../common/api/axios";
+import useAxios from "../../common/hook/useAxios";
 import "../../asset/css/SignUp.css";
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const { request, loading: axiosLoading, error: axiosError } = useAxios();
 
   // inputs
   const [email, onChangeEmail] = useInput("");
@@ -17,7 +18,6 @@ export default function SignUp() {
   const [name, onChangeName] = useInput("");
 
   // ui state
-  const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
   const [userIdChecked, setUserIdChecked] = useState(false); // userId 중복 확인 상태 추가
@@ -30,15 +30,12 @@ export default function SignUp() {
   const handleSendEmail = async () => {
     if (!email) return alert("이메일을 입력하세요.");
     try {
-      setLoading(true);
-      await api.post(`/api/signup/send-verification`, { email: email }); // 엔드포인트 변경
+      await request({ url: `/api/signup/send-verification`, method: "POST", data: { email: email } }); // 엔드포인트 변경
       setEmailSent(true);
       alert("인증 메일을 전송했습니다.");
     } catch (e) {
       console.error(e);
       alert("이메일 전송 실패");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -46,8 +43,7 @@ export default function SignUp() {
     if (!emailSent) return alert("먼저 이메일 인증을 요청하세요.");
     if (!code) return alert("인증코드를 입력하세요.");
     try {
-      setLoading(true);
-      const { data } = await api.post(`/api/signup/verify-code`, { email: email, code }); // 엔드포인트 변경
+      const data = await request({ url: `/api/signup/verify-code`, method: "POST", data: { email: email, code } }); // 엔드포인트 변경
       if (data?.isVerified) { // 필드명 변경
         setEmailVerified(true);
         alert("이메일 인증 완료");
@@ -58,8 +54,6 @@ export default function SignUp() {
     } catch (e) {
       console.error(e);
       alert("이메일 인증 실패");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -73,8 +67,7 @@ export default function SignUp() {
   const handleCheckNickname = async () => {
     if (!nickname) return alert("닉네임을 입력하세요.");
     try {
-      setLoading(true);
-      const { data } = await api.get(`/api/signup/check-nickname`, { params: { nickname } }); // 엔드포인트 변경
+      const data = await request({ url: `/api/signup/check-nickname`, method: "GET", params: { nickname } }); // 엔드포인트 변경
       if (data?.isDuplicated === false) { // 필드명 변경 및 로직 반전
         setNickChecked(true);
         alert("사용 가능한 닉네임입니다.");
@@ -85,16 +78,13 @@ export default function SignUp() {
     } catch (e) {
       console.error(e);
       alert("닉네임 중복확인 실패");
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleCheckUserId = async () => {
     if (!userId) return alert("아이디를 입력하세요.");
     try {
-      setLoading(true);
-      const { data } = await api.get(`/api/signup/check-userid`, { params: { userId } });
+      const data = await request({ url: `/api/signup/check-userid`, method: "GET", params: { userId } });
       if (data?.isDuplicated === false) {
         setUserIdChecked(true);
         alert("사용 가능한 아이디입니다.");
@@ -105,8 +95,6 @@ export default function SignUp() {
     } catch (e) {
       console.error(e);
       alert("아이디 중복확인 실패");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -114,21 +102,22 @@ export default function SignUp() {
     e.preventDefault();
     if (!canSubmit) return alert("필수 확인을 모두 완료하세요.");
     try {
-      setLoading(true);
-      await api.post("/api/signup/register", {
-        userEmail: email,
-        userPwd: pwd,
-        userNickname: nickname,
-        userName: name,
-        userId: userId, // userId 추가
+      await request({
+        url: "/api/signup/register",
+        method: "POST",
+        data: {
+          userEmail: email,
+          userPwd: pwd,
+          userNickname: nickname,
+          userName: name,
+          userId: userId, // userId 추가
+        },
       });
       alert("회원가입이 완료되었습니다.");
       navigate("/signIn");
     } catch (e) {
       console.error(e);
       alert("회원가입 실패");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -156,7 +145,7 @@ export default function SignUp() {
               type="button"
               className="btn-ghost"
               onClick={handleSendEmail}
-              disabled={loading || !email}
+              disabled={axiosLoading || !email}
             >
               {emailSent ? "재전송" : "인증요청"}
             </button>
@@ -180,7 +169,7 @@ export default function SignUp() {
               type="button"
               className="btn-ghost"
               onClick={handleVerifyCode}
-              disabled={loading || !emailSent || !code}
+              disabled={axiosLoading || !emailSent || !code}
             >
               확인
             </button>
@@ -206,7 +195,7 @@ export default function SignUp() {
               type="button"
               className="btn-ghost"
               onClick={handleCheckUserId}
-              disabled={loading || !userId}
+              disabled={axiosLoading || !userId}
             >
               중복확인
             </button>
@@ -269,7 +258,7 @@ export default function SignUp() {
               type="button"
               className="btn-ghost"
               onClick={handleCheckNickname}
-              disabled={loading || !nickname}
+              disabled={axiosLoading || !nickname}
             >
               중복확인
             </button>
@@ -290,7 +279,7 @@ export default function SignUp() {
         </div>
 
         {/* 회원가입 버튼 */}
-        <button type="submit" className="signup-button" disabled={loading || !canSubmit}>
+        <button type="submit" className="signup-button" disabled={axiosLoading || !canSubmit}>
           회원가입
         </button>
       </form>

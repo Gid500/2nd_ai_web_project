@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useInput from "../../common/hook/useInput";
-import api from "../../common/api/axios";
+import useAxios from "../../common/hook/useAxios";
 import "../../asset/css/SignUp.css"; // 회원가입과 동일 스타일 재사용
 
 export default function FindPassword() {
   const navigate = useNavigate();
+  const { request, loading: axiosLoading, error: axiosError } = useAxios();
 
   // inputs
   const [email, onChangeEmail] = useInput("");
@@ -14,7 +15,6 @@ export default function FindPassword() {
   const [pwd2, onChangePwd2] = useInput("");
 
   // ui state
-  const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
   const [pwdOk, setPwdOk] = useState(false);
@@ -24,16 +24,13 @@ export default function FindPassword() {
   const handleSendEmail = async () => {
     if (!email) return alert("이메일을 입력하세요.");
     try {
-      setLoading(true);
       // 인증 메일 발송
-      await api.post("/auth/password/reset/send", { email });
+      await request({ url: "/auth/password/reset/send", method: "POST", data: { email } });
       setEmailSent(true);
       alert("인증 메일을 전송했습니다.");
     } catch (e) {
       console.error(e);
       alert("이메일 전송에 실패했습니다.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -41,9 +38,8 @@ export default function FindPassword() {
     if (!emailSent) return alert("먼저 이메일 인증을 요청하세요.");
     if (!code) return alert("인증코드를 입력하세요.");
     try {
-      setLoading(true);
       // 인증코드 확인
-      const { data } = await api.post("/auth/password/reset/verify", { email, code });
+      const data = await request({ url: "/auth/password/reset/verify", method: "POST", data: { email, code } });
       if (data?.verified) {
         setEmailVerified(true);
         alert("이메일 인증 완료");
@@ -54,8 +50,6 @@ export default function FindPassword() {
     } catch (e) {
       console.error(e);
       alert("인증 확인에 실패했습니다.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -69,16 +63,13 @@ export default function FindPassword() {
     e.preventDefault();
     if (!canSubmit) return alert("이메일 인증 및 비밀번호 확인을 완료하세요.");
     try {
-      setLoading(true);
       // 최종 비밀번호 변경
-      await api.put("/auth/password/reset", { email, code, newPassword: pwd });
+      await request({ url: "/auth/password/reset", method: "PUT", data: { email, code, newPassword: pwd } });
       alert("비밀번호가 변경되었습니다. 새 비밀번호로 로그인하세요.");
       navigate("/signIn");
     } catch (e) {
       console.error(e);
       alert("비밀번호 변경에 실패했습니다.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -106,7 +97,7 @@ export default function FindPassword() {
               type="button"
               className="btn-ghost"
               onClick={handleSendEmail}
-              disabled={loading || !email}
+              disabled={axiosLoading || !email}
             >
               {emailSent ? "재전송" : "인증요청"}
             </button>
@@ -130,7 +121,7 @@ export default function FindPassword() {
               type="button"
               className="btn-ghost"
               onClick={handleVerifyCode}
-              disabled={loading || !emailSent || !code}
+              disabled={axiosLoading || !emailSent || !code}
             >
               확인
             </button>
@@ -173,7 +164,7 @@ export default function FindPassword() {
           )}
         </div>
 
-        <button type="submit" className="signup-button" disabled={loading || !canSubmit}>
+        <button type="submit" className="signup-button" disabled={axiosLoading || !canSubmit}>
           비밀번호 변경
         </button>
       </form>
