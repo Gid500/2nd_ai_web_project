@@ -57,4 +57,5 @@ grant update(컬럼1, 컬럼2) on DB이름.테이블명 to '사용자'@'localhos
 
 -- 사용자 비번 변경
 ALTER USER 'user-name'@'localhost' IDENTIFIED BY 'NEW_USER_PASSWORD';
+
 FLUSH PRIVILEGES;

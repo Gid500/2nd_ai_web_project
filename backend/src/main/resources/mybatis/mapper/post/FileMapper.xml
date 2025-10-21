@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.revia.lastdance.post.dao.FileMapper">
+
+    <resultMap id="fileResultMap" type="com.revia.lastdance.post.vo.FileVO">
+        <id property="fileId" column="file_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="uploadName" column="upload_name"/>
+        <result property="fileType" column="file_type"/>
+        <result property="fileSize" column="file_size"/>
+    </resultMap>
+
+    <insert id="insertFile" parameterType="com.revia.lastdance.post.vo.FileVO" useGeneratedKeys="true" keyProperty="fileId">
+        INSERT INTO tb_file (post_id, upload_name, file_type, file_size)
+        VALUES (#{postId}, #{uploadName}, #{fileType}, #{fileSize})
+    </insert>
+
+    <select id="selectFilesByPostId" resultMap="fileResultMap">
+        SELECT * FROM tb_file WHERE post_id = #{postId}
+    </select>
+
+    <delete id="deleteFile">
+        DELETE FROM tb_file WHERE file_id = #{fileId}
+    </delete>
+
+</mapper>
