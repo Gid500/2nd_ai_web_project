@@ -2,11 +2,8 @@
 
 import os
 from flask import Blueprint, request, jsonify, current_app
-from werkzeug.utils import secure_filename 
-
-# 도우미 함수를 가져옵니다.
-from utils import allowed_file 
-
+from werkzeug.utils import secure_filename
+from utils import allowed_file, hash_filename
 # 'upload_bp'라는 이름의 블루프린트를 생성합니다. 
 # URL 접두사를 '/api' 등으로 설정하여 API 엔드포인트를 구분할 수도 있습니다.
 upload_bp = Blueprint('upload_bp', __name__)
@@ -31,7 +28,9 @@ def upload_image():
     # 3. 파일이 존재하고 허용된 확장자인지 확인합니다.
     if file and allowed_file(file.filename):
         # 파일명 보안 처리 (경로 인젝션 방지)
-        filename = secure_filename(file.filename)
+        # 원본 파일 이름을 해시화하여 고유한 이름으로 만듭니다.
+        hashed_name = hash_filename(file.filename)
+        filename = secure_filename(hashed_name)
         
         # 4. 업로드 폴더가 없으면 생성합니다.
         if not os.path.exists(upload_dir):

@@ -1,7 +1,4 @@
-# app.py
-
 from flask import Flask
-# 설정과 라우트를 가져옵니다.
 from config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from routes import upload_bp
 

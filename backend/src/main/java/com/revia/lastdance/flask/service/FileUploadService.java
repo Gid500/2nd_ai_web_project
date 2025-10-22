@@ -48,7 +48,7 @@ public class FileUploadService {
         // 필수: Flask 서버가 기대하는 필드 이름('file')과 파일 Resource를 연결합니다.
         body.add("file", fileResource); 
         // 텍스트 필드를 추가하는 예시 (선택적):
-        // body.add("description", "Spring Boot에서 보낸 이미지");
+        body.add("description", "Spring Boot에서 보낸 이미지");
 
         // 4. 요청 Entity 생성 (헤더와 본문 결합)
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
