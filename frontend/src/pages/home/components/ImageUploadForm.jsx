@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import useImageUpload from '../hook/useImageUpload';
 
 const ImageUploadForm = () => {
     const { file, uploading, error, result, handleFileChange, handleUpload } = useImageUpload();
+    const [imagePreview, setImagePreview] = useState(null);
+
+    useEffect(() => {
+        if (file) {
+            const objectUrl = URL.createObjectURL(file);
+            setImagePreview(objectUrl);
+
+            return () => URL.revokeObjectURL(objectUrl);
+        }
+        setImagePreview(null);
+    }, [file]);
 
     return (
         <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px', maxWidth: '500px', margin: '20px auto' }}>
@@ -21,13 +32,44 @@ const ImageUploadForm = () => {
             </button>
 
             {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
-            {result && <p style={{ color: 'green', marginTop: '10px' }}>업로드 성공: {JSON.stringify(result)}</p>}
-            {result && result.image_url && (
+            {result && <p style={{ color: 'green', marginTop: '10px' }}>업로드 성공!</p>}
+
+            {imagePreview && (
                 <div style={{ marginTop: '20px' }}>
-                    <h3>업로드된 이미지:</h3>
-                    <img src={result.image_url} alt="Uploaded" style={{ maxWidth: '100%', height: 'auto', border: '1px solid #eee' }} />
+                    <h3>선택된 이미지:</h3>
+                    <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', height: 'auto', border: '1px solid #eee' }} />
                 </div>
             )}
+
+            {result && result.predicted_emotion && result.confidence !== undefined && (
+                <div style={{ marginTop: '20px' }}>
+                    <h3>예측 결과:</h3>
+                    <p><strong>가장 높은 감정:</strong> {result.predicted_emotion} (확신도: {(result.confidence * 100).toFixed(2)}%)</p>
+                </div>
+            )}
+
+            {result && result.all_predictions && (
+                <div style={{ marginTop: '20px' }}>
+                    <h4>모든 감정 예측:</h4>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead>
+                            <tr>
+                                <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>감정</th>
+                                <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>확신도</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Object.entries(result.all_predictions).map(([emotion, confidence]) => (
+                                <tr key={emotion}>
+                                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{emotion}</td>
+                                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{(confidence * 100).toFixed(2)}%</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
             {file && <p style={{ marginTop: '10px' }}>선택된 파일: {file.name}</p>}
         </div>
     );
