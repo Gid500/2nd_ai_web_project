@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from routes import upload_bp
 
@@ -14,6 +14,11 @@ def create_app():
 
     # 라우팅 로직이 포함된 블루프린트(routes.py의 upload_bp)를 등록합니다.
     app.register_blueprint(upload_bp)
+
+    # 업로드된 파일을 제공하는 정적 라우트 추가
+    @app.route('/uploads/<filename>')
+    def uploaded_file(filename):
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
     return app
 

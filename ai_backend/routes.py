@@ -51,10 +51,12 @@ def upload_image():
             return jsonify({'message': f'File save failed (파일 저장 실패): {e}'}), 500
         
         # 6. 성공 응답을 반환합니다.
+        image_url = request.url_root + 'uploads/' + filename
         return jsonify({
             'message': 'Image uploaded successfully (이미지 업로드 성공)', 
             'filename': filename, 
-            'save_path': save_path
+            'save_path': save_path,
+            'image_url': image_url
         }), 200
     else:
         # 7. 허용되지 않은 파일 형식인 경우 400 에러를 반환합니다.
