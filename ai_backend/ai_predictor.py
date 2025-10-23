@@ -6,7 +6,7 @@ import pandas as pd
 
 # Define constants - these should match the model's training
 IMAGE_WIDTH, IMAGE_HEIGHT = 128, 128
-MODEL_PATH = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/cat_emotion_mobilenet_finetuned_v1.h5"
+MODEL_PATH = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/cat_emotion_mobilenet_finetuned_v2.h5"
 CLASSES_CSV_PATH = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/Cat Emotions.v1i.multiclass/train/_classes.csv"
 
 # Load the model once when the module is imported
