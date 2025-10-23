@@ -29,9 +29,9 @@ def upload_image():
     # 3. 파일이 존재하고 허용된 확장자인지 확인합니다.
     if file and allowed_file(file.filename):
         # 파일명 보안 처리 (경로 인젝션 방지) - 더 이상 저장하지 않으므로 필요 없지만, filename을 위해 유지
-        # hashed_name = hash_filename(file.filename)
-        # filename = secure_filename(hashed_name)
-        filename = secure_filename(file.filename) # 원본 파일명 사용 또는 해시 유지
+        hashed_name = hash_filename(file.filename)
+        filename = secure_filename(hashed_name) # 원본 파일명 사용 또는 해시 유지
+        # filename = secure_filename(file.filename) # 원본 파일명 사용 또는 해시 유지
         
         # 4. 업로드 폴더 생성 로직 제거 (더 이상 저장하지 않음)
         # if not os.path.exists(upload_dir):

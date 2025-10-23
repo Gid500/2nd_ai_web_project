@@ -6,8 +6,7 @@ import pandas as pd
 
 # Define constants - these should match the model's training
 IMAGE_WIDTH, IMAGE_HEIGHT = 128, 128
-MODEL_PATH = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/cat_emotion_mobilenet_finetuned_v2.h5"
-CLASSES_CSV_PATH = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/Cat Emotions.v1i.multiclass/train/_classes.csv"
+MODEL_PATH = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/dog_emotion_mobilenet_finetuned_v2.h5"
 
 # Load the model once when the module is imported
 try:
@@ -17,17 +16,8 @@ except Exception as e:
     model = None
     print(f"Error loading AI model: {e}")
 
-# Load class labels
-class_labels = []
-try:
-    df_classes = pd.read_csv(CLASSES_CSV_PATH)
-    # Assuming the class names are the column headers excluding 'filename'
-    class_labels = df_classes.columns.drop('filename').tolist()
-    print(f"Class labels loaded: {class_labels}")
-except Exception as e:
-    print(f"Error loading class labels from {CLASSES_CSV_PATH}: {e}")
-    # Fallback labels if loading fails
-    class_labels = ['Angry', 'Happy', 'Neutral', 'Sad', 'Scared', 'Surprised', 'Unlabeled']
+# Define class labels directly (assuming these match the model's output classes)
+class_labels = ['Happy', 'Sad', 'Angry', 'Relaxed', 'Scared', 'Neutral']
 
 
 def preprocess_image(image_input):

@@ -33,19 +33,7 @@ public class FileUploadService {
     private final String FLASK_AI_PREDICT_URL = "http://localhost:5000/upload-image"; // Flask AI backend URL
 
     public Map<String, Object> uploadImageAndGetPrediction(MultipartFile file) throws Exception {
-        // 1. Save the uploaded file
-        String originalFilename = file.getOriginalFilename();
-        String uniqueFilename = UUID.randomUUID().toString() + "_" + originalFilename;
-        Path filePath = Paths.get(UPLOAD_DIR + uniqueFilename);
-        Files.copy(file.getInputStream(), filePath);
-
-        // 2. Store image info in DB
-        FlaskImgVO flaskImgVO = new FlaskImgVO();
-        flaskImgVO.setFlaskImgUrl(filePath.toString()); // Store local path for now
-        flaskImgVO.setFlaskImgName(uniqueFilename);
-        flaskImgMapper.insertFlaskImg(flaskImgVO);
-
-        // 3. Send image to Flask AI backend for prediction
+        // Send image to Flask AI backend for prediction
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
