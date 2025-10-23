@@ -13,19 +13,17 @@ IMAGE_WIDTH, IMAGE_HEIGHT = 128, 128  # Roboflow default size is often 416x416, 
 BATCH_SIZE = 32
 EPOCHS = 20  # You can increase this for better training
 NUM_CLASSES = 6  # Unlabeled, angry, attentive, no clear emotion recognizable, relaxed, sad, uncomfortable
-DATA_DIR = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/Cat Emotions.v2i.multiclass/train"
-CSV_FILE = os.path.join(DATA_DIR, "_classes.csv")
 
-def create_mobilenet_model(input_shape, num_classes):
+def create_mobilenet_model(input_shape, num_classes, fine_tune=False):
     base_model = MobileNetV2(input_shape=input_shape, include_top=False, weights='imagenet')
-    base_model.trainable = False  # Freeze the convolutional base
+    base_model.trainable = not fine_tune  # Freeze or unfreeze the convolutional base based on fine_tune
 
     inputs = tf.keras.Input(shape=input_shape)
     x = base_model(inputs, training=False)
     x = GlobalAveragePooling2D()(x)
-    x = Dense(512, activation='relu')(x)
+    x = Dense(512, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.001))(x)
     x = Dropout(0.5)(x)
-    outputs = Dense(num_classes, activation='softmax')(x)
+    outputs = Dense(num_classes, activation='sigmoid', kernel_regularizer=tf.keras.regularizers.l2(0.001))(x)
     model = Model(inputs, outputs)
     return model
 
@@ -97,24 +95,40 @@ def prepare_data(csv_file, data_dir, image_width, image_height, batch_size):
     )
     return train_generator, validation_generator, class_columns, num_classes
 
-def build_and_compile_model(input_shape, num_classes):
-    model = create_mobilenet_model(input_shape, num_classes)
-    model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
+def build_and_compile_model(input_shape, num_classes, existing_model_path=None, fine_tune=False):
+    if existing_model_path and os.path.exists(existing_model_path):
+        model = tf.keras.models.load_model(existing_model_path)
+        # If fine-tuning, unfreeze base model layers
+        if fine_tune:
+            for layer in model.layers:
+                if isinstance(layer, tf.keras.Model) and layer.name.startswith('mobilenetv2'):
+                    layer.trainable = True
+            model.compile(optimizer=tf.keras.optimizers.Adam(1e-5),  # Lower learning rate for fine-tuning
+                          loss='binary_crossentropy',
+                          metrics=['accuracy'])
+        else:
+            model.compile(optimizer='adam',
+                          loss='binary_crossentropy',
+                          metrics=['accuracy'])
+    else:
+        model = create_mobilenet_model(input_shape, num_classes, fine_tune)
+        model.compile(optimizer='adam',
+                      loss='binary_crossentropy',
+                      metrics=['accuracy'])
     model.summary()
     return model
 
-def train_and_save_model(model, train_generator, validation_generator, epochs, batch_size):
+def train_and_save_model(model, train_generator, validation_generator, epochs, batch_size, model_save_path, early_stopping):
     history = model.fit(
         train_generator,
         steps_per_epoch=int(np.ceil(train_generator.samples / batch_size)),
         epochs=epochs,
         validation_data=validation_generator,
-        validation_steps=int(np.ceil(validation_generator.samples / batch_size))
+        validation_steps=int(np.ceil(validation_generator.samples / batch_size)),
+        callbacks=[early_stopping]
     )
-    model.save("cat_emotion_mobilenet_model.h5") # Changed model name
-    print("Model trained and saved as cat_emotion_mobilenet_model.h5")
+    model.save(model_save_path)
+    print(f"Model trained and saved as {model_save_path}")
     return history
 
 def evaluate_and_display_predictions(model_path, validation_generator, class_columns):
@@ -128,21 +142,31 @@ def evaluate_and_display_predictions(model_path, validation_generator, class_col
         plt.subplot(3, 3, i + 1)
         plt.imshow(validation_images[i])
         true_label = class_columns[np.argmax(validation_labels[i])]
+        # For multi-label classification with sigmoid, a threshold (e.g., 0.5) should be applied to predictions
+        # to determine all present labels. For simplicity in display, we're showing the label with the highest probability.
         predicted_label = class_columns[np.argmax(predictions[i])]
         plt.title(f"True: {true_label}\nPred: {predicted_label}")
         plt.axis('off')
     plt.show()
 
-def train_model():
+def train_model(data_dir, csv_file, model_save_path, fine_tune=False, existing_model_path=None):
     train_generator, validation_generator, class_columns, num_classes = prepare_data(
-        CSV_FILE, DATA_DIR, IMAGE_WIDTH, IMAGE_HEIGHT, BATCH_SIZE
+        csv_file, data_dir, IMAGE_WIDTH, IMAGE_HEIGHT, BATCH_SIZE
     )
     
-    model = build_and_compile_model((IMAGE_WIDTH, IMAGE_HEIGHT, 3), num_classes)
+    model = build_and_compile_model((IMAGE_WIDTH, IMAGE_HEIGHT, 3), num_classes, existing_model_path, fine_tune)
     
-    train_and_save_model(model, train_generator, validation_generator, EPOCHS, BATCH_SIZE)
+    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
     
-    evaluate_and_display_predictions("cat_emotion_mobilenet_model.h5", validation_generator, class_columns) # Changed model name
+    train_and_save_model(model, train_generator, validation_generator, EPOCHS, BATCH_SIZE, model_save_path, early_stopping)
+    
+    evaluate_and_display_predictions(model_save_path, validation_generator, class_columns)
 
 if __name__ == "__main__":
-    train_model()
+    # Define paths for both datasets
+    DATA_DIR_V1 = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/Cat Emotions.v1i.multiclass/train"
+    CSV_FILE_V1 = os.path.join(DATA_DIR_V1, "_classes.csv")
+    MODEL_SAVE_PATH_V1 = "cat_emotion_mobilenet_model_v1.h5"
+
+    print("\n--- Training with Cat Emotions.v1i.multiclass ---")
+    train_model(DATA_DIR_V1, CSV_FILE_V1, MODEL_SAVE_PATH_V1, fine_tune=False, existing_model_path=None)

@@ -12,12 +12,12 @@ import matplotlib.pyplot as plt
 IMAGE_WIDTH, IMAGE_HEIGHT = 128, 128
 BATCH_SIZE = 32
 EPOCHS = 20
-NUM_CLASSES = 7  # Updated for the new dataset
+NUM_CLASSES = 7
 
-DATA_DIR = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/Cat Emotions.v1i.multiclass/train"
+DATA_DIR = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/Cat Emotions.v2i.multiclass/train"
 CSV_FILE = os.path.join(DATA_DIR, "_classes.csv")
-PRETRAINED_MODEL_PATH = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/cat_emotion_mobilenet_model.h5"
-FINE_TUNED_MODEL_PATH = "cat_emotion_mobilenet_finetuned_v1.h5"
+PRETRAINED_MODEL_PATH = "cat_emotion_mobilenet_model_v1.h5"
+FINE_TUNED_MODEL_PATH = "cat_emotion_mobilenet_finetuned_v2.h5"
 
 def create_mobilenet_model(input_shape, num_classes):
     base_model = MobileNetV2(input_shape=input_shape, include_top=False, weights='imagenet')
@@ -28,7 +28,7 @@ def create_mobilenet_model(input_shape, num_classes):
     x = GlobalAveragePooling2D()(x)
     x = Dense(512, activation='relu')(x)
     x = Dropout(0.5)(x)
-    outputs = Dense(num_classes, activation='softmax')(x)
+    outputs = Dense(num_classes, activation='sigmoid')(x)
     model = Model(inputs, outputs)
     return model
 
@@ -88,36 +88,29 @@ def prepare_data(csv_file, data_dir, image_width, image_height, batch_size):
     )
     return train_generator, validation_generator, class_columns, num_classes
 
-def build_and_compile_model(input_shape, num_classes):
-    # Create the MobileNetV2 base model, excluding the top (classification) layer
-    base_model = MobileNetV2(input_shape=input_shape, include_top=False, weights='imagenet')
+def build_and_compile_finetune_model(input_shape, num_classes, pretrained_model_path):
+    model = tf.keras.models.load_model(pretrained_model_path)
     
-    # Freeze the convolutional base
-    base_model.trainable = False
-        
-    # Create a new model on top of the pre-trained base
-    inputs = tf.keras.Input(shape=input_shape)
-    x = base_model(inputs, training=False)
-    x = GlobalAveragePooling2D()(x)
-    x = Dense(512, activation='relu')(x)
-    x = Dropout(0.5)(x)
-    outputs = Dense(num_classes, activation='softmax')(x)
-    
-    model = Model(inputs, outputs)
-    
-    model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
+    # Unfreeze the base model for fine-tuning
+    for layer in model.layers:
+        if isinstance(layer, tf.keras.Model) and layer.name.startswith('mobilenetv2'):
+            layer.trainable = True
+            
+    model.compile(optimizer=tf.keras.optimizers.Adam(1e-5),  # Lower learning rate for fine-tuning
+                  loss='binary_crossentropy',
                   metrics=['accuracy'])
     model.summary()
     return model
 
 def train_and_save_model(model, train_generator, validation_generator, epochs, batch_size):
+    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
     history = model.fit(
         train_generator,
         steps_per_epoch=int(np.ceil(train_generator.samples / batch_size)),
         epochs=epochs,
         validation_data=validation_generator,
-        validation_steps=int(np.ceil(validation_generator.samples / batch_size))
+        validation_steps=int(np.ceil(validation_generator.samples / batch_size)),
+        callbacks=[early_stopping]
     )
     model.save(FINE_TUNED_MODEL_PATH)
     print(f"Model trained and saved as {FINE_TUNED_MODEL_PATH}")
@@ -134,6 +127,8 @@ def evaluate_and_display_predictions(model_path, validation_generator, class_col
         plt.subplot(3, 3, i + 1)
         plt.imshow(validation_images[i])
         true_label = class_columns[np.argmax(validation_labels[i])].replace('Unlabeled', 'No Emotion')
+        # For multi-label classification with sigmoid, a threshold (e.g., 0.5) should be applied to predictions
+        # to determine all present labels. For simplicity in display, we're showing the label with the highest probability.
         predicted_label = class_columns[np.argmax(predictions[i])].replace('Unlabeled', 'No Emotion')
         plt.title(f"True: {true_label}\nPred: {predicted_label}")
         plt.axis('off')
@@ -144,7 +139,7 @@ def train_model():
         CSV_FILE, DATA_DIR, IMAGE_WIDTH, IMAGE_HEIGHT, BATCH_SIZE
     )
     
-    model = build_and_compile_model((IMAGE_WIDTH, IMAGE_HEIGHT, 3), num_classes)
+    model = build_and_compile_finetune_model((IMAGE_WIDTH, IMAGE_HEIGHT, 3), num_classes, PRETRAINED_MODEL_PATH)
     
     train_and_save_model(model, train_generator, validation_generator, EPOCHS, BATCH_SIZE)
     
