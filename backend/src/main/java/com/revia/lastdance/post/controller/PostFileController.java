@@ -20,12 +20,12 @@ public class PostFileController {
 
     @PostMapping
     public ResponseEntity<String> uploadFile(@PathVariable("postId") int postId,
-                                             @RequestParam("file") MultipartFile file) {
+                                             @RequestParam("files") MultipartFile[] files) {
         try {
-            fileService.uploadFile(file, postId);
-            return new ResponseEntity<>("File uploaded successfully", HttpStatus.CREATED);
+            fileService.uploadFile(files, postId);
+            return new ResponseEntity<>("Files uploaded successfully", HttpStatus.CREATED);
         } catch (IOException e) {
-            return new ResponseEntity<>("Failed to upload file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Failed to upload files: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

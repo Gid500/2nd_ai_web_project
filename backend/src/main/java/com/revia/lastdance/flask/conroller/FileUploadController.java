@@ -15,13 +15,23 @@ public class FileUploadController {
     @Autowired
     private FileUploadService fileUploadService;
 
-    @PostMapping("/uploadImage")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/uploadCatImage")
+    public ResponseEntity<?> uploadCatImage(@RequestParam("file") MultipartFile file) {
         try {
-            Map<String, Object> predictionResult = fileUploadService.uploadImageAndGetPrediction(file);
+            Map<String, Object> predictionResult = fileUploadService.uploadCatImageAndGetPrediction(file);
             return ResponseEntity.ok(predictionResult);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error uploading image: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error uploading cat image: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/uploadDogImage")
+    public ResponseEntity<?> uploadDogImage(@RequestParam("file") MultipartFile file) {
+        try {
+            Map<String, Object> predictionResult = fileUploadService.uploadDogImageAndGetPrediction(file);
+            return ResponseEntity.ok(predictionResult);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error uploading dog image: " + e.getMessage());
         }
     }
 }

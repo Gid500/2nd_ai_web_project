@@ -1,11 +1,13 @@
 import React from 'react';
-import ImageUploadForm from './components/ImageUploadForm';
+import CatImageUploadForm from './components/CatImageUploadForm';
+import DogImageUploadForm from './components/DogImageUploadForm';
 
 function Home() {
     return (
         <>
-            
-            <ImageUploadForm />
+            <h1>Home Page</h1>
+            <CatImageUploadForm />
+            <DogImageUploadForm />
         </>
     );
 }
