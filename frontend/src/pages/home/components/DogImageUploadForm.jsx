@@ -13,10 +13,10 @@ const DogImageUploadForm = () => {
             return () => URL.revokeObjectURL(objectUrl);
         }
         setImagePreview(null);
-    }, [file]);
+    });
 
     return (
-        <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px', maxWidth: '500px', margin: '20px auto' }}>
+        <div style={{ padding: '20px', borderRadius: '8px', maxWidth: '500px', margin: '20px auto' }}>
             <h2>강아지 이미지 업로드</h2>
             <input type="file" onChange={handleFileChange} accept="image/*" style={{ marginBottom: '10px', display: 'block' }} />
             <button onClick={handleUpload} disabled={!file || uploading} style={{
@@ -75,7 +75,7 @@ const DogImageUploadForm = () => {
             {analysisData && analysisData.openaiAnalysis && (
                 <div style={{ marginTop: '20px' }}>
                     <h3>OpenAI 분석 결과:</h3>
-                    <p>{analysisData.openaiAnalysis}</p>
+                    <p>{analysisData.openaiAnalysis.replace('{analysis=', '').replace('}', '')}</p>
                 </div>
             )}
 
