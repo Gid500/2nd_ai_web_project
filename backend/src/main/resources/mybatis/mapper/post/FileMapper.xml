@@ -7,16 +7,20 @@
         <result property="postId" column="post_id"/>
         <result property="uploadName" column="upload_name"/>
         <result property="fileType" column="file_type"/>
-        <result property="fileSize" column="file_size"/>
+        <result property="imgUrl" column="img_url" jdbcType="BLOB"/>
     </resultMap>
 
     <insert id="insertFile" parameterType="com.revia.lastdance.post.vo.FileVO" useGeneratedKeys="true" keyProperty="fileId">
-        INSERT INTO tb_file (post_id, upload_name, file_type, file_size)
-        VALUES (#{postId}, #{uploadName}, #{fileType}, #{fileSize})
+        INSERT INTO tb_file (post_id, upload_name, file_type, img_url)
+        VALUES (#{postId}, #{uploadName}, #{fileType}, #{imgUrl})
     </insert>
 
     <select id="selectFilesByPostId" resultMap="fileResultMap">
         SELECT * FROM tb_file WHERE post_id = #{postId}
+    </select>
+
+    <select id="selectFileById" resultMap="fileResultMap">
+        SELECT * FROM tb_file WHERE file_id = #{fileId}
     </select>
 
     <delete id="deleteFile">

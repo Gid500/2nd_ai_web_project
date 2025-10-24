@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileService {
@@ -25,26 +24,30 @@ public class FileService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    public void uploadFile(MultipartFile file, int postId) throws IOException {
+    public void uploadFile(MultipartFile[] files, int postId) throws IOException {
         // Ensure the upload directory exists
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        String originalFileName = file.getOriginalFilename();
-        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
-        Path filePath = uploadPath.resolve(uniqueFileName);
-        Files.copy(file.getInputStream(), filePath);
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                String originalFileName = file.getOriginalFilename();
+                String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+                Path filePath = uploadPath.resolve(uniqueFileName);
+                Files.copy(file.getInputStream(), filePath);
 
-        FileVO fileVO = new FileVO();
-        fileVO.setPostId(postId);
-        fileVO.setUploadName(uniqueFileName);
-        fileVO.setFileType(file.getContentType());
-        fileVO.setFileSize((int) file.getSize());
+                FileVO fileVO = new FileVO();
+                fileVO.setPostId(postId);
+                fileVO.setUploadName(uniqueFileName);
+                fileVO.setFileType(file.getContentType());
+                fileVO.setImgUrl(file.getBytes());
 
-        fileMapper.insertFile(fileVO);
+                fileMapper.insertFile(fileVO);
+            }
+        }
     }
 
     public List<FileVO> getFilesByPostId(int postId) {
@@ -52,7 +55,16 @@ public class FileService {
     }
 
     public void deleteFile(int fileId) {
-        // TODO: Also delete the file from the file system
+        FileVO fileVO = fileMapper.selectFileById(fileId);
+        if (fileVO != null) {
+            try {
+                Path filePath = Paths.get(uploadDir, fileVO.getUploadName());
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                // Log the exception or handle it as appropriate for your application
+                System.err.println("Failed to delete file from file system: " + e.getMessage());
+            }
+        }
         fileMapper.deleteFile(fileId);
     }
 }

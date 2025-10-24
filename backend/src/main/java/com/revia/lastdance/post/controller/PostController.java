@@ -38,14 +38,14 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/{postId}")
+    @PostMapping("/update/{postId}")
     public ResponseEntity<Void> updatePost(@PathVariable("postId") int postId, @RequestBody PostVO postVO) {
         postVO.setPostId(postId);
         postService.updatePost(postVO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{postId}")
+    @PostMapping("/delete/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable("postId") int postId) {
         postService.deletePost(postId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

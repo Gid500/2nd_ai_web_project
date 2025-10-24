@@ -22,6 +22,7 @@ def create_app():
 
     return app
 
+
 # 애플리케이션 인스턴스를 생성합니다.
 app = create_app()
 

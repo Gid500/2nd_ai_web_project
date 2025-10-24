@@ -30,10 +30,10 @@ public class FileUploadService {
     private RestTemplate restTemplate; // Assuming RestTemplate is configured
 
     private final String UPLOAD_DIR = "/home/qod120/Documents/project/2nd_ai_web_project/ai_backend/uploaded_img/";
-    private final String FLASK_AI_PREDICT_URL = "http://localhost:5000/upload-image"; // Flask AI backend URL
+    private final String FLASK_AI_CAT_PREDICT_URL = "http://localhost:5000/upload-cat-image"; // Flask AI backend URL for cat
+    private final String FLASK_AI_DOG_PREDICT_URL = "http://localhost:5000/upload-dog-image"; // Flask AI backend URL for dog
 
-    public Map<String, Object> uploadImageAndGetPrediction(MultipartFile file) throws Exception {
-        // Send image to Flask AI backend for prediction
+    private Map<String, Object> sendImageToFlask(MultipartFile file, String flaskUrl) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -47,12 +47,20 @@ public class FileUploadService {
 
         HttpEntity<MultiValueMap<String, Object>> flaskRequestEntity = new HttpEntity<>(flaskBody, headers);
 
-        ResponseEntity<Map> flaskResponse = restTemplate.postForEntity(FLASK_AI_PREDICT_URL, flaskRequestEntity, Map.class);
+        ResponseEntity<Map> flaskResponse = restTemplate.postForEntity(flaskUrl, flaskRequestEntity, Map.class);
 
         if (flaskResponse.getStatusCode().is2xxSuccessful()) {
             return flaskResponse.getBody();
         } else {
             throw new RuntimeException("Failed to get prediction from Flask AI backend: " + flaskResponse.getStatusCode());
         }
+    }
+
+    public Map<String, Object> uploadCatImageAndGetPrediction(MultipartFile file) throws Exception {
+        return sendImageToFlask(file, FLASK_AI_CAT_PREDICT_URL);
+    }
+
+    public Map<String, Object> uploadDogImageAndGetPrediction(MultipartFile file) throws Exception {
+        return sendImageToFlask(file, FLASK_AI_DOG_PREDICT_URL);
     }
 }

@@ -12,12 +12,51 @@
         <result property="updatedId" column="updated_id"/>
     </resultMap>
 
-    <select id="selectAllPosts" resultMap="postResultMap">
-        SELECT * FROM tb_post
+    <resultMap id="fileNestedResultMap" type="com.revia.lastdance.post.vo.FileVO">
+        <id property="fileId" column="file_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="uploadName" column="upload_name"/>
+        <result property="fileType" column="file_type"/>
+        <result property="imgUrl" column="img_url" jdbcType="BLOB"/>
+    </resultMap>
+
+    <resultMap id="postWithFilesResultMap" type="com.revia.lastdance.post.vo.PostVO" extends="postResultMap">
+        <collection property="files" ofType="com.revia.lastdance.post.vo.FileVO" resultMap="fileNestedResultMap"/>
+    </resultMap>
+
+    <select id="selectAllPosts" resultMap="postWithFilesResultMap">
+        SELECT
+            p.post_id,
+            p.user_id,
+            p.post_content,
+            p.created_date,
+            p.created_id,
+            p.updated_date,
+            p.updated_id,
+            f.file_id,
+            f.upload_name,
+            f.file_type,
+            f.img_url
+        FROM tb_post p
+        LEFT JOIN tb_file f ON p.post_id = f.post_id
     </select>
 
-    <select id="selectPostById" resultMap="postResultMap">
-        SELECT * FROM tb_post WHERE post_id = #{postId}
+    <select id="selectPostById" resultMap="postWithFilesResultMap">
+        SELECT
+            p.post_id,
+            p.user_id,
+            p.post_content,
+            p.created_date,
+            p.created_id,
+            p.updated_date,
+            p.updated_id,
+            f.file_id,
+            f.upload_name,
+            f.file_type,
+            f.img_url
+        FROM tb_post p
+        LEFT JOIN tb_file f ON p.post_id = f.post_id
+        WHERE p.post_id = #{postId}
     </select>
 
     <insert id="insertPost" parameterType="com.revia.lastdance.post.vo.PostVO" useGeneratedKeys="true" keyProperty="postId">

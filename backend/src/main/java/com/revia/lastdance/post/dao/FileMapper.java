@@ -9,5 +9,6 @@ import java.util.List;
 public interface FileMapper {
     void insertFile(FileVO fileVO);
     List<FileVO> selectFilesByPostId(int postId);
+    FileVO selectFileById(int fileId);
     void deleteFile(int fileId);
 }

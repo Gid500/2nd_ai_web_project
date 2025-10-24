@@ -3,6 +3,7 @@ package com.revia.lastdance.post.vo;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 public class PostVO {
@@ -13,4 +14,5 @@ public class PostVO {
     private String createdId;
     private Timestamp updatedDate;
     private String updatedId;
+    private List<FileVO> files;
 }

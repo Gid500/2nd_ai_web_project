@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import useImageUpload from '../hook/useImageUpload';
+import useDogImageUpload from '../hook/useDogImageUpload';
 
-const ImageUploadForm = () => {
-    const { file, uploading, error, result, handleFileChange, handleUpload } = useImageUpload();
+const DogImageUploadForm = () => {
+    const { file, uploading, error, result, handleFileChange, handleUpload } = useDogImageUpload();
     const [imagePreview, setImagePreview] = useState(null);
 
     useEffect(() => {
@@ -17,7 +17,7 @@ const ImageUploadForm = () => {
 
     return (
         <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px', maxWidth: '500px', margin: '20px auto' }}>
-            <h2>이미지 업로드</h2>
+            <h2>강아지 이미지 업로드</h2>
             <input type="file" onChange={handleFileChange} accept="image/*" style={{ marginBottom: '10px', display: 'block' }} />
             <button onClick={handleUpload} disabled={!file || uploading} style={{
                 padding: '10px 15px',
@@ -61,8 +61,8 @@ const ImageUploadForm = () => {
                         <tbody>
                             {Object.entries(result.all_predictions).map(([emotion, confidence]) => (
                                 <tr key={emotion}>
-                                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{emotion}</td>
-                                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{(confidence * 100).toFixed(2)}%</td>
+                                    <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{emotion}</td>
+                                    <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{(confidence * 100).toFixed(2)}%</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -75,4 +75,4 @@ const ImageUploadForm = () => {
     );
 };
 
-export default ImageUploadForm;
+export default DogImageUploadForm;
