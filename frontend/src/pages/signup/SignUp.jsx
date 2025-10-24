@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useInput from '../../common/hook/useInput';
 import { useSignupApi } from './api/signupApi';
 import { useAuth } from '../../common/hook/useAuth';
+import './SignUp.css'; // Import the CSS file
 
 function SignUp() {
     const navigate = useNavigate();
@@ -22,8 +23,9 @@ function SignUp() {
     const [emailVerified, setEmailVerified] = useState(false);
     const [countdown, setCountdown] = useState(0);
     const [isIdUnique, setIsIdUnique] = useState(false);
-    const [isEmailUnique, setIsEmailUnique] = useState(false); // This will be set after email duplication check within sendVerificationEmail
+    const [isEmailUnique, setIsEmailUnique] = useState(false);
     const [isNicknameUnique, setIsNicknameUnique] = useState(false);
+    const [passwordMatchMessage, setPasswordMatchMessage] = useState({ message: '', type: '' }); // 비밀번호 일치 메시지 상태 추가
 
     useEffect(() => {
         let timer;
@@ -32,6 +34,19 @@ function SignUp() {
         }
         return () => clearTimeout(timer);
     }, [countdown]);
+
+    // 비밀번호와 비밀번호 확인 필드 값이 변경될 때마다 일치 여부 확인
+    useEffect(() => {
+        if (password.value && confirmPassword.value) {
+            if (password.value === confirmPassword.value) {
+                setPasswordMatchMessage({ message: '비밀번호가 일치합니다.', type: 'success' });
+            } else {
+                setPasswordMatchMessage({ message: '비밀번호가 일치하지 않습니다.', type: 'error' });
+            }
+        } else {
+            setPasswordMatchMessage({ message: '', type: '' });
+        }
+    }, [password.value, confirmPassword.value]);
 
     const handleSendVerificationEmail = async () => {
         setError('');
@@ -167,43 +182,43 @@ function SignUp() {
     };
 
     return (
-        <div style={styles.container}>
-            <h2 style={styles.header}>회원가입</h2>
-            <form onSubmit={handleSubmit} style={styles.form}>
-                {error && <p style={styles.error}>{error}</p>}
-                {success && <p style={styles.success}>{success}</p>}
+        <div className="signup-container">
+            <h2 className="signup-header">회원가입</h2>
+            <form onSubmit={handleSubmit} className="signup-form">
+                {error && <p className="signup-error">{error}</p>}
+                {success && <p className="signup-success">{success}</p>}
 
-                <div style={styles.formGroup}>
-                    <label htmlFor="id" style={styles.label}>아이디:</label>
-                    <div style={styles.inputWithButton}>
+                <div className="signup-form-group">
+                    <label htmlFor="id" className="signup-label">아이디:</label>
+                    <div className="signup-input-with-button">
                         <input
                             type="text"
                             id="id"
                             {...id}
                             required
-                            style={styles.input}
+                            className="signup-input"
                             onChange={(e) => { id.onChange(e); setIsIdUnique(false); }}
                         />
                         <button
                             type="button"
                             onClick={handleCheckIdDuplication}
                             disabled={!id.value || isIdUnique}
-                            style={styles.checkButton}
+                            className="signup-check-button"
                         >
                             {isIdUnique ? '확인 완료' : '중복 확인'}
                         </button>
                     </div>
                 </div>
 
-                <div style={styles.formGroup}>
-                    <label htmlFor="email" style={styles.label}>이메일:</label>
-                    <div style={styles.inputWithButton}>
+                <div className="signup-form-group">
+                    <label htmlFor="email" className="signup-label">이메일:</label>
+                    <div className="signup-input-with-button">
                         <input
                             type="email"
                             id="email"
                             {...email}
                             required
-                            style={styles.input}
+                            className="signup-input"
                             disabled={emailSent}
                             onChange={(e) => { email.onChange(e); setIsEmailUnique(false); setEmailSent(false); setEmailVerified(false); setCountdown(0); }}
                         />
@@ -211,7 +226,7 @@ function SignUp() {
                             type="button"
                             onClick={handleSendVerificationEmail}
                             disabled={!email.value || emailSent}
-                            style={styles.sendCodeButton}
+                            className="signup-send-code-button"
                         >
                             {emailSent && countdown > 0 ? `재전송 (${countdown}s)` : '인증 코드 전송'}
                         </button>
@@ -219,22 +234,22 @@ function SignUp() {
                 </div>
 
                 {emailSent && (
-                    <div style={styles.formGroup}>
-                        <label htmlFor="emailVerification" style={styles.label}>인증 코드:</label>
-                        <div style={styles.inputWithButton}>
+                    <div className="signup-form-group">
+                        <label htmlFor="emailVerification" className="signup-label">인증 코드:</label>
+                        <div className="signup-input-with-button">
                             <input
                                 type="text"
                                 id="emailVerification"
                                 {...verificationCode}
                                 required
-                                style={styles.input}
+                                className="signup-input"
                                 disabled={emailVerified}
                             />
                             <button
                                 type="button"
                                 onClick={handleVerifyEmailCode}
                                 disabled={emailVerified || !emailSent}
-                                style={styles.verifyCodeButton}
+                                className="signup-verify-code-button"
                             >
                                 {emailVerified ? '인증 완료' : '코드 확인'}
                             </button>
@@ -242,164 +257,64 @@ function SignUp() {
                     </div>
                 )}
 
-                <div style={styles.formGroup}>
-                    <label htmlFor="password" style={styles.label}>비밀번호:</label>
+                <div className="signup-form-group">
+                    <label htmlFor="password" className="signup-label">비밀번호:</label>
                     <input
                         type="password"
                         id="password"
                         {...password}
                         required
-                        style={styles.input}
+                        className="signup-input"
                     />
                 </div>
-                <div style={styles.formGroup}>
-                    <label htmlFor="confirmPassword" style={styles.label}>비밀번호 확인:</label>
+                <div className="signup-form-group">
+                    <label htmlFor="confirmPassword" className="signup-label">비밀번호 확인:</label>
                     <input
                         type="password"
                         id="confirmPassword"
                         {...confirmPassword}
                         required
-                        style={styles.input}
+                        className="signup-input"
                     />
+                    {passwordMatchMessage.message && (
+                        <p className={passwordMatchMessage.type === 'error' ? 'signup-password-mismatch' : 'signup-password-match'}>
+                            {passwordMatchMessage.message}
+                        </p>
+                    )}
                 </div>
 
 
-                <div style={styles.formGroup}>
-                    <label htmlFor="nickname" style={styles.label}>닉네임:</label>
-                    <div style={styles.inputWithButton}>
+                <div className="signup-form-group">
+                    <label htmlFor="nickname" className="signup-label">닉네임:</label>
+                    <div className="signup-input-with-button">
                         <input
                             type="text"
                             id="nickname"
                             {...nickname}
                             required
-                            style={styles.input}
+                            className="signup-input"
                             onChange={(e) => { nickname.onChange(e); setIsNicknameUnique(false); }}
                         />
                         <button
                             type="button"
                             onClick={handleCheckNicknameDuplication}
                             disabled={!nickname.value || isNicknameUnique}
-                            style={styles.checkButton}
+                            className="signup-check-button"
                         >
                             {isNicknameUnique ? '확인 완료' : '중복 확인'}
                         </button>
                     </div>
                 </div>
 
-                <button type="submit" style={styles.button} disabled={!emailVerified || !isIdUnique || !isNicknameUnique}>
+                <button type="submit" className="signup-button" disabled={!emailVerified || !isIdUnique || !isNicknameUnique}>
                     회원가입
                 </button>
             </form>
-            <p style={styles.loginLink}>
-                이미 계정이 있으신가요? <span onClick={() => navigate('/signin')} style={styles.link}>로그인</span>
+            <p className="signup-login-link">
+                이미 계정이 있으신가요? <span onClick={() => navigate('/signin')} className="signup-link">로그인</span>
             </p>
         </div>
     );
 }
-
-const styles = {
-    container: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        backgroundColor: '#f0f2f5',
-        padding: '20px',
-    },
-    header: {
-        color: '#333',
-        marginBottom: '30px',
-    },
-    form: {
-        backgroundColor: '#fff',
-        padding: '40px',
-        borderRadius: '8px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        width: '100%',
-        maxWidth: '400px',
-    },
-    formGroup: {
-        marginBottom: '20px',
-    },
-    label: {
-        display: 'block',
-        marginBottom: '8px',
-        color: '#555',
-        fontWeight: 'bold',
-    },
-    input: {
-        flexGrow: 1,
-        padding: '10px',
-        border: '1px solid #ddd',
-        borderRadius: '4px',
-        fontSize: '16px',
-    },
-    inputWithButton: {
-        display: 'flex',
-        gap: '10px',
-        alignItems: 'center',
-    },
-    sendCodeButton: {
-        padding: '10px 15px',
-        backgroundColor: '#28a745',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '4px',
-        fontSize: '14px',
-        cursor: 'pointer',
-        whiteSpace: 'nowrap',
-    },
-    verifyCodeButton: {
-        padding: '10px 15px',
-        backgroundColor: '#007bff',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '4px',
-        fontSize: '14px',
-        cursor: 'pointer',
-        whiteSpace: 'nowrap',
-    },
-    checkButton: {
-        padding: '10px 15px',
-        backgroundColor: '#ffc107',
-        color: '#333',
-        border: 'none',
-        borderRadius: '4px',
-        fontSize: '14px',
-        cursor: 'pointer',
-        whiteSpace: 'nowrap',
-    },
-    button: {
-        width: '100%',
-        padding: '12px',
-        backgroundColor: '#007bff',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '4px',
-        fontSize: '18px',
-        cursor: 'pointer',
-        marginTop: '20px',
-    },
-    error: {
-        color: 'red',
-        marginBottom: '15px',
-        textAlign: 'center',
-    },
-    success: {
-        color: 'green',
-        marginBottom: '15px',
-        textAlign: 'center',
-    },
-    loginLink: {
-        marginTop: '20px',
-        color: '#555',
-    },
-    link: {
-        color: '#007bff',
-        cursor: 'pointer',
-        textDecoration: 'underline',
-    },
-};
 
 export default SignUp;
