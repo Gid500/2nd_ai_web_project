@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Header from './common/Header';
 import Intro from './pages/intro/Intro';
+import SignIn from './pages/signin/SignIn';
 import Cat from './pages/home/cat';
 import Dog from './pages/home/dog';
 import './App.css';
@@ -11,7 +12,9 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Intro />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/cat" element={<Cat />} />
+        <Route path="/dog" element={<Dog />} />
+        
         <Route path="/signin" element={<SignIn />} /> {/* Add SignIn route */}
       </Routes>
     </>
