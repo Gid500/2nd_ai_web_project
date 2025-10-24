@@ -10,7 +10,8 @@ public class PostVO {
     private int postId;
     private String userId;
     private String postTitle; // Added
-    private byte[] postContent; // BLOB type
+    private String postContent;
+    private Boolean isNotice;
     private Timestamp createdDate;
     private String createdId;
     private Timestamp updatedDate;
