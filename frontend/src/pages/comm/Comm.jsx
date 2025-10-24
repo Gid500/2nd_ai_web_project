@@ -3,6 +3,7 @@ import { useCommPosts } from './hook/useCommPosts';
 import PostList from './components/PostList';
 import PostDetail from './components/PostDetail';
 import PostForm from './components/PostForm';
+import LoadingSpinner from '../../common/components/LoadingSpinner';
 
 function Comm() {
     const { posts, selectedPost, loading, error, fetchPosts, fetchPostById, addPost, editPost, removePost, setSelectedPost } = useCommPosts();
@@ -32,7 +33,8 @@ function Comm() {
     const handleSubmitForm = async (postData) => {
         if (editingPost && editingPost.postId) { // Check if editingPost and postId exist for edit mode
             await editPost(editingPost.postId, postData);
-        } else {
+        }
+        else {
             await addPost(postData);
         }
         setShowForm(false);
@@ -44,7 +46,11 @@ function Comm() {
         setEditingPost(null);
     };
 
-    if (loading) return <p>로딩 중...</p>;
+    if (loading) return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <LoadingSpinner />
+        </div>
+    );
     if (error) return <p>에러 발생: {error.message}</p>;
 
     return (
