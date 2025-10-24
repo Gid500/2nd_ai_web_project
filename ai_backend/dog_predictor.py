@@ -7,10 +7,7 @@ import os
 IMAGE_WIDTH, IMAGE_HEIGHT = 128, 128
 
 # Define model path
-DOG_MODEL_PATH = (
-    "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/"
-    "dog_emotion_mobilenet_finetuned_v2.h5"
-)
+DOG_MODEL_PATH = "C:/Users/admin/Desktop/project/2nd_ai_web_project/ai_model/dog_emotion_mobilenet_finetuned_v2.h5"
 
 # Define class labels for the dog model
 DOG_CLASS_LABELS = ['Happy', 'Sad', 'Angry', 'Relaxed', 'Scared', 'Neutral']
