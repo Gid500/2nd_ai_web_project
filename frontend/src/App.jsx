@@ -16,7 +16,10 @@ function App() {
         <Route path="/cat" element={<Cat />} />
         <Route path="/dog" element={<Dog />} />
         <Route path='/admin' element={<Admin />} />
-        
+        <Route path="/comm" element={< Comm/>} />
+
+        {/* <Route path="/explan" element={<Explan />} /> */}
+
         <Route path="/signin" element={<SignIn />} /> {/* Add SignIn route */}
       </Routes>
     </>
