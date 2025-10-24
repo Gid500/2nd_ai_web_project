@@ -8,3 +8,6 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploaded_img')
 
 # 허용할 이미지 확장자 설정
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+# OpenAI API 키 설정 (환경 변수에서 로드)
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')

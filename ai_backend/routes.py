@@ -2,7 +2,7 @@
 
 from flask import Blueprint, request, jsonify
 from werkzeug.utils import secure_filename
-from utils import allowed_file, hash_filename
+from utils import allowed_file, hash_filename, analyze_prediction_with_openai
 from cat_predictor import predict_cat_emotion
 from dog_predictor import predict_dog_emotion
 
@@ -10,7 +10,7 @@ from dog_predictor import predict_dog_emotion
 # URL 접두사를 '/api' 등으로 설정하여 API 엔드포인트를 구분할 수도 있습니다.
 upload_bp = Blueprint('upload_bp', __name__)
 
-def process_image_upload(file, prediction_function):
+def process_image_upload(file, prediction_function, animal_type):
     """
     공통 이미지 업로드 및 예측 처리 로직
     """
@@ -34,6 +34,11 @@ def process_image_upload(file, prediction_function):
         }
         response_data.update(prediction_result)
 
+        # OpenAI를 사용하여 예측 결과 분석
+        openai_analysis = analyze_prediction_with_openai(prediction_result, animal_type)
+        print(f"OpenAI Analysis for {filename}: {openai_analysis}")
+        response_data['openai_analysis'] = openai_analysis
+
         return jsonify(response_data), 200
     else:
         # 7. 허용되지 않은 파일 형식인 경우 400 에러를 반환합니다.
@@ -48,7 +53,7 @@ def upload_cat_image():
         return jsonify({'message': 'No file part (파일 필드가 없습니다)'}), 400
     
     file = request.files['file']
-    return process_image_upload(file, predict_cat_emotion)
+    return process_image_upload(file, predict_cat_emotion, "cat")
 
 
 @upload_bp.route('/upload-dog-image', methods=['POST'])
@@ -59,4 +64,4 @@ def upload_dog_image():
         return jsonify({'message': 'No file part (파일 필드가 없습니다)'}), 400
     
     file = request.files['file']
-    return process_image_upload(file, predict_dog_emotion)
+    return process_image_upload(file, predict_dog_emotion, "dog")
