@@ -45,7 +45,7 @@ public class SessionController {
         return ResponseEntity.status(401).body(responseBody);
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/session-logout")
     public ResponseEntity<String> logout(HttpSession session, HttpServletResponse response) {
         log.info("Attempting to logout. Session ID before invalidate: {}", session.getId());
         session.invalidate(); // Invalidate the current session

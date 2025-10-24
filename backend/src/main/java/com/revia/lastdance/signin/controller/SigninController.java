@@ -36,7 +36,7 @@ public class SigninController {
         return ResponseEntity.ok("Logout successful");
     }
 
-    @GetMapping("/session-status")
+    @GetMapping("/auth-status")
     public ResponseEntity<?> getSessionStatus(HttpSession session) {
         // Check if the session is new or if a specific attribute exists to determine login status
         boolean loggedIn = session.getAttribute("loggedInUser") != null; // Assuming "loggedInUser" is set upon successful login
