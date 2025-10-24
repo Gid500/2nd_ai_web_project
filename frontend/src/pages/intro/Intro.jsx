@@ -37,7 +37,7 @@ function Intro() {
             className="dog-img"
           />
             <div className='cat_text'>
-              <p>우리 강아지는 어떤생각해?</p>
+              <p>우리 멍멍이는 어떤생각해?</p>
             </div>
           
         </div>
