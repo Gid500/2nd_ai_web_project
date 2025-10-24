@@ -5,7 +5,6 @@
     <select id="findUserByEmail" parameterType="string" resultType="com.revia.lastdance.signup.vo.UserVO">
         SELECT
             tu.user_id,
-            tu.user_name,
             tu.user_nickname,
             tu.user_email,
             tu.user_pwd,
@@ -27,7 +26,6 @@
     <select id="findUserByEmailOrUserId" parameterType="string" resultType="com.revia.lastdance.signup.vo.UserVO">
         SELECT
             tu.user_id,
-            tu.user_name,
             tu.user_nickname,
             tu.user_email,
             tu.user_pwd,
@@ -49,7 +47,6 @@
     <select id="findUserByUserId" parameterType="string" resultType="com.revia.lastdance.signup.vo.UserVO">
         SELECT
             tu.user_id,
-            tu.user_name,
             tu.user_nickname,
             tu.user_email,
             tu.user_pwd,

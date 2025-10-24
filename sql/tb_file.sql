@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `lastdance`.`tb_file` (
   `upload_name` VARCHAR(256) NOT NULL,
   `img_url` BLOB NOT NULL,
   `file_type` VARCHAR(30) NOT NULL,
-  `img_url` INT NULL DEFAULT NULL,
+
   PRIMARY KEY (`file_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4

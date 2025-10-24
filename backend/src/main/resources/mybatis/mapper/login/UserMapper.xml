@@ -7,7 +7,6 @@
     <select id="findByUserIdOrEmail" resultType="com.revia.lastdance.signup.vo.UserVO">
         SELECT
             user_id,
-            user_name,
             user_nickname,
             user_email,
             user_pwd,

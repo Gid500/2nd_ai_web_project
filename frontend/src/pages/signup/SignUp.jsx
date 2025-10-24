@@ -19,13 +19,16 @@ function SignUp() {
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [emailVerificationMessage, setEmailVerificationMessage] = useState('');
+    const [idVerificationMessage, setIdVerificationMessage] = useState('');
+    const [nicknameVerificationMessage, setNicknameVerificationMessage] = useState('');
     const [emailSent, setEmailSent] = useState(false);
     const [emailVerified, setEmailVerified] = useState(false);
     const [countdown, setCountdown] = useState(0);
     const [isIdUnique, setIsIdUnique] = useState(false);
     const [isEmailUnique, setIsEmailUnique] = useState(false);
     const [isNicknameUnique, setIsNicknameUnique] = useState(false);
-    const [passwordMatchMessage, setPasswordMatchMessage] = useState({ message: '', type: '' }); // 비밀번호 일치 메시지 상태 추가
+    const [passwordMatchMessage, setPasswordMatchMessage] = useState({ message: '', type: '' }); // 비밀번호 일치 메시지 추가
 
     useEffect(() => {
         let timer;
@@ -78,7 +81,8 @@ function SignUp() {
 
     const handleVerifyEmailCode = async () => {
         setError('');
-        setSuccess('');
+        setSuccess(''); // Clear general success message
+        setEmailVerificationMessage(''); // Clear previous email verification message
         if (!email.value || !verificationCode.value) {
             setError('이메일과 인증 코드를 모두 입력해주세요.');
             return;
@@ -87,7 +91,7 @@ function SignUp() {
             const response = await verifyEmailCode(email.value, verificationCode.value);
             if (response.isVerified) {
                 setEmailVerified(true);
-                setSuccess('이메일이 성공적으로 인증되었습니다.');
+                setEmailVerificationMessage('이메일이 성공적으로 인증되었습니다.'); // Set specific message
             } else {
                 setError('인증 코드가 일치하지 않습니다.');
             }
@@ -99,6 +103,7 @@ function SignUp() {
     const handleCheckIdDuplication = async () => {
         setError('');
         setSuccess('');
+        setIdVerificationMessage(''); // Clear previous ID verification message
         if (!id.value) {
             setError('아이디를 입력해주세요.');
             return;
@@ -107,7 +112,7 @@ function SignUp() {
             const response = await checkIdDuplication(id.value);
             if (response.isUnique) {
                 setIsIdUnique(true);
-                setSuccess('사용 가능한 아이디입니다.');
+                setIdVerificationMessage('사용 가능한 아이디입니다.'); // Set specific message
             } else {
                 setIsIdUnique(false);
                 setError('이미 사용 중인 아이디입니다.');
@@ -120,6 +125,7 @@ function SignUp() {
     const handleCheckNicknameDuplication = async () => {
         setError('');
         setSuccess('');
+        setNicknameVerificationMessage(''); // Clear previous nickname verification message
         if (!nickname.value) {
             setError('닉네임을 입력해주세요.');
             return;
@@ -128,7 +134,7 @@ function SignUp() {
             const response = await checkNicknameDuplication(nickname.value);
             if (response.isUnique) {
                 setIsNicknameUnique(true);
-                setSuccess('사용 가능한 닉네임입니다.');
+                setNicknameVerificationMessage('사용 가능한 닉네임입니다.'); // Set specific message
             } else {
                 setIsNicknameUnique(false);
                 setError('이미 사용 중인 닉네임입니다.');
@@ -197,7 +203,7 @@ function SignUp() {
                             {...id}
                             required
                             className="signup-input"
-                            onChange={(e) => { id.onChange(e); setIsIdUnique(false); }}
+                            onChange={(e) => { id.onChange(e); setIsIdUnique(false); setIdVerificationMessage(''); }}
                         />
                         <button
                             type="button"
@@ -208,6 +214,9 @@ function SignUp() {
                             {isIdUnique ? '확인 완료' : '중복 확인'}
                         </button>
                     </div>
+                    {idVerificationMessage && isIdUnique && (
+                        <p className="signup-success">{idVerificationMessage}</p>
+                    )}
                 </div>
 
                 <div className="signup-form-group">
@@ -220,7 +229,7 @@ function SignUp() {
                             required
                             className="signup-input"
                             disabled={emailSent}
-                            onChange={(e) => { email.onChange(e); setIsEmailUnique(false); setEmailSent(false); setEmailVerified(false); setCountdown(0); }}
+                            onChange={(e) => { email.onChange(e); setIsEmailUnique(false); setEmailSent(false); setEmailVerified(false); setCountdown(0); setEmailVerificationMessage(''); }}
                         />
                         <button
                             type="button"
@@ -254,6 +263,9 @@ function SignUp() {
                                 {emailVerified ? '인증 완료' : '코드 확인'}
                             </button>
                         </div>
+                        {emailVerificationMessage && emailVerified && (
+                            <p className="signup-success">{emailVerificationMessage}</p>
+                        )}
                     </div>
                 )}
 
@@ -293,7 +305,7 @@ function SignUp() {
                             {...nickname}
                             required
                             className="signup-input"
-                            onChange={(e) => { nickname.onChange(e); setIsNicknameUnique(false); }}
+                            onChange={(e) => { nickname.onChange(e); setIsNicknameUnique(false); setNicknameVerificationMessage(''); }}
                         />
                         <button
                             type="button"
@@ -304,6 +316,9 @@ function SignUp() {
                             {isNicknameUnique ? '확인 완료' : '중복 확인'}
                         </button>
                     </div>
+                    {nicknameVerificationMessage && isNicknameUnique && (
+                        <p className="signup-success">{nicknameVerificationMessage}</p>
+                    )}
                 </div>
 
                 <button type="submit" className="signup-button" disabled={!emailVerified || !isIdUnique || !isNicknameUnique}>
