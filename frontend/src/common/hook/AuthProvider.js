@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
     const checkLoginStatus = async () => {
         try {
-            const response = await api.get('/api/session-status');
+            const response = await api.get('/api/auth-status');
             setIsLoggedIn(response.data.loggedIn);
         } catch (error) {
             console.error('Failed to check login status:', error);
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await api.post('/api/logout');
+            await api.post('/api/session-logout');
             setIsLoggedIn(false);
             alert('로그아웃 되었습니다.');
         } catch (error) {
