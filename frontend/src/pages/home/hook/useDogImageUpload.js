@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { uploadDogImage } from '../api/uploadApi';
+import { useOpenAIAnalysis } from './useOpenAIAnalysis';
 
 const useDogImageUpload = () => {
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState(null);
     const [result, setResult] = useState(null);
+
+    const { analysisData, loading: analysisLoading, error: analysisError, fetchAnalysis } = useOpenAIAnalysis();
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
@@ -26,6 +29,8 @@ const useDogImageUpload = () => {
         try {
             const response = await uploadDogImage(file);
             setResult(response);
+            // Fetch OpenAI analysis after successful image upload
+            await fetchAnalysis(file, "dog");
         } catch (err) {
             setError('업로드 실패: ' + (err.response?.data || err.message));
         } finally {
@@ -38,6 +43,9 @@ const useDogImageUpload = () => {
         uploading,
         error,
         result,
+        analysisData,
+        analysisLoading,
+        analysisError,
         handleFileChange,
         handleUpload,
     };

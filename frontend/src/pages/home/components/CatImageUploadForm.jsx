@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import useCatImageUpload from '../hook/useCatImageUpload';
 
 const CatImageUploadForm = () => {
-    const { file, uploading, error, result, handleFileChange, handleUpload } = useCatImageUpload();
+    const { file, uploading, error, result, analysisData, analysisLoading, analysisError, handleFileChange, handleUpload } = useCatImageUpload();
     const [imagePreview, setImagePreview] = useState(null);
 
     useEffect(() => {
@@ -67,6 +67,15 @@ const CatImageUploadForm = () => {
                             ))}
                         </tbody>
                     </table>
+                </div>
+            )}
+
+            {analysisLoading && <p style={{ marginTop: '10px' }}>OpenAI 분석 중...</p>}
+            {analysisError && <p style={{ color: 'red', marginTop: '10px' }}>OpenAI 분석 오류: {analysisError.message}</p>}
+            {analysisData && analysisData.openaiAnalysis && (
+                <div style={{ marginTop: '20px' }}>
+                    <h3>OpenAI 분석 결과:</h3>
+                    <p>{analysisData.openaiAnalysis}</p>
                 </div>
             )}
 
