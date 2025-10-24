@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import useInput from '../../common/hook/useInput';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../common/hook/AuthProvider'; // AuthProvider에서 useAuth 임포트
-import api from './api/api'; // api 인스턴스 임포트
+import api from '../../common/api/api'; // api 인스턴스 임포트
 
 function SignIn() {
     const identifier = useInput('');

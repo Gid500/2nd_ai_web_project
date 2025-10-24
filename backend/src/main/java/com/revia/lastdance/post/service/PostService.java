@@ -3,6 +3,7 @@ package com.revia.lastdance.post.service;
 import com.revia.lastdance.post.dao.PostMapper;
 import com.revia.lastdance.post.vo.PostVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // Added import
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,9 @@ public class PostService {
     @Autowired
     private PostMapper postMapper;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder; // Added field
+
     public List<PostVO> getAllPosts() {
         return postMapper.selectAllPosts();
     }
@@ -22,6 +26,12 @@ public class PostService {
     }
 
     public void createPost(PostVO postVO) {
+        if (postVO.getAnoyUserPwd() != null && !postVO.getAnoyUserPwd().isEmpty()) {
+            postVO.setAnoyUserPwd(bCryptPasswordEncoder.encode(postVO.getAnoyUserPwd()));
+            // For anonymous posts, ensure userId and createdId are null
+            postVO.setUserId(null); 
+            postVO.setCreatedId(null);
+        }
         postMapper.insertPost(postVO);
     }
 

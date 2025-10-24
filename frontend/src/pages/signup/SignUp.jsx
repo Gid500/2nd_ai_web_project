@@ -173,7 +173,7 @@ function SignUp() {
             const response = await signup({
                 userId: id.value,
                 userEmail: email.value,
-                userPassword: password.value,
+                userPwd: password.value,
                 userNickname: nickname.value,
             });
             setSuccess('회원가입 성공! 로그인 페이지로 이동합니다.');
@@ -189,7 +189,6 @@ function SignUp() {
 
     return (
         <div className="signup-container">
-            <h2 className="signup-header">회원가입</h2>
             <form onSubmit={handleSubmit} className="signup-form">
                 {error && <p className="signup-error">{error}</p>}
                 {success && <p className="signup-success">{success}</p>}

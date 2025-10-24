@@ -12,6 +12,7 @@ public class UserVO {
     private String userPwd;
     private byte[] userImgUrl;
     private String roleType;
+    private int roleId;
 
     private Timestamp createdDate;
     private String createdId;
