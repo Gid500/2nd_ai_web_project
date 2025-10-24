@@ -20,6 +20,11 @@ public class SigninService {
 
         if (user != null && user.getUserPwd().equals(password)) {
             session.setAttribute("userId", user.getUserId());
+            if ("admin".equalsIgnoreCase(user.getRoleType())) {
+                session.setAttribute("isAdmin", true);
+            } else {
+                session.setAttribute("isAdmin", false);
+            }
             return true;
         } else {
             return false;
