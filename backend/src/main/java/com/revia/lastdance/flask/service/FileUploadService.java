@@ -57,10 +57,34 @@ public class FileUploadService {
     }
 
     public Map<String, Object> uploadCatImageAndGetPrediction(MultipartFile file) throws Exception {
+        // Save the file locally
+        String originalFilename = file.getOriginalFilename();
+        String uniqueFilename = UUID.randomUUID().toString() + "_" + originalFilename;
+        Path filePath = Paths.get(UPLOAD_DIR, uniqueFilename);
+        Files.write(filePath, file.getBytes());
+
+        // Save image info to database
+        FlaskImgVO flaskImgVO = new FlaskImgVO();
+        flaskImgVO.setFlaskImgUrl(filePath.toString());
+        flaskImgVO.setFlaskImgName(originalFilename);
+        flaskImgMapper.insertFlaskImg(flaskImgVO);
+
         return sendImageToFlask(file, FLASK_AI_CAT_PREDICT_URL);
     }
 
     public Map<String, Object> uploadDogImageAndGetPrediction(MultipartFile file) throws Exception {
+        // Save the file locally
+        String originalFilename = file.getOriginalFilename();
+        String uniqueFilename = UUID.randomUUID().toString() + "_" + originalFilename;
+        Path filePath = Paths.get(UPLOAD_DIR, uniqueFilename);
+        Files.write(filePath, file.getBytes());
+
+        // Save image info to database
+        FlaskImgVO flaskImgVO = new FlaskImgVO();
+        flaskImgVO.setFlaskImgUrl(filePath.toString());
+        flaskImgVO.setFlaskImgName(originalFilename);
+        flaskImgMapper.insertFlaskImg(flaskImgVO);
+
         return sendImageToFlask(file, FLASK_AI_DOG_PREDICT_URL);
     }
 }
