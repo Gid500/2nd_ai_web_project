@@ -11,8 +11,8 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Intro />} />
-        <Route path="/Cat" element={<Cat />} />
-        <Route path="/Dog" element={<Dog />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/signin" element={<SignIn />} /> {/* Add SignIn route */}
       </Routes>
     </>
   );

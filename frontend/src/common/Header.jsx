@@ -1,7 +1,10 @@
 import './Header.css';
 import { NavLink } from 'react-router-dom';
+import { useAuth } from './hook/useAuth'; // useAuth 훅 임포트
 
 function Header() {
+  const { isLoggedIn, logout } = useAuth(); // useAuth 훅 사용
+
   return (
     <header className="w-full bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -25,9 +28,13 @@ function Header() {
           <NavLink to="/mypage" className={({isActive}) => `tab ${isActive ? 'active' : ''}`}>
             사이트 소개
           </NavLink>
-          
-          
-          
+          {isLoggedIn ? (
+            <button onClick={logout} className="tab">로그아웃</button>
+          ) : (
+            <NavLink to="/signin" className={({isActive}) => `tab ${isActive ? 'active' : ''}`}>
+              로그인
+            </NavLink>
+          )}
         </nav>
       </div>
     </header>
