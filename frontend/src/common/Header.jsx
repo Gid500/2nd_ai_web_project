@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from './hook/useAuth'; // useAuth 훅 임포트
 
 function Header() {
-  const { isLoggedIn, logout } = useAuth(); // useAuth 훅 사용
+  const { isLoggedIn, isAdmin, logout } = useAuth(); // useAuth 훅 사용
 
   return (
     <header className="w-full bg-white shadow-md">
@@ -28,6 +28,11 @@ function Header() {
           <NavLink to="/mypage" className={({isActive}) => `tab ${isActive ? 'active' : ''}`}>
             사이트 소개
           </NavLink>
+          {isAdmin && (
+            <NavLink to="/admin" className={({isActive}) => `tab ${isActive ? 'active' : ''}`}>
+              관리자
+            </NavLink>
+          )}
           {isLoggedIn ? (
             <button onClick={logout} className="tab">로그아웃</button>
           ) : (
