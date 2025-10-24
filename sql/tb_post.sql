@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `lastdance`.`tb_post` (
   `post_id` INT NOT NULL AUTO_INCREMENT,
-  `user_id` VARCHAR(128) NOT NULL,
+  `user_id` VARCHAR(128) NULL,
   `post_title` VARCHAR(128) NOT NULL,
   `post_content` text NOT NULL,
   `is_notice` TINYINT NULL,

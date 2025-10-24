@@ -5,7 +5,9 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
     const isEditMode = !!initialData.postId;
 
     const postTitle = useInput(initialData.postTitle || '');
-    const postContent = useInput(initialData.postContent ? new TextDecoder().decode(new Uint8Array(initialData.postContent.data)) : '');
+    const postContent = useInput(initialData.postContent || '');
+    const [isNotice, setIsNotice] = useState(initialData.isNotice || false);
+
     const anoyUserName = useInput(initialData.anoyUserName || '');
     const anoyUserPwd = useInput(''); // Password should never be pre-filled
 
@@ -13,7 +15,8 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
         e.preventDefault();
         const data = {
             postTitle: postTitle.value,
-            postContent: new TextEncoder().encode(postContent.value),
+            postContent: postContent.value,
+            isNotice: isNotice,
             anoyUserName: anoyUserName.value,
         };
         if (anoyUserPwd.value) {
@@ -33,6 +36,10 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
                 <div>
                     <label>내용:</label>
                     <textarea {...postContent} rows="10" required />
+                </div>
+                <div>
+                    <label>공지사항:</label>
+                    <input type="checkbox" checked={isNotice} onChange={(e) => setIsNotice(e.target.checked)} />
                 </div>
                 <div>
                     <label>작성자 (익명):</label>

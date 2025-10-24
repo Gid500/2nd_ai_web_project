@@ -72,7 +72,8 @@
     </select>
 
     <insert id="insertPost" parameterType="com.revia.lastdance.post.vo.PostVO" useGeneratedKeys="true" keyProperty="postId">
-        INSERT INTO tb_post (
+        INSERT INTO tb_post
+        <trim prefix="(" suffix=")" suffixOverrides=",">
             post_title,
             post_content,
             is_notice,
@@ -81,8 +82,9 @@
             user_id,
             <if test="createdId != null">created_id,</if>
             <if test="anoyUserName != null">anoy_user_name,</if>
-            <if test="anoyUserPwd != null">anoy_user_pwd</if>
-        ) VALUES (
+            <if test="anoyUserPwd != null">anoy_user_pwd,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
             #{postTitle},
             #{postContent},
             #{isNotice},
@@ -91,8 +93,8 @@
             #{userId},
             <if test="createdId != null">#{createdId},</if>
             <if test="anoyUserName != null">#{anoyUserName},</if>
-            <if test="anoyUserPwd != null">#{anoyUserPwd}</if>
-        )
+            <if test="anoyUserPwd != null">#{anoyUserPwd},</if>
+        </trim>
     </insert>
 
     <update id="updatePost" parameterType="com.revia.lastdance.post.vo.PostVO">

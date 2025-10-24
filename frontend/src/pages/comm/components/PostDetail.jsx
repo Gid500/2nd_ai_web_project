@@ -6,11 +6,11 @@ const PostDetail = ({ post, onBackToList }) => {
     }
 
     // Assuming postContent is a byte array or similar that needs decoding
-    const decodedContent = post.postContent ? new TextDecoder().decode(new Uint8Array(post.postContent.data)) : '';
+    const decodedContent = post.postContent || '';
 
     return (
         <div>
-            <h2>{post.postTitle}</h2>
+            <h2>{post.isNotice && <span style={{ marginRight: '10px', color: 'red', fontWeight: 'bold' }}>[공지]</span>}{post.postTitle}</h2>
             <p>작성자: {post.anoyUserName || post.userId}</p>
             <p>작성일: {new Date(post.createdDate).toLocaleString()}</p>
             <div>

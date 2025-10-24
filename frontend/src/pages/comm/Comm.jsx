@@ -14,7 +14,7 @@ function Comm() {
     };
 
     const handleCreateNewPost = () => {
-        setEditingPost(null);
+        setEditingPost({}); // Revert to empty object
         setShowForm(true);
     };
 
@@ -30,7 +30,7 @@ function Comm() {
     };
 
     const handleSubmitForm = async (postData) => {
-        if (editingPost) {
+        if (editingPost && editingPost.postId) { // Check if editingPost and postId exist for edit mode
             await editPost(editingPost.postId, postData);
         } else {
             await addPost(postData);
