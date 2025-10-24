@@ -1,0 +1,39 @@
+header{
+
+    background-color: #EAD9C9;
+    display: flex;
+    justify-content: center;
+}
+
+.logo{
+    
+    
+    height:60px;
+    margin: 10px;
+}
+
+.tabs {
+  display: flex;
+  gap: 24px;
+  font-family: 'Gowun Dodum', sans-serif;
+}
+
+.tab {
+  padding: 8px 16px;
+  text-decoration: none;
+  color: #7A5230;
+  border-bottom: 2px solid transparent;
+  transition: color .2s ease, border-color .2s ease, transform .15s ease;
+}
+
+.tab:hover {
+  color: #CAA27A;
+  border-bottom-color: #CAA27A;
+  transform: translateY(-2px);
+}
+
+.tab.active {
+  color: #7A5230;
+  font-weight: bold;
+  border-bottom-color: #7A5230;
+}

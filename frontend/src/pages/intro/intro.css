@@ -1,0 +1,62 @@
+.cat-img{
+
+    width:250px;
+    height: auto;
+    transition: transform 0.25s ease;
+    margin-left: 20px;
+}
+
+.cat{
+
+    width:60%;
+    
+    border-radius: 20px;
+    margin: 50px auto;
+    border: 2px solid #d8c6b4;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    display: flex;
+    cursor: pointer;
+    gap:20px;
+
+
+}
+
+.cat_text{
+
+    display: flex;
+    align-items: center;
+    
+    
+        
+}
+
+.cat_text p{
+  font-family: 'Gowun Dodum', sans-serif;
+  color: #7A5230;
+  font-size: 1.8rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;   
+  font-weight: bold;
+  width: 100%;
+
+}
+
+
+
+.sleepcat {
+  width: 220px;
+  transition: opacity 0.3s ease;
+}
+
+/* hover 시 다른 이미지로 교체 */
+
+.cat:hover {
+  transform: translateY(-6px); /* 살짝 위로 뜸 */
+  border-color: #caa27a; /* 따뜻한 브라운 베이지 */
+  box-shadow: 0 6px 14px rgba(202, 162, 122, 0.25); /* 부드러운 그림자 */
+  /* background-color: #fff5e6; 살짝 더 따뜻한 배경*/
+} 
+
+.cat:hover .cat-img {
+  transform: scale(1.05);
+}
