@@ -1,7 +1,7 @@
-package com.revia.lastdance.login.controller;
+package com.revia.lastdance.signin.controller;
 
+import com.revia.lastdance.signin.dao.SigninMapper;
 import com.revia.lastdance.signup.vo.UserVO;
-import com.revia.lastdance.login.dao.LoginMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -22,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SessionController {
 
-    private final LoginMapper loginMapper;
+    private final SigninMapper signinMapper;
 
     @GetMapping("/checkSession")
     public ResponseEntity<?> checkSession(HttpSession session, HttpServletResponse response) {
@@ -30,7 +30,7 @@ public class SessionController {
         String userId = (String) session.getAttribute("userId");
         if (userId != null) {
             log.info("Session valid for user: {}", userId);
-            UserVO user = loginMapper.findUserByUserId(userId); // Assuming you have a method to find user by userId
+            UserVO user = signinMapper.findUserByUserId(userId); // Assuming you have a method to find user by userId
             if (user != null) {
                 Map<String, Object> responseBody = new HashMap<>();
                 responseBody.put("isAuthenticated", true);
