@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './intro.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function Intro() {
   const navigate = useNavigate();

@@ -10,6 +10,10 @@ import Comm from './pages/comm/Comm';
 import Error403 from './pages/error/Error403';
 import Error404 from './pages/error/Error404';
 import AdminRouteWrapper from './common/components/AdminRouteWrapper';
+import Explain from './pages/explain/Explain';
+import Mypage from './pages/mypage/Mypage';
+import CareAccoount from './pages/mypage/CareAccount';
+
 
 function App() {
   return (
@@ -21,9 +25,12 @@ function App() {
         <Route path="/dog" element={<Dog />} />
         <Route path='/admin' element={<AdminRouteWrapper />} />
         <Route path="/comm" element={<Comm/>} />
-
+        <Route path="/explain" element={<Explain/>} />
+        <Route path="/mypage" element={<Mypage/>} />
+        <Route path="/care" element={<CareAccoount />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        
 
         <Route path="/403" element={<Error403 />} />
         <Route path="*" element={<Error404 />} /> {/* Catch-all for 404 errors */}

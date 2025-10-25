@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../common/hook/AuthProvider'; // AuthProvider에서 useAuth 임포트
 import api from '../../common/api/api'; // api 인스턴스 임포트
 import LoadingSpinner from '../../common/components/LoadingSpinner';
+import { NavLink } from 'react-router-dom';
 
 function SignIn() {
+    const getNavLinkClass = ({ isActive }) => `tab ${isActive ? 'active' : ''}`;
     const identifier = useInput('');
     const password = useInput('');
     const [error, setError] = React.useState(null);
@@ -55,6 +57,14 @@ function SignIn() {
                     {loading ? <><LoadingSpinner /> <span style={{ marginLeft: '8px' }}>로그인 중...</span></> : '로그인'}
                 </button>
             </form>
+            <nav className="tabs">
+
+                <NavLink to="/signup" className={getNavLinkClass}>
+                회원 가입
+              </NavLink>
+
+            </nav>
+            
         </div>
     );
 }

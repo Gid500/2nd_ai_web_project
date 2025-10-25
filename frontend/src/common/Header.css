@@ -9,7 +9,8 @@ header{
     
     
     height:60px;
-    margin:10px 10px 10px 36px;
+    margin:10px 10px 10px 10px;
+    
 }
 
 
@@ -17,6 +18,7 @@ header{
   display: flex;
   gap: 24px;
   font-family: 'Gowun Dodum', sans-serif;
+  justify-content: center;
 }
 
 .tab {
@@ -37,4 +39,27 @@ header{
   color: #7A5230;
   font-weight: bold;
   border-bottom-color: #7A5230;
+}
+
+
+.login {
+
+  position: absolute;
+  right: 30px;
+  top: 4.5%;
+  transform: translateY(-50%);
+  border: 3px #7A5230 solid;
+  border-radius: 30px;
+  padding: 2px;
+
+}
+
+
+
+
+.profile{
+
+  font-size: 22px;
+  color: #7A5230;
+
 }
