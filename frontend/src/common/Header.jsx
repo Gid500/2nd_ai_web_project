@@ -22,10 +22,10 @@ function Header() {
           <NavLink to="/" end className={({isActive}) => `tab ${isActive ? 'active' : ''}`}>
             궁금해요!
           </NavLink>
-          <NavLink to="/home" className={({isActive}) => `tab ${isActive ? 'active' : ''}`}>
+          <NavLink to="/comm" className={({isActive}) => `tab ${isActive ? 'active' : ''}`}>
             자랑해요!
           </NavLink>
-          <NavLink to="/mypage" className={({isActive}) => `tab ${isActive ? 'active' : ''}`}>
+          <NavLink to="/explain" className={({isActive}) => `tab ${isActive ? 'active' : ''}`}>
             사이트 소개
           </NavLink>
           {isAdmin && (

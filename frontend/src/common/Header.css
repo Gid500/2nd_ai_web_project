@@ -9,8 +9,9 @@ header{
     
     
     height:60px;
-    margin: 10px;
+    margin:10px 10px 10px 36px;
 }
+
 
 .tabs {
   display: flex;

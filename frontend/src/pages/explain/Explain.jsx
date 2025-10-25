@@ -1,14 +1,14 @@
 import React from 'react';
 
 
-function Comm() {
+function Explain() {
     return (
         <>
             
            
-            <p>커뮤니티</p>
+            <p>소개사이트입니다.</p>
         </>
     );
 }
 
-export default Comm;
+export default Explain;
