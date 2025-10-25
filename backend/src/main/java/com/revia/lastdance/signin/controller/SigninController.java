@@ -39,10 +39,6 @@ public class SigninController {
     @GetMapping("/auth-status")
     public ResponseEntity<?> getSessionStatus(HttpSession session) {
         boolean loggedIn = session.getAttribute("loggedInUser") != null;
-        Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
-        if (isAdmin == null) {
-            isAdmin = false; // Default to false if not set
-        }
-        return ResponseEntity.ok(java.util.Map.of("loggedIn", loggedIn, "isAdmin", isAdmin));
+        return ResponseEntity.ok(java.util.Map.of("loggedIn", loggedIn));
     }
 }

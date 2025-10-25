@@ -5,11 +5,15 @@
     <resultMap id="postResultMap" type="com.revia.lastdance.post.vo.PostVO">
         <id property="postId" column="post_id"/>
         <result property="userId" column="user_id"/>
-        <result property="postContent" column="post_content" jdbcType="BLOB"/>
+        <result property="postTitle" column="post_title"/>
+        <result property="postContent" column="post_content"/>
+        <result property="isNotice" column="is_notice"/>
         <result property="createdDate" column="created_date"/>
         <result property="createdId" column="created_id"/>
         <result property="updatedDate" column="updated_date"/>
         <result property="updatedId" column="updated_id"/>
+        <result property="anoyUserName" column="anoy_user_name"/>
+        <result property="anoyUserPwd" column="anoy_user_pwd"/>
     </resultMap>
 
     <resultMap id="fileNestedResultMap" type="com.revia.lastdance.post.vo.FileVO">
@@ -28,11 +32,15 @@
         SELECT
             p.post_id,
             p.user_id,
+            p.post_title,
             p.post_content,
+            p.is_notice,
             p.created_date,
             p.created_id,
             p.updated_date,
             p.updated_id,
+            p.anoy_user_name,
+            p.anoy_user_pwd,
             f.file_id,
             f.upload_name,
             f.file_type,
@@ -45,11 +53,15 @@
         SELECT
             p.post_id,
             p.user_id,
+            p.post_title,
             p.post_content,
+            p.is_notice,
             p.created_date,
             p.created_id,
             p.updated_date,
             p.updated_id,
+            p.anoy_user_name,
+            p.anoy_user_pwd,
             f.file_id,
             f.upload_name,
             f.file_type,
@@ -60,16 +72,42 @@
     </select>
 
     <insert id="insertPost" parameterType="com.revia.lastdance.post.vo.PostVO" useGeneratedKeys="true" keyProperty="postId">
-        INSERT INTO tb_post (user_id, post_content, created_id, updated_id)
-        VALUES (#{userId}, #{postContent, jdbcType=BLOB}, #{createdId}, #{updatedId})
+        INSERT INTO tb_post
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            post_title,
+            post_content,
+            is_notice,
+            created_date,
+            updated_date,
+            user_id,
+            <if test="createdId != null">created_id,</if>
+            <if test="anoyUserName != null">anoy_user_name,</if>
+            <if test="anoyUserPwd != null">anoy_user_pwd,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            #{postTitle},
+            #{postContent},
+            #{isNotice},
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP,
+            #{userId},
+            <if test="createdId != null">#{createdId},</if>
+            <if test="anoyUserName != null">#{anoyUserName},</if>
+            <if test="anoyUserPwd != null">#{anoyUserPwd},</if>
+        </trim>
     </insert>
 
     <update id="updatePost" parameterType="com.revia.lastdance.post.vo.PostVO">
         UPDATE tb_post
         SET
-            user_id = #{userId},
-            post_content = #{postContent, jdbcType=BLOB},
+            post_title = #{postTitle},
+            post_content = #{postContent},
+            is_notice = #{isNotice},
             updated_date = CURRENT_TIMESTAMP,
+            user_id = #{userId},
+            <if test="createdId != null">created_id = #{createdId},</if>
+            <if test="anoyUserName != null">anoy_user_name = #{anoyUserName},</if>
+            <if test="anoyUserPwd != null">anoy_user_pwd = #{anoyUserPwd},</if>
             updated_id = #{updatedId}
         WHERE post_id = #{postId}
     </update>

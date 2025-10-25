@@ -1,12 +1,13 @@
 
 import tensorflow as tf
 from tensorflow.keras.applications import MobileNetV2
-from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
 from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import pandas as pd
 import numpy as np
 import os
+import math
 
 # Define constants
 IMAGE_SIZE = (224, 224)
@@ -56,6 +57,8 @@ base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(IMA
 # Add custom top layers for single-label classification
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
+x = Dense(128, activation='relu')(x) # Added a new Dense layer
+x = Dropout(0.5)(x) # Added a Dropout layer for regularization
 x = Dense(NUM_CLASSES, activation='softmax')(x) # Softmax for single-label classification
 
 # Create the new model
@@ -75,9 +78,9 @@ print("Starting model training...")
 history = model.fit(
     train_generator,
     epochs=EPOCHS,
-    steps_per_epoch=train_generator.samples // BATCH_SIZE,
+    steps_per_epoch=math.ceil(train_generator.samples / BATCH_SIZE),
     validation_data=validation_generator,
-    validation_steps=validation_generator.samples // BATCH_SIZE,
+    validation_steps=math.ceil(validation_generator.samples / BATCH_SIZE),
     verbose=1
 )
 print("Model training finished.")

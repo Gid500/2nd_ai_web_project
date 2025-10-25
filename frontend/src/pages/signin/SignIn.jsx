@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import useInput from '../../common/hook/useInput';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../common/hook/AuthProvider'; // AuthProvider에서 useAuth 임포트
-import api from './api/api'; // api 인스턴스 임포트
+import api from '../../common/api/api'; // api 인스턴스 임포트
+import LoadingSpinner from '../../common/components/LoadingSpinner';
 
 function SignIn() {
     const identifier = useInput('');
@@ -46,8 +47,12 @@ function SignIn() {
                     <label>비밀번호:</label>
                     <input type="password" {...password} required />
                 </div>
-                <button type="submit" disabled={loading}>
-                    {loading ? '로그인 중...' : '로그인'}
+                <button type="submit" disabled={loading} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                    {loading ? <><LoadingSpinner /> <span style={{ marginLeft: '8px' }}>로그인 중...</span></> : '로그인'}
                 </button>
             </form>
         </div>

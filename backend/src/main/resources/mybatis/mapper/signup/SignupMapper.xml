@@ -5,10 +5,11 @@
     <insert id="insertUser" parameterType="com.revia.lastdance.signup.vo.UserVO">
         INSERT INTO tb_user (
             user_id,
-            user_name,
+
             user_nickname,
             user_email,
             user_pwd,
+            role_id,
             <if test="userImgUrl != null">user_img_url,</if>
             created_date,
             created_id,
@@ -16,10 +17,10 @@
             updated_id
         ) VALUES (
             #{userId},
-            #{userName},
             #{userNickname},
             #{userEmail},
             #{userPwd},
+            #{roleId},
             <if test="userImgUrl != null">#{userImgUrl},</if>
             #{createdDate},
             #{createdId},

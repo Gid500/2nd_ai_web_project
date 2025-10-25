@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useAxios from '../../common/hook/useAxios';
+import LoadingSpinner from '../../common/components/LoadingSpinner';
 
 function Admin() {
     const { response, error, loading, fetchData } = useAxios();
@@ -16,7 +17,11 @@ function Admin() {
     }, [response]);
 
     if (loading) {
-        return <div>로딩 중...</div>; // Loading message
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <LoadingSpinner />
+            </div>
+        ); // Loading message
     }
 
     if (error) {
