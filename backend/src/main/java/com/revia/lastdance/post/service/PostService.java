@@ -52,13 +52,10 @@ public class PostService {
     }
 
     public boolean isOwner(int postId, String userId) {
-        logger.info("Checking ownership for postId: {}, principalUserId: {}", postId, userId);
         PostVO post = postMapper.selectPostById(postId);
         if (post == null) {
-            logger.warn("Post with ID {} not found.", postId);
             return false;
         }
-        logger.info("Post author userId from DB: {}", post.getUserId());
         return Objects.equals(post.getUserId(), userId);
     }
 }

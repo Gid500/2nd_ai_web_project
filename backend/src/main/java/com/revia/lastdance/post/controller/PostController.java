@@ -41,7 +41,7 @@ public class PostController {
     }
 
     @PutMapping("/update/{postId}") // Changed to PutMapping
-    @PreAuthorize("hasRole('ADMIN') or @postService.isOwner(#postId, principal.userId)")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_admin') or @postService.isOwner(#postId, authentication.principal.userId)")
     public ResponseEntity<Void> updatePost(@PathVariable("postId") int postId, @RequestBody PostVO postVO) {
         postVO.setPostId(postId);
         postService.updatePost(postVO);
@@ -49,7 +49,7 @@ public class PostController {
     }
 
     @DeleteMapping("/delete/{postId}") // Changed to DeleteMapping
-    @PreAuthorize("hasRole('ADMIN') or @postService.isOwner(#postId, principal.userId)")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_admin') or @postService.isOwner(#postId, authentication.principal.userId)")
     public ResponseEntity<Void> deletePost(@PathVariable("postId") int postId) {
         postService.deletePost(postId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
