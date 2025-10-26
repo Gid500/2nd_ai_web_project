@@ -42,9 +42,8 @@ public class FileService {
                 FileVO fileVO = new FileVO();
                 fileVO.setPostId(postId);
                 fileVO.setUploadName(uniqueFileName);
-                fileVO.setFileType(file.getContentType());
-                fileVO.setImgUrl(file.getBytes());
-
+                        fileVO.setFileType(file.getContentType());
+                        fileVO.setImgUrl("http://localhost:8080/images/" + uniqueFileName);
                 fileMapper.insertFile(fileVO);
             }
         }

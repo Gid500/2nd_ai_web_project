@@ -7,7 +7,7 @@
         <result property="postId" column="post_id"/>
         <result property="uploadName" column="upload_name"/>
         <result property="fileType" column="file_type"/>
-        <result property="imgUrl" column="img_url" jdbcType="BLOB"/>
+        <result property="imgUrl" column="img_url"/>
     </resultMap>
 
     <insert id="insertFile" parameterType="com.revia.lastdance.post.vo.FileVO" useGeneratedKeys="true" keyProperty="fileId">

@@ -8,5 +8,5 @@ public class FileVO {
     private int postId;
     private String uploadName;
     private String fileType;
-    private byte[] imgUrl;
+    private String imgUrl;
 }

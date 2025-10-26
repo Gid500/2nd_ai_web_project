@@ -6,6 +6,7 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [userId, setUserId] = useState(null); // Add userId to state
     const [loading, setLoading] = useState(true);
 
     const checkLoginStatus = async () => {
@@ -13,10 +14,12 @@ export const AuthProvider = ({ children }) => {
             const response = await api.get('/api/checkSession');
             setIsLoggedIn(response.data.isAuthenticated);
             setIsAdmin(response.data.roleType && response.data.roleType.toLowerCase() === 'admin');
+            setUserId(response.data.userId || null); // Store userId
         } catch (error) {
             console.error('Failed to check login status:', error);
             setIsLoggedIn(false);
             setIsAdmin(false);
+            setUserId(null);
         } finally {
             setLoading(false);
         }
@@ -28,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = () => {
         setIsLoggedIn(true);
-        // Re-check admin status after login, as it might have changed
+        // Re-check admin status and userId after login, as it might have changed
         checkLoginStatus(); 
     };
 
@@ -37,6 +40,7 @@ export const AuthProvider = ({ children }) => {
             await api.post('/api/session-logout');
             setIsLoggedIn(false);
             setIsAdmin(false);
+            setUserId(null); // Clear userId on logout
             alert('로그아웃 되었습니다.');
         } catch (error) {
             console.error('Logout failed:', error);
@@ -45,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, isAdmin, loading, login, logout }}>
+        <AuthContext.Provider value={{ isLoggedIn, isAdmin, userId, loading, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

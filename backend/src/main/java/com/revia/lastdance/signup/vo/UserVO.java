@@ -10,7 +10,7 @@ public class UserVO {
     private String userNickname;
     private String userEmail;
     private String userPwd;
-    private byte[] userImgUrl;
+    private String userImgUrl;
     private String roleType;
     private int roleId;
 

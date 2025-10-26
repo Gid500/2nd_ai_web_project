@@ -29,7 +29,7 @@ public class FileUploadService {
     @Autowired
     private RestTemplate restTemplate; // Assuming RestTemplate is configured
 
-    private final String UPLOAD_DIR = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/uploaded_img";
+    private final String UPLOAD_DIR = "/home/qod110/Documents/Project/2nd_ai_web_project/ai_model/uploaded_img";
     // private final String UPLOAD_DIR = "C:/Users/admin/Desktop/project/2nd_ai_web_project/ai_backend/uploaded_img";
     private final String FLASK_AI_CAT_PREDICT_URL = "http://localhost:5000/upload-cat-image"; // Flask AI backend URL for cat
     private final String FLASK_AI_DOG_PREDICT_URL = "http://localhost:5000/upload-dog-image"; // Flask AI backend URL for dog

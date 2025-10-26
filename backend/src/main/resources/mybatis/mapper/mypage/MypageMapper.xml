@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.revia.lastdance.mypage.dao.MypageMapper">
+
+    <update id="updateUserNickname" parameterType="com.revia.lastdance.signup.vo.UserVO">
+        UPDATE tb_user
+        SET user_nickname = #{userNickname},
+            updated_date = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
+    <insert id="insertEmailVerification" parameterType="com.revia.lastdance.signup.vo.EmailVerificationVO">
+        INSERT INTO tb_email_verification (user_email, email_code, verifi_time)
+        VALUES (#{userEmail}, #{emailCode}, #{verifiTime})
+    </insert>
+
+    <select id="selectEmailVerification" parameterType="com.revia.lastdance.signup.vo.EmailVerificationVO" resultType="com.revia.lastdance.signup.vo.EmailVerificationVO">
+        SELECT user_email, email_code, verifi_time
+        FROM tb_email_verification
+        WHERE user_email = #{userEmail} AND email_code = #{emailCode}
+    </select>
+
+    <update id="updateUserPassword" parameterType="com.revia.lastdance.signup.vo.UserVO">
+        UPDATE tb_user
+        SET user_pwd = #{userPwd},
+            updated_date = NOW()
+        WHERE user_email = #{userEmail}
+    </update>
+
+    <delete id="deleteEmailVerification" parameterType="com.revia.lastdance.signup.vo.EmailVerificationVO">
+        DELETE FROM tb_email_verification
+        WHERE user_email = #{userEmail} AND email_code = #{emailCode}
+    </delete>
+
+    <update id="updateUserImgUrl" parameterType="com.revia.lastdance.signup.vo.UserVO">
+        UPDATE tb_user
+        SET user_img_url = #{userImgUrl},
+            updated_date = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="checkNicknameAvailability" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM tb_user WHERE user_nickname = #{userNickname} AND user_id != #{userId}
+    </select>
+
+</mapper>

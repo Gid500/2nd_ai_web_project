@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './Mypage.css';
+import api from '../../common/api/api'; // Adjust path as necessary
 
-function ProfileForm() {
+function ProfileForm({ userId }) {
   const fileRef = useRef(null);
 
   // 폼 상태
@@ -14,6 +15,24 @@ function ProfileForm() {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState('');
+
+  // Fetch initial user data (e.g., nickname) when component mounts
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!userId) return; // Ensure userId is available
+      try {
+        // Assuming there's an endpoint to fetch user details by userId
+        const response = await api.get(`/api/user/${userId}`);
+        setNickname(response.data.userNickname);
+        // setBio(response.data.bio); // Uncomment if bio is fetched
+        setAvatarPreview(response.data.userImgUrl); // Set avatar preview from fetched user data
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+        setError("Failed to load user data.");
+      }
+    };
+    fetchUserData();
+  }, [userId]);
 
   // 이미지 선택
   const onPickFile = (e) => {
@@ -56,22 +75,29 @@ function ProfileForm() {
     setSaving(true);
 
     try {
-      // 실제 API 경로로 바꿔 쓰세요.
-      // 예: POST /api/profile (multipart/form-data)
-      const form = new FormData();
-      if (avatarFile) form.append('avatar', avatarFile);
-      form.append('nickname', nickname);
-      form.append('bio', bio);
+      // Update Nickname
+      if (userId && nickname) {
+        await api.post('/api/mypage/nickname', { userId, userNickname: nickname });
+      }
 
-      // 데모용: 실제 API 없을 때는 setTimeout으로 대체
-      // 실제로는 fetch/axios 사용
-      // const res = await fetch('/api/profile', { method: 'POST', body: form });
-      // if (!res.ok) throw new Error('업데이트 실패');
-      await new Promise((r) => setTimeout(r, 800));
+      // Upload Profile Image
+      if (avatarFile && userId) {
+        const formData = new FormData();
+        formData.append('file', avatarFile);
+        const response = await api.post(`/api/mypage/profile-image/${userId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        setAvatarPreview(response.data.userImgUrl); // Update preview with new URL from backend
+      }
+
+      // TODO: Handle bio update separately if needed
 
       setSuccess('프로필이 저장되었어요!');
     } catch (err) {
-      setError(err.message || '저장 중 문제가 발생했어요.');
+      console.error("Error saving profile:", err);
+      setError(err.response?.data || '저장 중 문제가 발생했어요.');
     } finally {
       setSaving(false);
     }
