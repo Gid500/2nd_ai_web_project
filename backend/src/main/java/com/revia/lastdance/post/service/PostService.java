@@ -2,20 +2,22 @@ package com.revia.lastdance.post.service;
 
 import com.revia.lastdance.post.dao.PostMapper;
 import com.revia.lastdance.post.vo.PostVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // Added import
+import com.revia.lastdance.signin.dto.CustomUserDetails;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
 
-    @Autowired
-    private PostMapper postMapper;
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder; // Added field
+    private final PostMapper postMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public List<PostVO> getAllPosts() {
         return postMapper.selectAllPosts();
@@ -25,13 +27,15 @@ public class PostService {
         return postMapper.selectPostById(postId);
     }
 
-    public void createPost(PostVO postVO) {
-        if (postVO.getAnoyUserPwd() != null && !postVO.getAnoyUserPwd().isEmpty()) {
-            postVO.setAnoyUserPwd(bCryptPasswordEncoder.encode(postVO.getAnoyUserPwd()));
-            // For anonymous posts, ensure userId and createdId are null
-            postVO.setUserId(null); 
-            postVO.setCreatedId(null);
-        }
+    public void createPost(PostVO postVO, Principal principal) {
+        Authentication authentication = (Authentication) principal;
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUserId();
+
+        postVO.setUserId(userId);
+        postVO.setCreatedId(userId);
+        postVO.setUpdatedId(userId);
+
         postMapper.insertPost(postVO);
     }
 
@@ -41,5 +45,10 @@ public class PostService {
 
     public void deletePost(int postId) {
         postMapper.deletePost(postId);
+    }
+
+    public boolean isOwner(int postId, String userId) {
+        PostVO post = postMapper.selectPostById(postId);
+        return post != null && Objects.equals(post.getUserId(), userId);
     }
 }

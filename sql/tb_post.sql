@@ -9,8 +9,6 @@ CREATE TABLE IF NOT EXISTS `lastdance`.`tb_post` (
   `updated_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_id` VARCHAR(128) NULL DEFAULT NULL,
   `post_title` VARCHAR(128) NULL DEFAULT NULL,
-  `anoy_user_name` VARCHAR(128) NULL,
-  'anoy_user_pwd' VARCHAR(64) NULL,
   PRIMARY KEY (`post_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4

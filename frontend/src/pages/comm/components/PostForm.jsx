@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import useInput from '../hook/useInput';
 
 const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
@@ -8,20 +8,13 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
     const postContent = useInput(initialData.postContent || '');
     const [isNotice, setIsNotice] = useState(initialData.isNotice || false);
 
-    const anoyUserName = useInput(initialData.anoyUserName || '');
-    const anoyUserPwd = useInput(''); // Password should never be pre-filled
-
     const handleSubmit = (e) => {
         e.preventDefault();
         const data = {
             postTitle: postTitle.value,
             postContent: postContent.value,
             isNotice: isNotice,
-            anoyUserName: anoyUserName.value,
         };
-        if (anoyUserPwd.value) {
-            data.anoyUserPwd = anoyUserPwd.value;
-        }
         onSubmit(data);
     };
 
@@ -40,14 +33,6 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
                 <div>
                     <label>공지사항:</label>
                     <input type="checkbox" checked={isNotice} onChange={(e) => setIsNotice(e.target.checked)} />
-                </div>
-                <div>
-                    <label>작성자 (익명):</label>
-                    <input type="text" {...anoyUserName} />
-                </div>
-                <div>
-                    <label>비밀번호 (익명):</label>
-                    <input type="password" {...anoyUserPwd} />
                 </div>
                 <button type="submit">{isEditMode ? '수정' : '작성'}</button>
                 <button type="button" onClick={onCancel}>취소</button>

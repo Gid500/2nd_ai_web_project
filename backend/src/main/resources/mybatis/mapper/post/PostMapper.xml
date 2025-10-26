@@ -12,8 +12,6 @@
         <result property="createdId" column="created_id"/>
         <result property="updatedDate" column="updated_date"/>
         <result property="updatedId" column="updated_id"/>
-        <result property="anoyUserName" column="anoy_user_name"/>
-        <result property="anoyUserPwd" column="anoy_user_pwd"/>
     </resultMap>
 
     <resultMap id="fileNestedResultMap" type="com.revia.lastdance.post.vo.FileVO">
@@ -39,8 +37,6 @@
             p.created_id,
             p.updated_date,
             p.updated_id,
-            p.anoy_user_name,
-            p.anoy_user_pwd,
             f.file_id,
             f.upload_name,
             f.file_type,
@@ -60,8 +56,6 @@
             p.created_id,
             p.updated_date,
             p.updated_id,
-            p.anoy_user_name,
-            p.anoy_user_pwd,
             f.file_id,
             f.upload_name,
             f.file_type,
@@ -81,8 +75,6 @@
             updated_date,
             user_id,
             <if test="createdId != null">created_id,</if>
-            <if test="anoyUserName != null">anoy_user_name,</if>
-            <if test="anoyUserPwd != null">anoy_user_pwd,</if>
         </trim>
         <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
             #{postTitle},
@@ -92,8 +84,6 @@
             CURRENT_TIMESTAMP,
             #{userId},
             <if test="createdId != null">#{createdId},</if>
-            <if test="anoyUserName != null">#{anoyUserName},</if>
-            <if test="anoyUserPwd != null">#{anoyUserPwd},</if>
         </trim>
     </insert>
 
@@ -106,8 +96,6 @@
             updated_date = CURRENT_TIMESTAMP,
             user_id = #{userId},
             <if test="createdId != null">created_id = #{createdId},</if>
-            <if test="anoyUserName != null">anoy_user_name = #{anoyUserName},</if>
-            <if test="anoyUserPwd != null">anoy_user_pwd = #{anoyUserPwd},</if>
             updated_id = #{updatedId}
         WHERE post_id = #{postId}
     </update>

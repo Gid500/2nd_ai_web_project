@@ -68,7 +68,12 @@ function Comm() {
                     onCancel={handleCancelForm}
                 />
             ) : selectedPost ? (
-                <PostDetail post={selectedPost} onBackToList={() => setSelectedPost(null)} />
+                <PostDetail 
+                    post={selectedPost} 
+                    onBackToList={() => setSelectedPost(null)} 
+                    onEdit={handleEditPost} 
+                    onDelete={handleDeletePost} 
+                />
             ) : (
                 <PostList
                     posts={posts}

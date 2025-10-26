@@ -1,11 +1,13 @@
 import React from 'react';
+import { useAuth } from '../../../common/hook/useAuth';
 
-const PostDetail = ({ post, onBackToList }) => {
+const PostDetail = ({ post, onBackToList, onEdit, onDelete }) => {
+    const { user, isAdmin } = useAuth();
+
     if (!post) {
         return <p>게시글을 찾을 수 없습니다.</p>;
     }
 
-    // Assuming postContent is a byte array or similar that needs decoding
     const decodedContent = post.postContent || '';
 
     return (
@@ -30,6 +32,12 @@ const PostDetail = ({ post, onBackToList }) => {
                 </div>
             )}
             <button onClick={onBackToList}>목록으로 돌아가기</button>
+            {(isAdmin || (user && user.userId === post.userId)) && (
+                <>
+                    <button onClick={() => onEdit(post)}>수정</button>
+                    <button onClick={() => onDelete(post.postId)}>삭제</button>
+                </>
+            )}
         </div>
     );
 };

@@ -2,19 +2,21 @@ package com.revia.lastdance.post.controller;
 
 import com.revia.lastdance.post.service.PostService;
 import com.revia.lastdance.post.vo.PostVO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/api/posts") // Changed mapping to /api/posts
+@RequiredArgsConstructor
 public class PostController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
 
     @GetMapping
     public ResponseEntity<List<PostVO>> getAllPosts() {
@@ -33,19 +35,21 @@ public class PostController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createPost(@RequestBody PostVO postVO) {
-        postService.createPost(postVO);
+    public ResponseEntity<Void> createPost(@RequestBody PostVO postVO, Principal principal) {
+        postService.createPost(postVO, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/update/{postId}")
+    @PutMapping("/update/{postId}") // Changed to PutMapping
+    @PreAuthorize("hasRole('ADMIN') or @postService.isOwner(#postId, principal.userId)")
     public ResponseEntity<Void> updatePost(@PathVariable("postId") int postId, @RequestBody PostVO postVO) {
         postVO.setPostId(postId);
         postService.updatePost(postVO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/delete/{postId}")
+    @DeleteMapping("/delete/{postId}") // Changed to DeleteMapping
+    @PreAuthorize("hasRole('ADMIN') or @postService.isOwner(#postId, principal.userId)")
     public ResponseEntity<Void> deletePost(@PathVariable("postId") int postId) {
         postService.deletePost(postId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

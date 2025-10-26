@@ -1,6 +1,9 @@
 import React from 'react';
+import { useAuth } from '../../../common/hook/useAuth';
 
 const PostList = ({ posts, onViewDetail, onEdit, onDelete }) => {
+    const { user, isAdmin } = useAuth();
+
     // Sort posts: notices first, then by createdDate (newest first)
     const sortedPosts = [...posts].sort((a, b) => {
         // If both are notices or both are not notices, sort by createdDate
@@ -26,8 +29,12 @@ const PostList = ({ posts, onViewDetail, onEdit, onDelete }) => {
                             </h3>
                             <p>작성자: {post.anoyUserName || post.userId}</p>
                             <p>작성일: {new Date(post.createdDate).toLocaleString()}</p>
-                            <button onClick={() => onEdit(post)}>수정</button>
-                            <button onClick={() => onDelete(post.postId)}>삭제</button>
+                            {(isAdmin || (user && user.userId === post.userId)) && (
+                                <>
+                                    <button onClick={() => onEdit(post)}>수정</button>
+                                    <button onClick={() => onDelete(post.postId)}>삭제</button>
+                                </>
+                            )}
                         </li>
                     ))}
                 </ul>

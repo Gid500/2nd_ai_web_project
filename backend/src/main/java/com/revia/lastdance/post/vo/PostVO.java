@@ -16,7 +16,5 @@ public class PostVO {
     private String createdId;
     private Timestamp updatedDate;
     private String updatedId;
-    private String anoyUserName; // Added
-    private String anoyUserPwd; // Added
     private List<FileVO> files;
 }
