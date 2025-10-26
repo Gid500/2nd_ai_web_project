@@ -8,7 +8,7 @@ import './SignUp.css'; // Import the CSS file
 function SignUp() {
     const navigate = useNavigate();
     const { signup, sendVerificationEmail, verifyEmailCode, checkEmailDuplication, checkNicknameDuplication, checkIdDuplication } = useSignupApi();
-    const { login } = useAuth(); // Assuming login is available in useAuth
+    const { login } = useAuth();
 
     const id = useInput('');
     const email = useInput('');
@@ -20,7 +20,6 @@ function SignUp() {
     // Specific error states for each input
     const [idError, setIdError] = useState('');
     const [emailError, setEmailError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
     const [nicknameError, setNicknameError] = useState('');
     const [generalError, setGeneralError] = useState(''); // For non-field specific errors
 
@@ -32,7 +31,6 @@ function SignUp() {
     const [emailVerified, setEmailVerified] = useState(false);
     const [countdown, setCountdown] = useState(0);
     const [isIdUnique, setIsIdUnique] = useState(false);
-    const [isEmailUnique, setIsEmailUnique] = useState(false);
     const [isNicknameUnique, setIsNicknameUnique] = useState(false);
     const [passwordMatchMessage, setPasswordMatchMessage] = useState({ message: '', type: '' });
 
@@ -48,19 +46,11 @@ function SignUp() {
         if (password.value && confirmPassword.value) {
             if (password.value === confirmPassword.value) {
                 setPasswordMatchMessage({ message: '비밀번호가 일치합니다.', type: 'success' });
-                setPasswordError('');
             } else {
                 setPasswordMatchMessage({ message: '비밀번호가 일치하지 않습니다.', type: 'error' });
-                setPasswordError('비밀번호가 일치하지 않습니다.');
             }
-        } else if (password.value || confirmPassword.value) {
-            // 한쪽만 입력되었을 경우 메시지를 비웁니다.
-            setPasswordMatchMessage({ message: '', type: '' });
-            setPasswordError('');
         } else {
-            // 둘 다 비어있을 경우 메시지를 비웁니다.
             setPasswordMatchMessage({ message: '', type: '' });
-            setPasswordError('');
         }
     }, [password.value, confirmPassword.value]);
 
@@ -79,10 +69,8 @@ function SignUp() {
             const emailDuplicationResponse = await checkEmailDuplication(email.value);
             if (!emailDuplicationResponse.isUnique) {
                 setEmailError('이미 사용 중인 이메일입니다.');
-                setIsEmailUnique(false);
                 return;
             }
-            setIsEmailUnique(true);
 
             await sendVerificationEmail(email.value);
             setEmailSent(true);
@@ -172,17 +160,14 @@ function SignUp() {
         // Clear all specific errors at the start of submission
         setIdError('');
         setEmailError('');
-        setPasswordError('');
         setNicknameError('');
 
         let hasError = false;
 
         if (password.value !== confirmPassword.value) {
-            setPasswordError('비밀번호가 일치하지 않습니다.');
             setPasswordMatchMessage({ message: '비밀번호가 일치하지 않습니다.', type: 'error' });
             hasError = true;
         } else {
-            setPasswordError('');
             setPasswordMatchMessage({ message: '비밀번호가 일치합니다.', type: 'success' });
         }
 
@@ -213,10 +198,13 @@ function SignUp() {
                 userPwd: password.value,
                 userNickname: nickname.value,
             });
-            setSuccess('회원가입 성공! 로그인 페이지로 이동합니다.');
-            setTimeout(() => {
-                navigate('/signin');
-            }, 2000);
+            if (response.jwt) {
+                setSuccess('회원가입 성공! 자동으로 로그인됩니다.');
+                login(response.jwt);
+                setTimeout(() => {
+                    navigate('/');
+                }, 2000);
+            }
         } catch (err) {
             setGeneralError(err.response?.data?.message || '회원가입 실패');
         }
@@ -264,7 +252,7 @@ function SignUp() {
                             required
                             className="signup-input"
                             disabled={emailSent}
-                            onChange={(e) => { email.onChange(e); setIsEmailUnique(false); setEmailSent(false); setEmailVerified(false); setCountdown(0); setEmailVerificationMessage(''); setEmailError(''); }}
+                            onChange={(e) => { email.onChange(e); setEmailSent(false); setEmailVerified(false); setCountdown(0); setEmailVerificationMessage(''); setEmailError(''); }}
                         />
                         <button
                             type="button"
@@ -315,7 +303,7 @@ function SignUp() {
                         {...password}
                         required
                         className="signup-input"
-                        onChange={(e) => { password.onChange(e); setPasswordError(''); }}
+                        onChange={(e) => { password.onChange(e); }}
                     />
                 </div>
                 <div className="signup-form-group">
@@ -326,7 +314,7 @@ function SignUp() {
                         {...confirmPassword}
                         required
                         className="signup-input"
-                        onChange={(e) => { confirmPassword.onChange(e); setPasswordError(''); }}
+                        onChange={(e) => { confirmPassword.onChange(e); }}
                     />
                     {passwordMatchMessage.message && (
                         <p className={passwordMatchMessage.type === 'error' ? 'signup-password-mismatch' : 'signup-password-match'}>

@@ -1,0 +1,29 @@
+package com.revia.lastdance.signin.service;
+
+import com.revia.lastdance.signin.dao.SigninMapper;
+import com.revia.lastdance.signup.vo.UserVO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+
+@Service
+@RequiredArgsConstructor
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+    private final SigninMapper signinMapper;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserVO userVO = signinMapper.findUserByEmail(username);
+        if (userVO == null) {
+            throw new UsernameNotFoundException("User not found with email: " + username);
+        }
+        return new User(userVO.getUserEmail(), userVO.getUserPwd(), Collections.singletonList(new SimpleGrantedAuthority(userVO.getRoleType())));
+    }
+}

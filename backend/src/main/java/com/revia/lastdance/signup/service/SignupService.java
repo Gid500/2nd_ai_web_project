@@ -6,10 +6,10 @@ import com.revia.lastdance.signup.dao.SignupMapper;
 import com.revia.lastdance.signup.vo.EmailVerificationVO;
 import com.revia.lastdance.signup.vo.UserVO;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,26 +18,20 @@ import java.util.Calendar;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class SignupService {
 
-    @Autowired
-    private SignupMapper signupMapper;
-
-    @Autowired
-    private JavaMailSender mailSender;
-
-    @Autowired
-    private EmailVerificationProperties emailVerificationProperties;
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final SignupMapper signupMapper;
+    private final JavaMailSender mailSender;
+    private final EmailVerificationProperties emailVerificationProperties;
+    private final PasswordEncoder passwordEncoder;
 
     // 회원가입 처리
     @Transactional
     public void registerUser(UserVO userVO) {
         
         // 비밀번호 암호화
-        String encodedPassword = bCryptPasswordEncoder.encode(userVO.getUserPwd());
+        String encodedPassword = passwordEncoder.encode(userVO.getUserPwd());
         userVO.setUserPwd(encodedPassword);
         
         // 사용자 ID는 userVO에 이미 설정되어 있다고 가정하고 UUID 생성 로직 제거

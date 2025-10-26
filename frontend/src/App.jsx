@@ -13,7 +13,7 @@ import AdminRouteWrapper from './common/components/AdminRouteWrapper';
 import Explain from './pages/explain/Explain';
 import Mypage from './pages/mypage/Mypage';
 import CareAccoount from './pages/mypage/CareAccount';
-
+import ProtectedRoute from './common/components/ProtectedRoute';
 
 function App() {
   return (
@@ -24,13 +24,15 @@ function App() {
         <Route path="/cat" element={<Cat />} />
         <Route path="/dog" element={<Dog />} />
         <Route path='/admin' element={<AdminRouteWrapper />} />
-        <Route path="/comm" element={<Comm/>} />
         <Route path="/explain" element={<Explain/>} />
-        <Route path="/mypage" element={<Mypage/>} />
-        <Route path="/care" element={<CareAccoount />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/comm" element={<Comm/>} />
+          <Route path="/mypage" element={<Mypage/>} />
+          <Route path="/care" element={<CareAccoount />} />
+        </Route>
 
         <Route path="/403" element={<Error403 />} />
         <Route path="*" element={<Error404 />} /> {/* Catch-all for 404 errors */}

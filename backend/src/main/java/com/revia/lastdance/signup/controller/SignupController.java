@@ -1,34 +1,49 @@
 package com.revia.lastdance.signup.controller;
 
+import com.revia.lastdance.config.jwt.JwtUtil;
+import com.revia.lastdance.signin.dto.AuthenticationResponse;
 import com.revia.lastdance.signup.service.SignupService;
 import com.revia.lastdance.signup.vo.UserVO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class SignupController {
 
-    @Autowired
-    private SignupService signupService;
+    private static final Logger logger = LoggerFactory.getLogger(SignupController.class);
+
+    private final SignupService signupService;
+    private final JwtUtil jwtUtil;
+    private final UserDetailsService userDetailsService;
 
     @PostMapping("/signup/register")
     public ResponseEntity<?> registerUser(@RequestBody UserVO userVO) {
+        logger.info("Received signup request for user: {}", userVO.toString());
+
         if (signupService.isEmailDuplicated(userVO.getUserEmail())) {
             return ResponseEntity.badRequest().body("이미 사용중인 이메일입니다.");
         }
         if (signupService.isNicknameDuplicated(userVO.getUserNickname())) {
             return ResponseEntity.badRequest().body("이미 사용중인 닉네임입니다.");
         }
-        // 사용자 ID 중복 확인 추가
         if (signupService.isUserIdDuplicated(userVO.getUserId())) {
             return ResponseEntity.badRequest().body("이미 사용중인 아이디입니다.");
         }
         signupService.registerUser(userVO);
-        return ResponseEntity.ok("회원가입이 완료되었습니다.");
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(userVO.getUserEmail());
+        final String jwt = jwtUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
     @GetMapping("/signup/check-email")
@@ -43,7 +58,6 @@ public class SignupController {
         return ResponseEntity.ok(Map.of("isDuplicated", isDuplicated));
     }
 
-    // 사용자 ID 중복 확인 엔드포인트 추가
     @GetMapping("/signup/check-userid")
     public ResponseEntity<?> checkUserId(@RequestParam String userId) {
         boolean isDuplicated = signupService.isUserIdDuplicated(userId);

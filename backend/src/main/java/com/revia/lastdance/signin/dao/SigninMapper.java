@@ -8,4 +8,5 @@ import org.apache.ibatis.annotations.Param;
 public interface SigninMapper {
     UserVO findUserByEmailOrUserId(@Param("identifier") String identifier);
     UserVO findUserByUserId(@Param("userId") String userId);
+    UserVO findUserByEmail(String userEmail);
 }

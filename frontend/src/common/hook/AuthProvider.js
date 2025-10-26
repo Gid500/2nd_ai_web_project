@@ -1,58 +1,70 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '../api/api';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { jwtDecode } from 'jwt-decode'; // Corrected import
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(false);
-    const [userId, setUserId] = useState(null); // Add userId to state
+    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const checkLoginStatus = async () => {
-        try {
-            const response = await api.get('/api/checkSession');
-            setIsLoggedIn(response.data.isAuthenticated);
-            setIsAdmin(response.data.roleType && response.data.roleType.toLowerCase() === 'admin');
-            setUserId(response.data.user ? response.data.user.userId : null); // Correctly extract userId
-        } catch (error) {
-            console.error('Failed to check login status:', error);
-            setIsLoggedIn(false);
-            setIsAdmin(false);
-            setUserId(null);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
-        checkLoginStatus();
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                // Check if token is expired
+                if (decoded.exp * 1000 > Date.now()) {
+                    setUser({ 
+                        email: decoded.sub, 
+                        role: decoded.auth, // Assuming role is stored in 'auth' claim
+                        isLoggedIn: true 
+                    });
+                } else {
+                    localStorage.removeItem('token');
+                }
+            } catch (error) {
+                console.error("Invalid token", error);
+                localStorage.removeItem('token');
+            }
+        }
+        setLoading(false);
     }, []);
 
-    const login = () => {
-        setIsLoggedIn(true);
-        // Re-check admin status and userId after login, as it might have changed
-        checkLoginStatus(); 
+    const login = (token) => {
+        localStorage.setItem('token', token);
+        try {
+            const decoded = jwtDecode(token);
+            setUser({ 
+                email: decoded.sub, 
+                role: decoded.auth, 
+                isLoggedIn: true 
+            });
+        } catch (error) {
+            console.error("Invalid token", error);
+        }
     };
 
-    const logout = async () => {
-        try {
-            await api.post('/api/session-logout');
-            setIsLoggedIn(false);
-            setIsAdmin(false);
-            setUserId(null); // Clear userId on logout
-            alert('로그아웃 되었습니다.');
-        } catch (error) {
-            console.error('Logout failed:', error);
-            alert('로그아웃 실패.');
-        }
+    const logout = () => {
+        localStorage.removeItem('token');
+        setUser(null);
+    };
+
+    const authContextValue = {
+        user,
+        loading,
+        login,
+        logout,
+        isLoggedIn: user?.isLoggedIn,
+        isAdmin: user?.role === 'ROLE_ADMIN',
+        userId: user?.email
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, isAdmin, userId, loading, login, logout }}>
+        <AuthContext.Provider value={authContextValue}>
             {children}
         </AuthContext.Provider>
     );
 };
+
 
 export const useAuth = () => useContext(AuthContext);

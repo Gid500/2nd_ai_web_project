@@ -1,38 +1,38 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import useInput from '../../common/hook/useInput';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../common/hook/AuthProvider'; // AuthProvider에서 useAuth 임포트
-import api from '../../common/api/api'; // api 인스턴스 임포트
+import { useAuth } from '../../common/hook/AuthProvider';
+import api from '../../common/api/api';
 import LoadingSpinner from '../../common/components/LoadingSpinner';
 import { NavLink } from 'react-router-dom';
-import './SignIn.css'; // Import SignIn.css
+import './SignIn.css';
 
 function SignIn() {
     const getNavLinkClass = ({ isActive }) => `signin-link ${isActive ? 'active' : ''}`;
-    const identifier = useInput('');
+    const email = useInput('');
     const password = useInput('');
     const [error, setError] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const navigate = useNavigate();
-    const { login } = useAuth(); // useAuth 훅에서 login 함수 가져오기
+    const { login } = useAuth();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
         try {
-            const response = await api.post('/api/login', {
-                identifier: identifier.value,
-                userPwd: password.value,
+            const response = await api.post('/api/signin', {
+                username: email.value,
+                password: password.value,
             });
-            if (response.status === 200) {
+            if (response.data.jwt) {
                 alert('로그인 성공!');
-                login(); // 로그인 성공 시 AuthContext의 login 함수 호출
+                login(response.data.jwt);
                 navigate('/');
             }
         } catch (err) {
-            setError(err.response?.data || err.message);
-            alert('로그인 실패: ' + (err.response?.data || err.message));
+            setError(err.response?.data?.message || err.message);
+            alert('로그인 실패: ' + (err.response?.data?.message || err.message));
         } finally {
             setLoading(false);
         }
@@ -44,8 +44,8 @@ function SignIn() {
                 <h2 className="signin-title">로그인</h2>
                 <form onSubmit={handleLogin}>
                     <div className="signin-form-group">
-                        <label className="signin-label">아이디 또는 이메일:</label>
-                        <input type="text" className="signin-input" {...identifier} required />
+                        <label className="signin-label">이메일:</label>
+                        <input type="email" className="signin-input" {...email} required />
                     </div>
                     <div className="signin-form-group">
                         <label className="signin-label">비밀번호:</label>
