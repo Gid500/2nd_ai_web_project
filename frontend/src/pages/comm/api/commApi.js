@@ -1,8 +1,8 @@
 import api from '../../../common/api/api';
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (page = 1, size = 10) => {
     try {
-        const response = await api.get('/api/posts');
+        const response = await api.get(`/api/posts?page=${page}&size=${size}`);
         return response.data;
     } catch (error) {
         console.error('Error fetching posts:', error);
@@ -30,9 +30,10 @@ export const createPost = async (postData) => {
     }
 };
 
-export const updatePost = async (postId, postData) => {
+export const updatePost = async (postId, postData) => { // POST 요청으로 변경
     try {
-        const response = await api.put(`/api/posts/update/${postId}`, postData);
+        // 백엔드에서 postId를 postData 내에서 처리하므로 URL에서 제거
+        const response = await api.post(`/api/posts/update`, postData);
         return response.data;
     } catch (error) {
         console.error(`Error updating post with ID ${postId}:`, error);

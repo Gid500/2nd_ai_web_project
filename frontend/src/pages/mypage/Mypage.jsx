@@ -11,24 +11,22 @@ function Mypage() {
 
   return (
     <div className="parents">
-        <div className="profileForm">
-        
-        
-        <h2 className="pf-title">프로필 수정</h2>
+      <div className="mypage-content-wrapper">
+        <div className="mypage-profile-form">
+          <h2 className="mypage-title">프로필 수정</h2>
 
-            <MypageTab />
-
-            {authLoading ? (
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
-                <LoadingSpinner />
-              </div>
-            ) : (
-              userId ? <ProfileForm userId={userId} /> : <p>로그인 정보가 없습니다.</p>
-            )}
-
-            <PasswordResetForm />
-
+          {authLoading ? (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+              <LoadingSpinner />
+            </div>
+          ) : (
+            userId ? <ProfileForm userId={userId} /> : <p>로그인 정보가 없습니다.</p>
+          )}
         </div>
+
+        <PasswordResetForm />
+      </div>
+      <MypageTab />
     </div>
   );
 }

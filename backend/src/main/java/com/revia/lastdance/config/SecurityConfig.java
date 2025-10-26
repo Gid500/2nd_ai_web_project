@@ -60,7 +60,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/signup/**", "/api/signin").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/posts/delete/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_admin") // 관리자만 삭제 가능
+                        // DELETE 요청에 대한 권한 설정을 authenticated()로 변경하여 PostController의 @PreAuthorize에 위임
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/delete/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

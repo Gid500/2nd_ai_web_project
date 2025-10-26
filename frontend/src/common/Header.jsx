@@ -40,7 +40,10 @@ function Header() {
                 <button onClick={handleLogout} className="logout-button">로그아웃</button>
               </>
             ) : (
-              <NavLink to="/signin" className="profile"><i className="fa-solid fa-user"></i></NavLink>
+              <>
+                <NavLink to="/signin" className="profile">로그인</NavLink>
+                <NavLink to="/signup" className="profile">회원가입</NavLink>
+              </>
             )}
           </nav>
         </div>

@@ -51,7 +51,7 @@ public class PostService {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         String userId = userDetails.getUserId();
 
-        // 공지사항 작성 권한 검사
+        // 공지사항 작성 권한 검사 (isAdmin 사용하지 않으므로 제거했던 부분 복구)
         if (postVO.getIsNotice() != null && postVO.getIsNotice()) {
             boolean isAdmin = authentication.getAuthorities().stream()
                                         .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_admin"));
@@ -96,8 +96,10 @@ public class PostService {
     public boolean isOwner(int postId, String userId) {
         PostVO post = postMapper.selectPostById(postId);
         if (post == null) {
+            logger.warn("Post with ID {} not found.", postId); // 로그 추가
             return false;
         }
+        logger.info("Checking ownership: Post ID = {}, Stored User ID = {}, Current User ID = {}", postId, post.getUserId(), userId); // 로그 추가
         return Objects.equals(post.getUserId(), userId);
     }
 }

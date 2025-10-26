@@ -4,7 +4,7 @@ import { useAuth } from '../../../common/hook/useAuth';
 
 const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
     const isEditMode = !!initialData.postId;
-    const { isAdmin } = useAuth();
+    const { user, isAdmin } = useAuth(); // isAdmin 다시 가져오기
 
     const postTitle = useInput(initialData.postTitle || '');
     const postContent = useInput(initialData.postContent || '');
@@ -33,10 +33,12 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
 
         const formData = new FormData();
         const postData = {
+            postId: initialData.postId, // postId 추가
             postTitle: postTitle.value,
             postContent: postContent.value,
             isNotice: postType === 'notice',
             deletedFileIds: deletedFileIds, // 삭제할 파일 ID 목록 포함
+            userId: user ? user.userId : null, // user_id 추가
         };
 
         formData.append('post', new Blob([JSON.stringify(postData)], { type: 'application/json' }));
@@ -49,7 +51,7 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
     };
 
     const postOptions = [];
-    if (isAdmin) {
+    if (isAdmin) { // isAdmin 조건 다시 추가
         postOptions.push({ value: 'notice', label: '공지사항' });
     }
     postOptions.push({ value: 'general', label: '일반' });

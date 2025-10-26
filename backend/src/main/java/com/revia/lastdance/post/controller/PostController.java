@@ -47,13 +47,12 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{postId}") // Changed to PutMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_admin') or @postService.isOwner(#postId, authentication.principal.userId)")
+    @PostMapping("/update") // PUT 대신 POST 사용
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_admin') or @postService.isOwner(#postVO.postId, #postVO.userId)") // userId를 PostVO에서 가져옴
     public ResponseEntity<Void> updatePost(
-            @PathVariable("postId") int postId,
             @RequestPart("post") PostVO postVO,
             @RequestPart(value = "files", required = false) List<MultipartFile> files) {
-        postVO.setPostId(postId);
+        // postId는 PostVO 안에 이미 포함되어 있으므로 별도로 설정할 필요 없음
         postService.updatePost(postVO, files);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -1,147 +1,101 @@
-import React, { useState } from 'react';
-import api from '../../../common/api/api';
+import React from 'react';
 import '../Mypage.css'; // Reusing Mypage.css for styling
 import LoadingSpinner from '../../../common/components/LoadingSpinner'; // Import LoadingSpinner
+import usePasswordResetForm from '../hook/usePasswordResetForm'; // 새로 생성한 훅 임포트
 
 function PasswordResetForm() {
-  const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [step, setStep] = useState(1); // 1: Request code, 2: Reset password
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
-  const handleRequestCode = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    setLoading(true);
-
-    try {
-      await api.post('/api/mypage/password-reset/request', { userEmail: email });
-      setSuccess('Verification code sent to your email.');
-      setStep(2);
-    } catch (err) {
-      console.error("Error requesting password reset code:", err);
-      setError(err.response?.data || 'Failed to send verification code.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResetPassword = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    setLoading(true);
-
-    if (newPassword !== confirmPassword) {
-      setError('Passwords do not match.');
-      setLoading(false);
-      return;
-    }
-
-    try {
-      await api.post('/api/mypage/password-reset/confirm', {
-        userEmail: email,
-        emailCode: code,
-        newPassword: newPassword,
-      });
-      setSuccess('Password reset successfully!');
-      setStep(1); // Optionally reset form or navigate
-      setEmail('');
-      setCode('');
-      setNewPassword('');
-      setConfirmPassword('');
-    } catch (err) {
-      console.error("Error resetting password:", err);
-      setError(err.response?.data || 'Failed to reset password.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    email,
+    code,
+    newPassword,
+    confirmPassword,
+    step,
+    loading,
+    error,
+    success,
+    handleRequestCode,
+    handleResetPassword,
+  } = usePasswordResetForm();
 
   return (
-    <div className="passwordResetForm">
-      <h2 className="pf-title">비밀번호 변경</h2>
+    <div className="mypage-password-reset-form">
+      <h2 className="mypage-title">비밀번호 변경</h2>
 
-      {error && <div className="pf-error">{error}</div>}
-      {success && <div className="pf-success">{success}</div>}
+      {error && <div className="mypage-error">{error}</div>}
+      {success && <div className="mypage-success">{success}</div>}
 
       {step === 1 && (
         <form onSubmit={handleRequestCode}>
-          <div className="pf-row">
-            <label htmlFor="resetEmail" className="pf-label">이메일</label>
-            <input
-              id="resetEmail"
-              className="pf-input"
-              type="email"
-              placeholder="등록된 이메일 주소"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="pf-footer">
-            <button className="pf-submit" disabled={loading}>
-              {loading ? <><LoadingSpinner /> <span style={{ marginLeft: '8px' }}>전송 중…</span></> : '인증 코드 전송'}
-            </button>
+          <div className="mypage-row">
+            <label htmlFor="resetEmail" className="mypage-label">이메일</label>
+            <div className="mypage-input-button-group">
+              <input
+                id="resetEmail"
+                className="mypage-input"
+                type="email"
+                placeholder="등록된 이메일 주소"
+                value={email.value} // useInput 훅의 value 사용
+                onChange={email.onChange} // useInput 훅의 onChange 사용
+                required
+              />
+              <button className="mypage-btn mypage-submit" disabled={loading}>
+                {loading ? <><LoadingSpinner /> <span style={{ marginLeft: '8px' }}>전송 중…</span></> : '인증 코드 전송'}
+              </button>
+            </div>
           </div>
         </form>
       )}
 
       {step === 2 && (
         <form onSubmit={handleResetPassword}>
-          <div className="pf-row">
-            <label htmlFor="resetEmailConfirm" className="pf-label">이메일</label>
+          <div className="mypage-row">
+            <label htmlFor="resetEmailConfirm" className="mypage-label">이메일</label>
             <input
               id="resetEmailConfirm"
-              className="pf-input"
+              className="mypage-input"
               type="email"
-              value={email}
+              value={email.value}
               disabled
             />
           </div>
-          <div className="pf-row">
-            <label htmlFor="verificationCode" className="pf-label">인증 코드</label>
+          <div className="mypage-row">
+            <label htmlFor="verificationCode" className="mypage-label">인증 코드</label>
             <input
               id="verificationCode"
-              className="pf-input"
+              className="mypage-input"
               type="text"
               placeholder="이메일로 받은 인증 코드"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
+              value={code.value}
+              onChange={code.onChange}
               required
             />
           </div>
-          <div className="pf-row">
-            <label htmlFor="newPassword" className="pf-label">새 비밀번호</label>
+          <div className="mypage-row">
+            <label htmlFor="newPassword" className="mypage-label">새 비밀번호</label>
             <input
               id="newPassword"
-              className="pf-input"
+              className="mypage-input"
               type="password"
               placeholder="새 비밀번호"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              value={newPassword.value}
+              onChange={newPassword.onChange}
               required
             />
           </div>
-          <div className="pf-row">
-            <label htmlFor="confirmPassword" className="pf-label">새 비밀번호 확인</label>
+          <div className="mypage-row">
+            <label htmlFor="confirmPassword" className="mypage-label">새 비밀번호 확인</label>
             <input
               id="confirmPassword"
-              className="pf-input"
+              className="mypage-input"
               type="password"
               placeholder="새 비밀번호 확인"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={confirmPassword.value}
+              onChange={confirmPassword.onChange}
               required
             />
           </div>
-          <div className="pf-footer">
-            <button className="pf-submit" disabled={loading}>
+          <div className="mypage-footer">
+            <button className="mypage-submit" disabled={loading}>
               {loading ? <><LoadingSpinner /> <span style={{ marginLeft: '8px' }}>변경 중…</span></> : '비밀번호 변경'}
             </button>
           </div>

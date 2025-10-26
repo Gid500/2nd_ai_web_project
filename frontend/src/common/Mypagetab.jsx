@@ -13,7 +13,7 @@ function Mypagetab() {
 
   return (
     <div>
-      <nav className="mypageTabs">
+      <nav className="mypage-tabs">
         <NavLink
           to="/mypage"
           className={({ isActive }) => (isActive ? 'tab active' : 'tab')}
@@ -28,7 +28,7 @@ function Mypagetab() {
           계정 관리
         </NavLink>
 
-        <button className="logoutBtn" onClick={handleLogout}>
+        <button className="mypage-logout-btn" onClick={handleLogout}>
           로그아웃
         </button>
       </nav>
