@@ -30,7 +30,9 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/comm" element={<Comm/>} />
-          <Route path="/comm/:postId" element={<Comm/>} /> {/* Added route for post detail */}
+          <Route path="/comm/new" element={<Comm/>} /> {/* 새 게시글 작성 */}
+          <Route path="/comm/:postId" element={<Comm/>} />
+          <Route path="/comm/:postId/edit" element={<Comm/>} /> {/* 게시글 수정 */}
           <Route path="/mypage" element={<Mypage/>} />
           <Route path="/care" element={<CareAccoount />} />
         </Route>

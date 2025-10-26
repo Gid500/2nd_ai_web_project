@@ -1,21 +1,16 @@
 package com.revia.lastdance.comment.vo;
 
-import com.revia.lastdance.post.vo.PostVO;
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 public class CommentVO {
     private int commentId;
-    private String userId;
     private int postId;
-    private String comment;
-    private Timestamp createdDate;
-    private String createdId;
-    private Timestamp updatedDate;
-    private String updatedId;
-
-    private UserVO user;
-    private PostVO post;
+    private int userId;
+    private String content;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private String userName;
 }

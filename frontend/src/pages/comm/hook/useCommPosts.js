@@ -4,7 +4,6 @@ import { getAllPosts, getPostById, createPost, updatePost, deletePost, getTopNot
 export const useCommPosts = (page = 1, size = 10) => {
     const [posts, setPosts] = useState([]);
     const [notices, setNotices] = useState([]); // 공지사항 상태 추가
-    const [selectedPost, setSelectedPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [totalPosts, setTotalPosts] = useState(0);
@@ -42,11 +41,11 @@ export const useCommPosts = (page = 1, size = 10) => {
         setLoading(true);
         try {
             const response = await getPostById(id); // commApi의 getPostById 사용
-            setSelectedPost(response);
             setError(null);
+            return response; // 게시글 데이터 반환
         } catch (err) {
             setError(err);
-            setSelectedPost(null);
+            return null;
         } finally {
             setLoading(false);
         }
@@ -92,16 +91,13 @@ export const useCommPosts = (page = 1, size = 10) => {
     }, [fetchPosts, fetchNotices]);
 
     useEffect(() => {
-        if (!selectedPost) {
-            fetchPosts();
-            fetchNotices(2); // 컴포넌트 마운트 시 상위 2개 공지사항 가져오기
-        }
-    }, [fetchPosts, fetchNotices, selectedPost]);
+        fetchPosts();
+        fetchNotices(2); // 컴포넌트 마운트 시 상위 2개 공지사항 가져오기
+    }, [fetchPosts, fetchNotices]);
 
     return {
         posts,
         notices, // 공지사항 반환
-        selectedPost,
         loading,
         error,
         fetchPosts,
@@ -110,7 +106,6 @@ export const useCommPosts = (page = 1, size = 10) => {
         addPost,
         editPost,
         removePost,
-        setSelectedPost,
         totalPosts,
         totalPages
     };

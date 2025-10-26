@@ -1,9 +1,11 @@
 import React from 'react';
 import { useAuth } from '../../../common/hook/useAuth';
 import './PostList.css';
+import { useNavigate } from 'react-router-dom'; // useNavigate 임포트
 
-const PostList = ({ posts, onViewDetail, onEdit, onDelete }) => {
+const PostList = ({ posts, onCreateNewPost, currentUser }) => {
     const { user, isAdmin } = useAuth();
+    const navigate = useNavigate(); // useNavigate 훅 사용
 
     // Sort posts: notices first, then by createdDate (newest first)
     const sortedPosts = [...posts].sort((a, b) => {
@@ -15,16 +17,35 @@ const PostList = ({ posts, onViewDetail, onEdit, onDelete }) => {
         return b.isNotice - a.isNotice;
     });
 
+    const handleViewDetail = (id) => {
+        navigate(`/comm/${id}`);
+    };
+
+    const handleEdit = (post) => {
+        // PostDetail에서 onEdit을 호출할 때 navigate를 사용하도록 변경
+        // 여기서는 PostList에서 직접 수정 버튼을 누를 일이 없으므로 onEdit prop은 제거
+    };
+
+    const handleDelete = (id) => {
+        // PostDetail에서 onDelete를 호출할 때 navigate를 사용하도록 변경
+        // 여기서는 PostList에서 직접 삭제 버튼을 누를 일이 없으므로 onDelete prop은 제거
+    };
+
     return (
         <div className="post-list-container">
-            <h2 className="post-list-title">게시글 목록</h2>
+            <div className="post-list-header">
+                <h2 className="post-list-title">게시글 목록</h2>
+                {currentUser && ( // 로그인된 사용자에게만 버튼 표시
+                    <button className="comm-create-post-button" onClick={onCreateNewPost}>새 게시글 작성</button>
+                )}
+            </div>
             {sortedPosts.length === 0 ? (
                 <p className="post-list-empty">게시글이 없습니다.</p>
             ) : (
                 <ul className="post-list-ul">
                     {sortedPosts.map(post => (
                         <li key={post.postId} className={`post-list-item ${post.isNotice ? 'notice' : ''}`}>
-                            <h3 onClick={() => onViewDetail(post.postId)} className="post-list-item-title">
+                            <h3 onClick={() => handleViewDetail(post.postId)} className="post-list-item-title">
                                 {post.isNotice && <span className="post-list-notice-tag">[공지]</span>}
                                 {post.postTitle}
                             </h3>
@@ -32,8 +53,7 @@ const PostList = ({ posts, onViewDetail, onEdit, onDelete }) => {
                             <p className="post-list-meta-info">작성일: {new Date(post.createdDate).toLocaleString()}</p>
                             {(isAdmin || (user && user.userId === post.userId)) && (
                                 <div className="post-list-actions">
-                                    <button onClick={() => onEdit(post)}>수정</button>
-                                    <button onClick={() => onDelete(post.postId)}>삭제</button>
+                                    {/* PostList에서는 수정/삭제 버튼을 직접 렌더링하지 않고 PostDetail에서 처리 */}
                                 </div>
                             )}
                         </li>

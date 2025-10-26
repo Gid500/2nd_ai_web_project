@@ -6,9 +6,15 @@
     background-color: #fff;
 }
 
+.post-list-header {
+    display: flex;
+    justify-content: space-between; /* 제목과 버튼을 양쪽 끝으로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    margin-bottom: 20px;
+}
+
 .post-list-title {
     font-size: 1.8em;
-    margin-bottom: 20px;
     color: #333;
 }
 
@@ -78,4 +84,18 @@
 
 .post-list-actions button:hover {
     background-color: #5a6268;
+}
+
+.comm-create-post-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.comm-create-post-button:hover {
+    background-color: #0056b3;
 }

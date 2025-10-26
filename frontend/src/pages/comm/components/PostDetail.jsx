@@ -1,18 +1,31 @@
 import React from 'react';
 import { useAuth } from '../../../common/hook/useAuth';
 import './PostDetail.css';
+import { useNavigate } from 'react-router-dom'; // useNavigate 임포트
+// CommentList와 CommentForm 컴포넌트 import
+import CommentList from '../../commnet/components/CommentList';
+import CommentForm from '../../commnet/components/CommentForm';
 
 // 백엔드 기본 URL (환경 변수 또는 설정 파일에서 가져오는 것이 좋지만, 일단 하드코딩)
 const BACKEND_BASE_URL = 'http://localhost:8080';
 
-const PostDetail = ({ post, onBackToList, onEdit, onDelete }) => {
+const PostDetail = ({ post, onBackToList, onEdit, onDelete, comments, fetchComments }) => {
     const { user, isAdmin } = useAuth();
+    const navigate = useNavigate(); // useNavigate 훅 사용
 
     if (!post) {
         return <p>게시글을 찾을 수 없습니다.</p>;
     }
 
     const decodedContent = post.postContent || '';
+
+    const handleEditClick = () => {
+        onEdit(post); // useCommPage의 handleEditPost 호출
+    };
+
+    const handleDeleteClick = () => {
+        onDelete(post.postId); // useCommPage의 handleDeletePost 호출
+    };
 
     return (
         <div className="post-detail-container">
@@ -50,11 +63,17 @@ const PostDetail = ({ post, onBackToList, onEdit, onDelete }) => {
             <div className="post-detail-actions">
                 <button onClick={onBackToList}>목록으로 돌아가기</button>
                 {(isAdmin || (user && user.userId === post.userId)) && (
-                    <>
-                        <button onClick={() => onEdit(post)}>수정</button>
-                        <button onClick={() => onDelete(post.postId)}>삭제</button>
+                    <> 
+                        <button onClick={handleEditClick}>수정</button>
+                        <button onClick={handleDeleteClick}>삭제</button>
                     </>
                 )}
+            </div>
+
+            {/* 댓글 섹션 추가 */}
+            <div className="comment-section">
+                <CommentForm postId={post.postId} onCommentAdded={fetchComments} />
+                <CommentList postId={post.postId} comments={comments} onCommentUpdated={fetchComments} onCommentDeleted={fetchComments} />
             </div>
         </div>
     );

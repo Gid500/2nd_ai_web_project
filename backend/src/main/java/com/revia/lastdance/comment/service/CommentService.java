@@ -1,9 +1,10 @@
 package com.revia.lastdance.comment.service;
 
-import com.revia.lastdance.comment.dao.CommentMapper;
+import com.revia.lastdance.comment.dao.CommentDAO;
 import com.revia.lastdance.comment.vo.CommentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
 
@@ -11,25 +12,34 @@ import java.util.List;
 public class CommentService {
 
     @Autowired
-    private CommentMapper commentMapper;
+    private CommentDAO commentDAO;
 
-    public void createComment(CommentVO commentVO) {
-        commentMapper.insertComment(commentVO);
+    public void addComment(CommentVO commentVO) {
+        commentDAO.insertComment(commentVO);
     }
 
     public List<CommentVO> getCommentsByPostId(int postId) {
-        return commentMapper.selectCommentsByPostId(postId);
-    }
-
-    public void updateComment(CommentVO commentVO) {
-        commentMapper.updateComment(commentVO);
-    }
-
-    public void deleteComment(int commentId) {
-        commentMapper.deleteComment(commentId);
+        return commentDAO.selectCommentsByPostId(postId);
     }
 
     public CommentVO getCommentById(int commentId) {
-        return commentMapper.selectCommentById(commentId);
+        return commentDAO.selectCommentById(commentId);
+    }
+
+    public void updateComment(CommentVO commentVO) {
+        commentDAO.updateComment(commentVO);
+    }
+
+    public void deleteComment(int commentId, int userId, boolean isAdmin) {
+        CommentVO comment = commentDAO.selectCommentById(commentId);
+        if (comment == null) {
+            throw new IllegalArgumentException("댓글을 찾을 수 없습니다.");
+        }
+
+        if (isAdmin || comment.getUserId() == userId) {
+            commentDAO.deleteComment(commentId);
+        } else {
+            throw new AccessDeniedException("댓글을 삭제할 권한이 없습니다.");
+        }
     }
 }
