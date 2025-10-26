@@ -13,10 +13,12 @@ const useCommPage = () => {
 
     const {
         posts,
+        notices,
         selectedPost,
         loading,
         error,
         fetchPosts,
+        fetchNotices,
         fetchPostById,
         addPost,
         editPost,
@@ -31,8 +33,9 @@ const useCommPage = () => {
         } else {
             setSelectedPost(null);
             fetchPosts();
+            fetchNotices(2); // CommPage가 로드될 때 공지사항도 가져오도록 추가
         }
-    }, [postId, fetchPostById, setSelectedPost, fetchPosts, currentPage, postsPerPage]);
+    }, [postId, fetchPostById, setSelectedPost, fetchPosts, fetchNotices, currentPage, postsPerPage]);
 
     const handleViewDetail = (id) => {
         navigate(`/comm/${id}`);
@@ -55,6 +58,7 @@ const useCommPage = () => {
             await removePost(id);
             navigate('/comm');
             fetchPosts();
+            fetchNotices(2); // 공지사항도 새로고침
         }
     };
 
@@ -69,6 +73,7 @@ const useCommPage = () => {
         setEditingPost(null);
         navigate('/comm');
         fetchPosts();
+        fetchNotices(2); // 공지사항도 새로고침
     };
 
     const handleCancelForm = () => {
@@ -86,6 +91,7 @@ const useCommPage = () => {
 
     return {
         posts,
+        notices,
         selectedPost,
         loading,
         error,

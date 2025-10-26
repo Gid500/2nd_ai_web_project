@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useInput from '../hook/useInput';
 import { useAuth } from '../../../common/hook/useAuth';
+import './PostForm.css';
 
 const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
     const isEditMode = !!initialData.postId;
@@ -57,20 +58,20 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
     postOptions.push({ value: 'general', label: '일반' });
 
     return (
-        <div>
-            <h2>{isEditMode ? '게시글 수정' : '새 게시글 작성'}</h2>
+        <div className="post-form-container">
+            <h2 className="post-form-title">{isEditMode ? '게시글 수정' : '새 게시글 작성'}</h2>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label>제목:</label>
-                    <input type="text" {...postTitle} required />
+                <div className="post-form-group">
+                    <label htmlFor="postTitle">제목:</label>
+                    <input type="text" id="postTitle" {...postTitle} required />
                 </div>
-                <div>
-                    <label>내용:</label>
-                    <textarea {...postContent} rows="10" required />
+                <div className="post-form-group">
+                    <label htmlFor="postContent">내용:</label>
+                    <textarea id="postContent" {...postContent} rows="10" required />
                 </div>
-                <div>
-                    <label>게시글 유형:</label>
-                    <select value={postType} onChange={(e) => setPostType(e.target.value)}>
+                <div className="post-form-group">
+                    <label htmlFor="postType">게시글 유형:</label>
+                    <select id="postType" value={postType} onChange={(e) => setPostType(e.target.value)}>
                         {postOptions.map(option => (
                             <option key={option.value} value={option.value}>
                                 {option.label}
@@ -79,11 +80,11 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
                     </select>
                 </div>
                 {isEditMode && existingFiles.length > 0 && (
-                    <div>
+                    <div className="post-form-group">
                         <label>기존 파일:</label>
-                        <ul>
+                        <ul className="post-form-file-list">
                             {existingFiles.map(file => (
-                                <li key={file.fileId}>
+                                <li key={file.fileId} className="post-form-file-item">
                                     {file.uploadName}
                                     <button type="button" onClick={() => handleRemoveExistingFile(file.fileId)}>X</button>
                                 </li>
@@ -91,12 +92,14 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
                         </ul>
                     </div>
                 )}
-                <div>
-                    <label>파일 첨부:</label>
-                    <input type="file" multiple onChange={handleFileChange} />
+                <div className="post-form-group">
+                    <label htmlFor="fileUpload">파일 첨부:</label>
+                    <input type="file" id="fileUpload" multiple onChange={handleFileChange} />
                 </div>
-                <button type="submit">{isEditMode ? '수정' : '작성'}</button>
-                <button type="button" onClick={onCancel}>취소</button>
+                <div className="post-form-actions">
+                    <button type="submit">{isEditMode ? '수정' : '작성'}</button>
+                    <button type="button" onClick={onCancel}>취소</button>
+                </div>
             </form>
         </div>
     );

@@ -1,0 +1,81 @@
+/* PostList.css */
+.post-list-container {
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.post-list-title {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.post-list-empty {
+    text-align: center;
+    color: #777;
+    padding: 20px;
+}
+
+.post-list-ul {
+    list-style: none;
+    padding: 0;
+}
+
+.post-list-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    transition: box-shadow 0.3s ease;
+}
+
+.post-list-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.post-list-item.notice {
+    border: 2px solid #ffcc00;
+    background-color: #fffaf0; /* Slightly different background for notices */
+}
+
+.post-list-item-title {
+    font-size: 1.3em;
+    color: #007bff;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.post-list-item-title:hover {
+    text-decoration: underline;
+}
+
+.post-list-notice-tag {
+    margin-right: 10px;
+    color: red;
+    font-weight: bold;
+}
+
+.post-list-meta-info {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.post-list-actions button {
+    background-color: #6c757d;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+    margin-right: 5px;
+    margin-top: 10px;
+}
+
+.post-list-actions button:hover {
+    background-color: #5a6268;
+}

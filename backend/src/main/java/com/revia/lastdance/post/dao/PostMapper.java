@@ -14,4 +14,9 @@ public interface PostMapper {
     void insertPost(PostVO postVO);
     void updatePost(PostVO postVO);
     void deletePost(int postId);
+
+    // New methods for notices and general posts
+    List<PostVO> selectTopNotices(@Param("count") int count);
+    List<PostVO> selectAllGeneralPostsPaged(@Param("size") int size, @Param("offset") int offset);
+    int countAllGeneralPosts();
 }

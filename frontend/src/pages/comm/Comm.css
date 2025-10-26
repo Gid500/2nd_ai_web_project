@@ -1,0 +1,45 @@
+/* Comm.css */
+.comm-container {
+    /* Styles for the main container */
+}
+
+.comm-loading-spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.comm-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.comm-create-post-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.comm-create-post-button:hover {
+    background-color: #0056b3;
+}
+
+.comm-posts-per-page-selector {
+    margin-bottom: 10px;
+}
+
+.comm-posts-per-page-selector label {
+    margin-right: 10px;
+}
+
+.comm-posts-per-page-selector select {
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}

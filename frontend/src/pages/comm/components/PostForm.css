@@ -1,0 +1,93 @@
+/* PostForm.css */
+.post-form-container {
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fff;
+    margin-bottom: 20px;
+}
+
+.post-form-title {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.post-form-group {
+    margin-bottom: 15px;
+}
+
+.post-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.post-form-group input[type="text"],
+.post-form-group textarea,
+.post-form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+}
+
+.post-form-group textarea {
+    resize: vertical;
+}
+
+.post-form-file-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.post-form-file-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    background-color: #f9f9f9;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.post-form-file-item button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 4px 8px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+
+.post-form-file-item button:hover {
+    background-color: #c82333;
+}
+
+.post-form-actions button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.post-form-actions button[type="button"] {
+    background-color: #6c757d;
+}
+
+.post-form-actions button:hover {
+    background-color: #0056b3;
+}
+
+.post-form-actions button[type="button"]:hover {
+    background-color: #5a6268;
+}

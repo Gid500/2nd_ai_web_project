@@ -28,6 +28,12 @@ public class PostController {
         return new ResponseEntity<>(postsData, HttpStatus.OK);
     }
 
+    @GetMapping("/notices/top/{count}")
+    public ResponseEntity<List<PostVO>> getTopNotices(@PathVariable("count") int count) {
+        List<PostVO> notices = postService.getTopNotices(count);
+        return new ResponseEntity<>(notices, HttpStatus.OK);
+    }
+
     @GetMapping("/{postId}")
     public ResponseEntity<PostVO> getPostById(@PathVariable("postId") int postId) {
         PostVO post = postService.getPostById(postId);

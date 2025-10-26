@@ -26,6 +26,7 @@
         <collection property="files" ofType="com.revia.lastdance.post.vo.FileVO" resultMap="fileNestedResultMap"/>
     </resultMap>
 
+    <!-- 기존 selectAllPostsPaged는 일반 게시물만 조회하도록 변경 -->
     <select id="selectAllPostsPaged" resultMap="postWithFilesResultMap">
         SELECT
             p.post_id,
@@ -43,12 +44,14 @@
             f.img_url
         FROM tb_post p
         LEFT JOIN tb_file f ON p.post_id = f.post_id
+        WHERE p.is_notice = FALSE
         ORDER BY p.created_date DESC
         LIMIT #{size} OFFSET #{offset}
     </select>
 
+    <!-- 기존 countAllPosts는 일반 게시물만 카운트하도록 변경 -->
     <select id="countAllPosts" resultType="int">
-        SELECT COUNT(*) FROM tb_post
+        SELECT COUNT(*) FROM tb_post WHERE is_notice = FALSE
     </select>
 
     <select id="selectPostById" resultMap="postWithFilesResultMap">
@@ -107,5 +110,56 @@
     <delete id="deletePost">
         DELETE FROM tb_post WHERE post_id = #{postId}
     </delete>
+
+    <!-- New: 상위 N개 공지사항 조회 -->
+    <select id="selectTopNotices" resultMap="postWithFilesResultMap">
+        SELECT
+            p.post_id,
+            p.user_id,
+            p.post_title,
+            p.post_content,
+            p.is_notice,
+            p.created_date,
+            p.created_id,
+            p.updated_date,
+            p.updated_id,
+            f.file_id,
+            f.upload_name,
+            f.file_type,
+            f.img_url
+        FROM tb_post p
+        LEFT JOIN tb_file f ON p.post_id = f.post_id
+        WHERE p.is_notice = TRUE
+        ORDER BY p.created_date DESC
+        LIMIT #{count}
+    </select>
+
+    <!-- New: 일반 게시물만 페이지네이션하여 조회 (기존 selectAllPostsPaged와 동일한 로직이나 is_notice 조건 추가) -->
+    <select id="selectAllGeneralPostsPaged" resultMap="postWithFilesResultMap">
+        SELECT
+            p.post_id,
+            p.user_id,
+            p.post_title,
+            p.post_content,
+            p.is_notice,
+            p.created_date,
+            p.created_id,
+            p.updated_date,
+            p.updated_id,
+            f.file_id,
+            f.upload_name,
+            f.file_type,
+            f.img_url
+        FROM tb_post p
+        LEFT JOIN tb_file f ON p.post_id = f.post_id
+        WHERE p.is_notice = FALSE
+        ORDER BY p.created_date DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- New: 일반 게시물만 카운트 -->
+    <select id="countAllGeneralPosts" resultType="int">
+        SELECT COUNT(*) FROM tb_post WHERE is_notice = FALSE
+    </select>
 
 </mapper>

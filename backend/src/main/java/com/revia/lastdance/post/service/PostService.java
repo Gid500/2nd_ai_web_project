@@ -30,8 +30,8 @@ public class PostService {
 
     public Map<String, Object> getAllPosts(int page, int size) {
         int offset = (page - 1) * size;
-        List<PostVO> posts = postMapper.selectAllPostsPaged(size, offset);
-        int totalPosts = postMapper.countAllPosts();
+        List<PostVO> posts = postMapper.selectAllGeneralPostsPaged(size, offset); // 일반 게시물만 조회
+        int totalPosts = postMapper.countAllGeneralPosts(); // 일반 게시물만 카운트
 
         Map<String, Object> response = new HashMap<>();
         response.put("posts", posts);
@@ -40,6 +40,10 @@ public class PostService {
         response.put("pageSize", size);
         response.put("totalPages", (int) Math.ceil((double) totalPosts / size));
         return response;
+    }
+
+    public List<PostVO> getTopNotices(int count) {
+        return postMapper.selectTopNotices(count);
     }
 
     public PostVO getPostById(int postId) {
@@ -79,7 +83,7 @@ public class PostService {
         // 2. 삭제할 파일 처리
         if (postVO.getDeletedFileIds() != null && !postVO.getDeletedFileIds().isEmpty()) {
             for (Integer fileId : postVO.getDeletedFileIds()) {
-                fileService.deleteFile(fileId); // 특정 파일 삭제
+                fileService.deleteFile(fileId);
             }
         }
 
@@ -89,17 +93,18 @@ public class PostService {
 
     public void deletePost(int postId) {
         // 게시물 삭제 전에 연결된 파일 정보도 삭제
-        fileService.deleteFilesByPostId(postId); // 파일 삭제 로직 위임
+        fileService.deleteFilesByPostId(postId);
         postMapper.deletePost(postId);
     }
 
     public boolean isOwner(int postId, String userId) {
         PostVO post = postMapper.selectPostById(postId);
         if (post == null) {
-            logger.warn("Post with ID {} not found.", postId); // 로그 추가
+            logger.warn("Post with ID {} not found.", postId);
             return false;
         }
-        logger.info("Checking ownership: Post ID = {}, Stored User ID = {}, Current User ID = {}", postId, post.getUserId(), userId); // 로그 추가
+        logger.info("Checking ownership: Post ID = {}, Stored User ID = {}, Current User ID = {}", postId, post.getUserId(), userId);
         return Objects.equals(post.getUserId(), userId);
     }
+
 }

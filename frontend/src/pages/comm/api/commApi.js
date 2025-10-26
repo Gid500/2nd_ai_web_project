@@ -10,6 +10,16 @@ export const getAllPosts = async (page = 1, size = 10) => {
     }
 };
 
+export const getTopNotices = async (count = 2) => {
+    try {
+        const response = await api.get(`/api/posts/notices/top/${count}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching top notices:', error);
+        throw error;
+    }
+};
+
 export const getPostById = async (postId) => {
     try {
         const response = await api.get(`/api/posts/${postId}`);
