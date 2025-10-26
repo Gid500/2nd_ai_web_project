@@ -7,8 +7,8 @@ import os
 IMAGE_WIDTH, IMAGE_HEIGHT = 128, 128
 
 # Define model path
-# DOG_MODEL_PATH = "/home/qod110/Documents/Project/2nd_ai_web_project/dog_emotion_mobilenet_finetuned_v2.h5"
-DOG_MODEL_PATH = "C:/Users/admin/Desktop/project/2nd_ai_web_project/ai_model/dog_emotion_mobilenet_finetuned_v2.h5"
+DOG_MODEL_PATH = "/home/qod110/Documents/Project/2nd_ai_web_project/dog_emotion_mobilenet_finetuned_v2.h5"
+# DOG_MODEL_PATH = "C:/Users/admin/Desktop/project/2nd_ai_web_project/ai_model/dog_emotion_mobilenet_finetuned_v2.h5"
 
 # Define class labels for the dog model
 DOG_CLASS_LABELS = ['Happy', 'Sad', 'Angry', 'Relaxed', 'Scared', 'Neutral']
@@ -31,7 +31,8 @@ def preprocess_image(image_input):
         img = Image.open(image_input).convert('RGB')
     else:
         # 파일 객체인 경우 (예: Flask request.files)
-        img = Image.open(image_input).convert('RGB')
+        # FileStorage 객체의 stream을 Image.open에 전달
+        img = Image.open(image_input.stream).convert('RGB') # .stream 추가
         
     img = img.resize((IMAGE_WIDTH, IMAGE_HEIGHT))
     img_array = np.array(img)

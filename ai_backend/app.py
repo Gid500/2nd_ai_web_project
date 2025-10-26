@@ -1,4 +1,5 @@
 from flask import Flask, send_from_directory
+from flask_cors import CORS # CORS 임포트
 from config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from routes import upload_bp
 
@@ -7,6 +8,9 @@ def create_app():
     Flask 애플리케이션 인스턴스를 생성하고 초기 설정합니다.
     """
     app = Flask(__name__)
+
+    # CORS 설정 추가
+    CORS(app) # 모든 출처(origin)에 대해 CORS 허용
 
     # config.py에서 정의된 설정 값을 Flask 설정에 적용합니다.
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER

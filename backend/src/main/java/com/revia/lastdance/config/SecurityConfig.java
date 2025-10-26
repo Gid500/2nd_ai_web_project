@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/signup/**", "/api/signin").permitAll()
+                        .requestMatchers("/api/signup/**", "/api/signin", "/api/flask/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                         // DELETE 요청에 대한 권한 설정을 authenticated()로 변경하여 PostController의 @PreAuthorize에 위임
                         .requestMatchers(HttpMethod.DELETE, "/api/posts/delete/**").authenticated()

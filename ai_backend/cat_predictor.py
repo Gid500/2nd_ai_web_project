@@ -7,11 +7,11 @@ import os
 IMAGE_WIDTH, IMAGE_HEIGHT = 224, 224
 
 # Define model path
-# CAT_MODEL_PATH = "/home/qod110/Documents/Project/2nd_ai_web_project/cat_emotion_mobilenet_v2.h5"
-CAT_MODEL_PATH = "C:/Users/admin/Desktop/project/2nd_ai_web_project/ai_model/cat_emotion_mobilenet_v2.h5"
+CAT_MODEL_PATH = "/home/qod110/Documents/Project/2nd_ai_web_project/ai_model/cat_emotion_mobilenet_v2_v1_test.h5"
+# CAT_MODEL_PATH = "C:/Users/admin/Desktop/project/2nd_ai_web_project/ai_model/cat_emotion_mobilenet_v2.h5"
 
 # Define class labels for the cat model
-CAT_CLASS_LABELS = ['angry', 'Happy', 'Normal', 'relaxed', 'sad', 'Scared']
+CAT_CLASS_LABELS = ['Angry', 'Disgusted', 'Happy', 'Normal', 'Sad', 'Scared', 'Surprised']
 
 # Load the model once when the module is imported
 try:
@@ -31,7 +31,8 @@ def preprocess_image(image_input):
         img = Image.open(image_input).convert('RGB')
     else:
         # 파일 객체인 경우 (예: Flask request.files)
-        img = Image.open(image_input).convert('RGB')
+        # FileStorage 객체의 stream을 Image.open에 전달
+        img = Image.open(image_input.stream).convert('RGB') # .stream 추가
         
     img = img.resize((IMAGE_WIDTH, IMAGE_HEIGHT))
     img_array = np.array(img)

@@ -13,11 +13,11 @@ import math
 IMAGE_SIZE = (224, 224)
 BATCH_SIZE = 32
 EPOCHS = 10  # You might want to increase this for better accuracy
-NUM_CLASSES = 6 # angry, Happy, Normal, relaxed, sad, Scared
-DATASET_PATH = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/Cat Emotions.v2i.folder"
+NUM_CLASSES = 7 # Angry, Disgusted, Happy, Normal, Sad, Scared, Surprised
+DATASET_PATH = "/home/qod110/Documents/Project/2nd_ai_web_project/ai_model/Cat Emotions.v1-test.folder"
 TRAIN_DIR = os.path.join(DATASET_PATH, "train")
 
-MODEL_SAVE_PATH = "/home/qod120/Documents/project/2nd_ai_web_project/ai_model/cat_emotion_mobilenet_v2.h5"
+MODEL_SAVE_PATH = "/home/qod110/Documents/Project/2nd_ai_web_project/ai_model/cat_emotion_mobilenet_v2_v1_test.h5"
 
 # Create an ImageDataGenerator for data augmentation and preprocessing
 train_datagen = ImageDataGenerator(
