@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 public class CommentVO {
     private int commentId;
     private int postId;
-    private int userId;
-    private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String userName;
+    private String userId;
+    private String comment; // Renamed from content
+    private LocalDateTime createdDate; // Renamed from createdAt
+    private LocalDateTime updatedDate; // Renamed from updatedAt
+    private String userNickname; // Renamed from userName
 }

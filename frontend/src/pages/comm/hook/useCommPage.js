@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCommPosts } from './useCommPosts'; // useCommPosts 훅 임포트
-import { getCommentsByPostId } from '../../commnet/api/commentApi'; // 댓글 API 임포트
+import { getCommentsByPostId } from '../api/commCommentApi'; // 댓글 API 임포트 경로 수정
 
 const useCommPage = () => {
     const { postId } = useParams(); // URL에서 postId를 직접 가져옴

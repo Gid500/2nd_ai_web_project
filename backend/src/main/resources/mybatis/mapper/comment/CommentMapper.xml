@@ -1,108 +1,60 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.revia.lastdance.comment.dao.CommentMapper">
+<mapper namespace="com.revia.lastdance.comment.dao.CommentDAO">
 
-    <!-- Nested Result Map for UserVO -->
-    <resultMap id="userNestedResultMap" type="com.revia.lastdance.comment.vo.UserVO">
-        <id property="userId" column="user_id"/>
-        <result property="userName" column="user_name"/>
-        <result property="userNickname" column="user_nickname"/>
-        <result property="userEmail" column="user_email"/>
-        <result property="userImgUrl" column="user_img_url" jdbcType="BLOB"/>
-        <result property="createdDate" column="user_created_date"/>
-        <result property="updatedDate" column="user_updated_date"/>
-    </resultMap>
-
-    <!-- Nested Result Map for PostVO (simplified for comment context) -->
-    <resultMap id="postNestedResultMap" type="com.revia.lastdance.post.vo.PostVO">
-        <id property="postId" column="post_id"/>
-        <result property="postContent" column="post_content" jdbcType="BLOB"/>
-        <!-- Add other PostVO fields if needed in comment context -->
-    </resultMap>
-
-    <!-- Main Result Map for CommentVO -->
-    <resultMap id="commentResultMap" type="com.revia.lastdance.comment.vo.CommentVO">
+    <resultMap id="CommentVOResultMap" type="com.revia.lastdance.comment.vo.CommentVO">
         <id property="commentId" column="comment_id"/>
-        <result property="userId" column="comment_user_id"/>
-        <result property="postId" column="comment_post_id"/>
-        <result property="comment" column="comment_content"/>
-        <result property="createdDate" column="comment_created_date"/>
-        <result property="createdId" column="comment_created_id"/>
-        <result property="updatedDate" column="comment_updated_date"/>
-        <result property="updatedId" column="comment_updated_id"/>
-
-        <!-- Association for UserVO -->
-        <association property="user" resultMap="userNestedResultMap"/>
-
-        <!-- Association for PostVO -->
-        <association property="post" resultMap="postNestedResultMap"/>
+        <result property="postId" column="post_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="comment" column="comment"/>
+        <result property="createdDate" column="created_date"/>
+        <result property="updatedDate" column="updated_date"/>
+        <result property="userNickname" column="user_nickname"/>
     </resultMap>
 
-    <insert id="insertComment" parameterType="com.revia.lastdance.comment.vo.CommentVO" useGeneratedKeys="true" keyProperty="commentId">
-        INSERT INTO tb_comment (user_id, post_id, comment, created_id, updated_id)
-        VALUES (#{userId}, #{postId}, #{comment}, #{createdId}, #{updatedId})
+    <insert id="insertComment" parameterType="com.revia.lastdance.comment.vo.CommentVO">
+        INSERT INTO tb_comment (post_id, user_id, comment, created_date, created_id, updated_date, updated_id)
+        VALUES (#{postId}, #{userId}, #{comment}, NOW(), #{userId}, NOW(), #{userId})
     </insert>
 
-    <select id="selectCommentsByPostId" resultMap="commentResultMap">
+    <select id="selectCommentsByPostId" parameterType="int" resultMap="CommentVOResultMap">
         SELECT
             c.comment_id,
-            c.user_id AS comment_user_id,
-            c.post_id AS comment_post_id,
-            c.comment AS comment_content,
-            c.created_date AS comment_created_date,
-            c.created_id AS comment_created_id,
-            c.updated_date AS comment_updated_date,
-            c.updated_id AS comment_updated_id,
-            u.user_id,
-            u.user_nickname,
-            u.user_email,
-            u.user_img_url,
-            u.created_date AS user_created_date,
-            u.updated_date AS user_updated_date,
-            p.post_id,
-            p.post_content
+            c.post_id,
+            c.user_id,
+            c.comment,
+            c.created_date,
+            c.updated_date,
+            u.user_nickname
         FROM tb_comment c
-        LEFT JOIN tb_user u ON c.user_id = u.user_id
-        LEFT JOIN tb_post p ON c.post_id = p.post_id
+        JOIN tb_user u ON c.user_id = u.user_id
         WHERE c.post_id = #{postId}
         ORDER BY c.created_date ASC
     </select>
 
-    <select id="selectCommentById" resultMap="commentResultMap">
+    <select id="selectCommentById" parameterType="int" resultMap="CommentVOResultMap">
         SELECT
-            c.comment_id,
-            c.user_id AS comment_user_id,
-            c.post_id AS comment_post_id,
-            c.comment AS comment_content,
-            c.created_date AS comment_created_date,
-            c.created_id AS comment_created_id,
-            c.updated_date AS comment_updated_date,
-            c.updated_id AS comment_updated_id,
-            u.user_id,
-            u.user_nickname,
-            u.user_email,
-            u.user_img_url,
-            u.created_date AS user_created_date,
-            u.updated_date AS user_updated_date,
-            p.post_id,
-            p.post_content
-        FROM tb_comment c
-        LEFT JOIN tb_user u ON c.user_id = u.user_id
-        LEFT JOIN tb_post p ON c.post_id = p.post_id
-        WHERE c.comment_id = #{commentId}
+            comment_id,
+            post_id,
+            user_id,
+            comment,
+            created_date,
+            updated_date
+        FROM tb_comment
+        WHERE comment_id = #{commentId}
     </select>
 
     <update id="updateComment" parameterType="com.revia.lastdance.comment.vo.CommentVO">
         UPDATE tb_comment
         SET
             comment = #{comment},
-            updated_date = CURRENT_TIMESTAMP,
-            updated_id = #{updatedId}
+            updated_date = NOW(),
+            updated_id = #{userId}
         WHERE comment_id = #{commentId}
     </update>
 
-    <delete id="deleteComment">
-        DELETE FROM tb_comment WHERE comment_id = #{commentId}
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM tb_comment
+        WHERE comment_id = #{commentId}
     </delete>
 
 </mapper>

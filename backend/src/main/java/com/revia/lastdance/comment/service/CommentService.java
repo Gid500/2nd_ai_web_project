@@ -30,13 +30,13 @@ public class CommentService {
         commentDAO.updateComment(commentVO);
     }
 
-    public void deleteComment(int commentId, int userId, boolean isAdmin) {
+    public void deleteComment(int commentId, String userId, boolean isAdmin) { // userId 타입을 String으로 변경
         CommentVO comment = commentDAO.selectCommentById(commentId);
         if (comment == null) {
             throw new IllegalArgumentException("댓글을 찾을 수 없습니다.");
         }
 
-        if (isAdmin || comment.getUserId() == userId) {
+        if (isAdmin || comment.getUserId().equals(userId)) { // String 비교는 .equals() 사용
             commentDAO.deleteComment(commentId);
         } else {
             throw new AccessDeniedException("댓글을 삭제할 권한이 없습니다.");

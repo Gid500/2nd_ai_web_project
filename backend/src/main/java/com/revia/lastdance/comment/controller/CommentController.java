@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.access.AccessDeniedException;
+import com.revia.lastdance.signin.dto.CustomUserDetails;
 
 import java.util.List;
 
@@ -28,11 +29,16 @@ public class CommentController {
             return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
         }
         // 현재 로그인한 사용자의 ID를 commentVO에 설정
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        // userDetails에서 userId를 가져오는 로직이 필요합니다. (예: CustomUserDetails 사용)
-        // 현재는 임시로 1로 설정합니다. 실제 구현에서는 userDetails에서 userId를 추출해야 합니다.
-        // TODO: userDetails에서 userId를 가져오는 로직 구현
-        commentVO.setUserId(1); // 임시 userId
+        Object principal = authentication.getPrincipal();
+        String currentUserId;
+        if (principal instanceof CustomUserDetails) {
+            currentUserId = ((CustomUserDetails) principal).getUserId(); // CustomUserDetails에서 userId 가져오기
+        } else if (principal instanceof UserDetails) {
+            currentUserId = ((UserDetails) principal).getUsername(); // 기본 UserDetails의 경우 username 사용
+        } else {
+            return new ResponseEntity<>("사용자 정보를 찾을 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        commentVO.setUserId(currentUserId);
 
         commentService.addComment(commentVO);
         return new ResponseEntity<>("댓글이 성공적으로 작성되었습니다.", HttpStatus.CREATED);
@@ -52,14 +58,21 @@ public class CommentController {
         if (authentication == null || !authentication.isAuthenticated()) {
             return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
         }
-        // TODO: userDetails에서 userId를 가져오는 로직 구현
-        int currentUserId = 1; // 임시 userId
+        Object principal = authentication.getPrincipal();
+        String currentUserId;
+        if (principal instanceof CustomUserDetails) {
+            currentUserId = ((CustomUserDetails) principal).getUserId(); // CustomUserDetails에서 userId 가져오기
+        } else if (principal instanceof UserDetails) {
+            currentUserId = ((UserDetails) principal).getUsername(); // 기본 UserDetails의 경우 username 사용
+        } else {
+            return new ResponseEntity<>("사용자 정보를 찾을 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         CommentVO existingComment = commentService.getCommentById(commentId);
         if (existingComment == null) {
             return new ResponseEntity<>("댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
         }
-        if (existingComment.getUserId() != currentUserId) {
+        if (!existingComment.getUserId().equals(currentUserId)) { // String 비교는 equals 사용
             return new ResponseEntity<>("댓글을 수정할 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
@@ -76,9 +89,15 @@ public class CommentController {
             return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
         }
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        // TODO: userDetails에서 userId를 가져오는 로직 구현
-        int currentUserId = 1; // 임시 userId
+        Object principal = authentication.getPrincipal();
+        String currentUserId;
+        if (principal instanceof CustomUserDetails) {
+            currentUserId = ((CustomUserDetails) principal).getUserId(); // CustomUserDetails에서 userId 가져오기
+        } else if (principal instanceof UserDetails) {
+            currentUserId = ((UserDetails) principal).getUsername(); // 기본 UserDetails의 경우 username 사용
+        } else {
+            return new ResponseEntity<>("사용자 정보를 찾을 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
 

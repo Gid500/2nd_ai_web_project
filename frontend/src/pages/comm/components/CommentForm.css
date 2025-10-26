@@ -1,0 +1,50 @@
+.comment-form-container {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background-color: #fcfcfc;
+}
+
+.comment-textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+    resize: vertical;
+}
+
+.comment-textarea::placeholder {
+    color: #aaa;
+}
+
+.comment-form-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.comment-submit-button,
+.comment-cancel-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 10px;
+}
+
+.comment-submit-button:hover {
+    background-color: #218838;
+}
+
+.comment-cancel-button {
+    background-color: #6c757d;
+}
+
+.comment-cancel-button:hover {
+    background-color: #5a6268;
+}
