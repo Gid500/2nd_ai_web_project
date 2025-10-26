@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import api from '../../../common/api/api';
 import '../Mypage.css'; // Reusing Mypage.css for styling
+import LoadingSpinner from '../../../common/components/LoadingSpinner'; // Import LoadingSpinner
 
 function PasswordResetForm() {
   const [email, setEmail] = useState('');
@@ -85,7 +86,7 @@ function PasswordResetForm() {
           </div>
           <div className="pf-footer">
             <button className="pf-submit" disabled={loading}>
-              {loading ? '전송 중…' : '인증 코드 전송'}
+              {loading ? <><LoadingSpinner /> <span style={{ marginLeft: '8px' }}>전송 중…</span></> : '인증 코드 전송'}
             </button>
           </div>
         </form>
@@ -141,7 +142,7 @@ function PasswordResetForm() {
           </div>
           <div className="pf-footer">
             <button className="pf-submit" disabled={loading}>
-              {loading ? '변경 중…' : '비밀번호 변경'}
+              {loading ? <><LoadingSpinner /> <span style={{ marginLeft: '8px' }}>변경 중…</span></> : '비밀번호 변경'}
             </button>
           </div>
         </form>

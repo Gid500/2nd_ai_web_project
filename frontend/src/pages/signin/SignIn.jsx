@@ -5,6 +5,7 @@ import { useAuth } from '../../common/hook/AuthProvider'; // AuthProvider에서 
 import api from '../../common/api/api'; // api 인스턴스 임포트
 import LoadingSpinner from '../../common/components/LoadingSpinner';
 import { NavLink } from 'react-router-dom';
+import './SignIn.css'; // Import SignIn.css
 
 function SignIn() {
     const getNavLinkClass = ({ isActive }) => `tab ${isActive ? 'active' : ''}`;
@@ -38,33 +39,29 @@ function SignIn() {
     };
 
     return (
-        <div>
-            <h2>로그인</h2>
-            <form onSubmit={handleLogin}>
-                <div>
-                    <label>아이디 또는 이메일:</label>
-                    <input type="text" {...identifier} required />
-                </div>
-                <div>
-                    <label>비밀번호:</label>
-                    <input type="password" {...password} required />
-                </div>
-                <button type="submit" disabled={loading} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }}>
-                    {loading ? <><LoadingSpinner /> <span style={{ marginLeft: '8px' }}>로그인 중...</span></> : '로그인'}
-                </button>
-            </form>
-            <nav className="tabs">
-
-                <NavLink to="/signup" className={getNavLinkClass}>
-                회원 가입
-              </NavLink>
-
-            </nav>
-            
+        <div className="signin-container">
+            <div className="signin-form-card">
+                <h2 className="signin-title">로그인</h2>
+                <form onSubmit={handleLogin}>
+                    <div className="pf-row">
+                        <label className="pf-label">아이디 또는 이메일:</label>
+                        <input type="text" className="pf-input" {...identifier} required />
+                    </div>
+                    <div className="pf-row">
+                        <label className="pf-label">비밀번호:</label>
+                        <input type="password" className="pf-input" {...password} required />
+                    </div>
+                    {error && <div className="signin-error">{error}</div>}
+                    <button type="submit" className="pf-submit" disabled={loading}>
+                        {loading ? <><LoadingSpinner /> <span style={{ marginLeft: '8px' }}>로그인 중...</span></> : '로그인'}
+                    </button>
+                </form>
+                <nav className="signin-links">
+                    <NavLink to="/signup" className={getNavLinkClass}>
+                        회원 가입
+                    </NavLink>
+                </nav>
+            </div>
         </div>
     );
 }
