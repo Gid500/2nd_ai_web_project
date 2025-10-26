@@ -27,4 +27,8 @@
         DELETE FROM tb_file WHERE file_id = #{fileId}
     </delete>
 
+    <delete id="deleteFilesByPostId">
+        DELETE FROM tb_file WHERE post_id = #{postId}
+    </delete>
+
 </mapper>

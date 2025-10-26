@@ -17,4 +17,5 @@ public class PostVO {
     private Timestamp updatedDate;
     private String updatedId;
     private List<FileVO> files;
+    private List<Integer> deletedFileIds; // 추가: 삭제할 파일 ID 목록
 }

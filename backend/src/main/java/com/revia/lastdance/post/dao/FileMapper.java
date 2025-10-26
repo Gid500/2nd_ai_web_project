@@ -11,4 +11,5 @@ public interface FileMapper {
     List<FileVO> selectFilesByPostId(int postId);
     FileVO selectFileById(int fileId);
     void deleteFile(int fileId);
+    void deleteFilesByPostId(int postId); // 추가
 }

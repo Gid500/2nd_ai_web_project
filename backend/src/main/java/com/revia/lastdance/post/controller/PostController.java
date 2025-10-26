@@ -7,9 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts") // Changed mapping to /api/posts
@@ -19,9 +21,11 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public ResponseEntity<List<PostVO>> getAllPosts() {
-        List<PostVO> posts = postService.getAllPosts();
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getAllPosts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Map<String, Object> postsData = postService.getAllPosts(page, size);
+        return new ResponseEntity<>(postsData, HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")
@@ -35,16 +39,22 @@ public class PostController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createPost(@RequestBody PostVO postVO, Principal principal) {
-        postService.createPost(postVO, principal);
+    public ResponseEntity<Void> createPost(
+            @RequestPart("post") PostVO postVO,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files,
+            Principal principal) {
+        postService.createPost(postVO, files, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{postId}") // Changed to PutMapping
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_admin') or @postService.isOwner(#postId, authentication.principal.userId)")
-    public ResponseEntity<Void> updatePost(@PathVariable("postId") int postId, @RequestBody PostVO postVO) {
+    public ResponseEntity<Void> updatePost(
+            @PathVariable("postId") int postId,
+            @RequestPart("post") PostVO postVO,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         postVO.setPostId(postId);
-        postService.updatePost(postVO);
+        postService.updatePost(postVO, files);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

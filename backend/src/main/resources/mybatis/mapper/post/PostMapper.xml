@@ -26,7 +26,7 @@
         <collection property="files" ofType="com.revia.lastdance.post.vo.FileVO" resultMap="fileNestedResultMap"/>
     </resultMap>
 
-    <select id="selectAllPosts" resultMap="postWithFilesResultMap">
+    <select id="selectAllPostsPaged" resultMap="postWithFilesResultMap">
         SELECT
             p.post_id,
             p.user_id,
@@ -43,6 +43,12 @@
             f.img_url
         FROM tb_post p
         LEFT JOIN tb_file f ON p.post_id = f.post_id
+        ORDER BY p.created_date DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="countAllPosts" resultType="int">
+        SELECT COUNT(*) FROM tb_post
     </select>
 
     <select id="selectPostById" resultMap="postWithFilesResultMap">
@@ -72,7 +78,6 @@
             post_content,
             is_notice,
             created_date,
-            updated_date,
             user_id,
             <if test="createdId != null">created_id,</if>
         </trim>
@@ -80,7 +85,6 @@
             #{postTitle},
             #{postContent},
             #{isNotice},
-            CURRENT_TIMESTAMP,
             CURRENT_TIMESTAMP,
             #{userId},
             <if test="createdId != null">#{createdId},</if>

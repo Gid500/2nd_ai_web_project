@@ -1,22 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useInput from '../hook/useInput';
+import { useAuth } from '../../../common/hook/useAuth';
 
 const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
     const isEditMode = !!initialData.postId;
+    const { isAdmin } = useAuth();
 
     const postTitle = useInput(initialData.postTitle || '');
     const postContent = useInput(initialData.postContent || '');
-    const [isNotice, setIsNotice] = useState(initialData.isNotice || false);
+    const [postType, setPostType] = useState(initialData.isNotice ? 'notice' : 'general');
+    const [selectedFiles, setSelectedFiles] = useState([]); // 새로 선택된 파일
+    const [existingFiles, setExistingFiles] = useState(initialData.files || []); // 기존 파일
+    const [deletedFileIds, setDeletedFileIds] = useState([]); // 삭제할 파일 ID 목록
+
+    useEffect(() => {
+        setPostType(initialData.isNotice ? 'notice' : 'general');
+        setExistingFiles(initialData.files || []);
+        setDeletedFileIds([]); // 초기화
+    }, [initialData]);
+
+    const handleFileChange = (e) => {
+        setSelectedFiles(Array.from(e.target.files));
+    };
+
+    const handleRemoveExistingFile = (fileId) => {
+        setDeletedFileIds(prev => [...prev, fileId]); // 삭제할 파일 ID 목록에 추가
+        setExistingFiles(existingFiles.filter(file => file.fileId !== fileId)); // UI에서 제거
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data = {
+
+        const formData = new FormData();
+        const postData = {
             postTitle: postTitle.value,
             postContent: postContent.value,
-            isNotice: isNotice,
+            isNotice: postType === 'notice',
+            deletedFileIds: deletedFileIds, // 삭제할 파일 ID 목록 포함
         };
-        onSubmit(data);
+
+        formData.append('post', new Blob([JSON.stringify(postData)], { type: 'application/json' }));
+
+        selectedFiles.forEach(file => {
+            formData.append('files', file);
+        });
+
+        onSubmit(formData); // FormData 객체 전달
     };
+
+    const postOptions = [];
+    if (isAdmin) {
+        postOptions.push({ value: 'notice', label: '공지사항' });
+    }
+    postOptions.push({ value: 'general', label: '일반' });
 
     return (
         <div>
@@ -31,8 +67,31 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
                     <textarea {...postContent} rows="10" required />
                 </div>
                 <div>
-                    <label>공지사항:</label>
-                    <input type="checkbox" checked={isNotice} onChange={(e) => setIsNotice(e.target.checked)} />
+                    <label>게시글 유형:</label>
+                    <select value={postType} onChange={(e) => setPostType(e.target.value)}>
+                        {postOptions.map(option => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                {isEditMode && existingFiles.length > 0 && (
+                    <div>
+                        <label>기존 파일:</label>
+                        <ul>
+                            {existingFiles.map(file => (
+                                <li key={file.fileId}>
+                                    {file.uploadName}
+                                    <button type="button" onClick={() => handleRemoveExistingFile(file.fileId)}>X</button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+                <div>
+                    <label>파일 첨부:</label>
+                    <input type="file" multiple onChange={handleFileChange} />
                 </div>
                 <button type="submit">{isEditMode ? '수정' : '작성'}</button>
                 <button type="button" onClick={onCancel}>취소</button>

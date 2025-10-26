@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -20,11 +21,11 @@ public class PostFileController {
 
     @PostMapping
     public ResponseEntity<String> uploadFile(@PathVariable("postId") int postId,
-                                             @RequestParam("files") MultipartFile[] files) {
+                                             @RequestParam("files") List<MultipartFile> files) {
         try {
-            fileService.uploadFile(files, postId);
+            fileService.uploadFiles(postId, files);
             return new ResponseEntity<>("Files uploaded successfully", HttpStatus.CREATED);
-        } catch (IOException e) {
+        } catch (RuntimeException e) { // IOException 대신 RuntimeException
             return new ResponseEntity<>("Failed to upload files: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

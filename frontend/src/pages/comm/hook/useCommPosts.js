@@ -1,80 +1,93 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getAllPosts, getPostById, createPost, updatePost, deletePost } from '../api/commApi';
+import api from '../../../common/api/api';
 
-export const useCommPosts = () => {
+export const useCommPosts = (page = 1, size = 10) => { // page와 size 파라미터 추가
     const [posts, setPosts] = useState([]);
     const [selectedPost, setSelectedPost] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [totalPosts, setTotalPosts] = useState(0); // 총 게시물 수 상태 추가
+    const [totalPages, setTotalPages] = useState(0); // 총 페이지 수 상태 추가
 
     const fetchPosts = useCallback(async () => {
         setLoading(true);
-        setError(null);
         try {
-            const data = await getAllPosts();
-            setPosts(data);
+            // API 호출 시 page와 size 파라미터 전달
+            const response = await api.get(`/api/posts?page=${page}&size=${size}`);
+            setPosts(response.data.posts);
+            setTotalPosts(response.data.totalPosts); // 총 게시물 수 설정
+            setTotalPages(response.data.totalPages); // 총 페이지 수 설정
+            setError(null);
         } catch (err) {
             setError(err);
-        } finally {
+            setPosts([]);
+            setTotalPosts(0);
+            setTotalPages(0);
+        }
+        finally {
+            setLoading(false);
+        }
+    }, [page, size]); // page와 size가 변경될 때마다 fetchPosts 재생성
+
+    const fetchPostById = useCallback(async (id) => {
+        setLoading(true);
+        try {
+            const response = await api.get(`/api/posts/${id}`);
+            setSelectedPost(response.data);
+            setError(null);
+        } catch (err) {
+            setError(err);
+            setSelectedPost(null);
+        }
+        finally {
             setLoading(false);
         }
     }, []);
 
-    const fetchPostById = useCallback(async (postId) => {
+    const addPost = useCallback(async (formData) => { // postData 대신 formData
         setLoading(true);
-        setError(null);
         try {
-            const data = await getPostById(postId);
-            setSelectedPost(data);
+            await api.post('/api/posts/create', formData); // formData 직접 전달
+            await fetchPosts(); // 게시물 추가 후 목록 새로고침
         } catch (err) {
             setError(err);
-        } finally {
-            setLoading(false);
         }
-    }, []);
-
-    const addPost = useCallback(async (postData) => {
-        setLoading(true);
-        setError(null);
-        try {
-            await createPost(postData);
-            await fetchPosts(); // Refresh the list after adding
-        } catch (err) {
-            setError(err);
-        } finally {
+        finally {
             setLoading(false);
         }
     }, [fetchPosts]);
 
-    const editPost = useCallback(async (postId, postData) => {
+    const editPost = useCallback(async (id, formData) => { // postData 대신 formData
         setLoading(true);
-        setError(null);
         try {
-            await updatePost(postId, postData);
-            await fetchPosts(); // Refresh the list after updating
+            await api.put(`/api/posts/update/${id}`, formData); // formData 직접 전달
+            await fetchPosts(); // 게시물 수정 후 목록 새로고침
         } catch (err) {
             setError(err);
-        } finally {
+        }
+        finally {
             setLoading(false);
         }
     }, [fetchPosts]);
 
-    const removePost = useCallback(async (postId) => {
+    const removePost = useCallback(async (id) => {
         setLoading(true);
-        setError(null);
         try {
-            await deletePost(postId);
-            await fetchPosts(); // Refresh the list after deleting
+            await api.delete(`/api/posts/delete/${id}`);
+            await fetchPosts(); // 게시물 삭제 후 목록 새로고침
         } catch (err) {
             setError(err);
-        } finally {
+        }
+        finally {
             setLoading(false);
         }
     }, [fetchPosts]);
 
     useEffect(() => {
-        fetchPosts();
-    }, [fetchPosts]);
+        if (!selectedPost) { // 상세 게시물이 선택되지 않았을 때만 목록을 불러옴
+            fetchPosts();
+        }
+    }, [fetchPosts, selectedPost]);
 
     return {
         posts,
@@ -86,6 +99,8 @@ export const useCommPosts = () => {
         addPost,
         editPost,
         removePost,
-        setSelectedPost // To clear selected post or set it manually
+        setSelectedPost,
+        totalPosts, // totalPosts 반환
+        totalPages // totalPages 반환
     };
 };

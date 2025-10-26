@@ -60,6 +60,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/signup/**", "/api/signin").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/delete/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_admin") // 관리자만 삭제 가능
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.beans.factory.annotation.Value;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.io.File; // File import
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -28,9 +29,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+        // Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize(); // 이 부분은 그대로 유지
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:" + uploadPath.toString() + "/");
+                .addResourceLocations("file:" + System.getProperty("user.dir") + File.separator + uploadDir);
     }
 
     @Bean

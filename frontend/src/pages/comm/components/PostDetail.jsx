@@ -1,6 +1,9 @@
 import React from 'react';
 import { useAuth } from '../../../common/hook/useAuth';
 
+// 백엔드 기본 URL (환경 변수 또는 설정 파일에서 가져오는 것이 좋지만, 일단 하드코딩)
+const BACKEND_BASE_URL = 'http://localhost:8080';
+
 const PostDetail = ({ post, onBackToList, onEdit, onDelete }) => {
     const { user, isAdmin } = useAuth();
 
@@ -15,6 +18,9 @@ const PostDetail = ({ post, onBackToList, onEdit, onDelete }) => {
             <h2>{post.isNotice && <span style={{ marginRight: '10px', color: 'red', fontWeight: 'bold' }}>[공지]</span>}{post.postTitle}</h2>
             <p>작성자: {post.anoyUserName || post.userId}</p>
             <p>작성일: {new Date(post.createdDate).toLocaleString()}</p>
+            {post.updatedDate && new Date(post.updatedDate).getTime() !== new Date(post.createdDate).getTime() && (
+                <p>수정일: {new Date(post.updatedDate).toLocaleString()}</p>
+            )}
             <div>
                 <h3>내용:</h3>
                 <p>{decodedContent}</p>
@@ -25,7 +31,13 @@ const PostDetail = ({ post, onBackToList, onEdit, onDelete }) => {
                     <ul>
                         {post.files.map(file => (
                             <li key={file.fileId}>
-                                <a href={file.imgUrl} target="_blank" rel="noopener noreferrer">{file.uploadName}</a>
+                                {/* 이미지가 맞다면 <img> 태그로 표시 */}
+                                {file.fileType && file.fileType.startsWith('image/') ? (
+                                    <img src={`${BACKEND_BASE_URL}${file.imgUrl}`} alt={file.uploadName} style={{ maxWidth: '100%', height: 'auto' }} />
+                                ) : (
+                                    // 이미지가 아니면 기존처럼 링크로 표시
+                                    <a href={`${BACKEND_BASE_URL}${file.imgUrl}`} target="_blank" rel="noopener noreferrer">{file.uploadName}</a>
+                                )}
                             </li>
                         ))}
                     </ul>
