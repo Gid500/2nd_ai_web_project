@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useCommPosts } from './hook/useCommPosts';
 import PostList from './components/PostList';
 import PostDetail from './components/PostDetail';
@@ -6,32 +7,45 @@ import PostForm from './components/PostForm';
 import LoadingSpinner from '../../common/components/LoadingSpinner';
 
 function Comm() {
+    const { postId } = useParams(); // Get postId from URL
+    const navigate = useNavigate();
     const { posts, selectedPost, loading, error, fetchPosts, fetchPostById, addPost, editPost, removePost, setSelectedPost } = useCommPosts();
     const [showForm, setShowForm] = useState(false);
     const [editingPost, setEditingPost] = useState(null);
 
-    const handleViewDetail = (postId) => {
-        fetchPostById(postId);
+    useEffect(() => {
+        if (postId) {
+            fetchPostById(parseInt(postId));
+        } else {
+            setSelectedPost(null);
+        }
+    }, [postId, fetchPostById, setSelectedPost]);
+
+    const handleViewDetail = (id) => {
+        navigate(`/comm/${id}`); // Navigate to URL with postId
     };
 
     const handleCreateNewPost = () => {
-        setEditingPost({}); // Revert to empty object
+        setEditingPost({});
         setShowForm(true);
+        navigate('/comm'); // Clear postId from URL when creating new post
     };
 
     const handleEditPost = (post) => {
         setEditingPost(post);
         setShowForm(true);
+        navigate(`/comm/${post.postId}`); // Keep postId in URL when editing
     };
 
-    const handleDeletePost = async (postId) => {
+    const handleDeletePost = async (id) => {
         if (window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
-            await removePost(postId);
+            await removePost(id);
+            navigate('/comm'); // Go back to list after deleting
         }
     };
 
     const handleSubmitForm = async (postData) => {
-        if (editingPost && editingPost.postId) { // Check if editingPost and postId exist for edit mode
+        if (editingPost && editingPost.postId) {
             await editPost(editingPost.postId, postData);
         }
         else {
@@ -39,11 +53,13 @@ function Comm() {
         }
         setShowForm(false);
         setEditingPost(null);
+        navigate('/comm'); // Go back to list after submitting form
     };
 
     const handleCancelForm = () => {
         setShowForm(false);
         setEditingPost(null);
+        navigate('/comm'); // Go back to list after canceling form
     };
 
     if (loading) return (
@@ -70,7 +86,7 @@ function Comm() {
             ) : selectedPost ? (
                 <PostDetail 
                     post={selectedPost} 
-                    onBackToList={() => setSelectedPost(null)} 
+                    onBackToList={() => navigate('/comm')} 
                     onEdit={handleEditPost} 
                     onDelete={handleDeletePost} 
                 />

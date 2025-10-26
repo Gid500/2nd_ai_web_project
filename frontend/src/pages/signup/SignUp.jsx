@@ -198,9 +198,11 @@ function SignUp() {
                 userPwd: password.value,
                 userNickname: nickname.value,
             });
-            if (response.jwt) {
+            // Backend now sets HttpOnly cookie, so no JWT in response.data.jwt
+            // Just check for successful response status
+            if (response.status === 200) {
                 setSuccess('회원가입 성공! 자동으로 로그인됩니다.');
-                login(response.jwt);
+                await login(); // Call login without token argument
                 setTimeout(() => {
                     navigate('/');
                 }, 2000);

@@ -24,6 +24,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (userVO == null) {
             throw new UsernameNotFoundException("User not found with email: " + username);
         }
-        return new CustomUserDetails(userVO.getUserEmail(), userVO.getUserPwd(), Collections.singletonList(new SimpleGrantedAuthority(userVO.getRoleType())), userVO.getUserId());
+        // Ensure roleType is prefixed with 'ROLE_' for Spring Security
+        String role = userVO.getRoleType().startsWith("ROLE_") ? userVO.getRoleType() : "ROLE_" + userVO.getRoleType();
+        return new CustomUserDetails(userVO.getUserEmail(), userVO.getUserPwd(), Collections.singletonList(new SimpleGrantedAuthority(role)), userVO.getUserId());
     }
 }

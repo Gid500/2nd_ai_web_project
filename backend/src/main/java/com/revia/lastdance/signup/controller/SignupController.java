@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @RestController
@@ -26,7 +28,7 @@ public class SignupController {
     private final UserDetailsService userDetailsService;
 
     @PostMapping("/signup/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserVO userVO) {
+    public ResponseEntity<?> registerUser(@RequestBody UserVO userVO, HttpServletResponse response) {
         logger.info("Received signup request for user: {}", userVO.toString());
 
         if (signupService.isEmailDuplicated(userVO.getUserEmail())) {
@@ -43,7 +45,16 @@ public class SignupController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(userVO.getUserEmail());
         final String jwt = jwtUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        // Set JWT in an HttpOnly cookie
+        Cookie jwtCookie = new Cookie("jwt", jwt);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setPath("/"); // Accessible throughout the application
+        jwtCookie.setMaxAge(60 * 60 * 10); // 10 hours
+        // jwtCookie.setSecure(true); // Only send over HTTPS
+        response.addCookie(jwtCookie);
+
+        // Optionally, return some user info in the body if needed by frontend JS
+        return ResponseEntity.ok(new AuthenticationResponse(jwt)); // Still returning JWT in body for frontend compatibility for now
     }
 
     @GetMapping("/signup/check-email")

@@ -25,9 +25,11 @@ function SignIn() {
                 username: email.value,
                 password: password.value,
             });
-            if (response.data.jwt) {
+            // Backend now sets HttpOnly cookie, so no JWT in response.data.jwt
+            // Just check for successful response status
+            if (response.status === 200) {
                 alert('로그인 성공!');
-                login(response.data.jwt);
+                await login(); // Call login without token argument
                 navigate('/');
             }
         } catch (err) {

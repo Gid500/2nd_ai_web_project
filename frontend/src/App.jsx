@@ -30,6 +30,7 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/comm" element={<Comm/>} />
+          <Route path="/comm/:postId" element={<Comm/>} /> {/* Added route for post detail */}
           <Route path="/mypage" element={<Mypage/>} />
           <Route path="/care" element={<CareAccoount />} />
         </Route>

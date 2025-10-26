@@ -1,5 +1,6 @@
 package com.revia.lastdance.config.jwt;
 
+import com.revia.lastdance.signin.dto.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -52,6 +53,12 @@ public class JwtUtil {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
         claims.put("auth", authorities);
+        
+        // Add userId to JWT claims
+        if (userDetails instanceof CustomUserDetails) {
+            claims.put("userId", ((CustomUserDetails) userDetails).getUserId());
+        }
+
         return createToken(claims, userDetails.getUsername());
     }
 

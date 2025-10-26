@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { jwtDecode } from 'jwt-decode'; // Corrected import
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import { fetchCurrentUser, logoutUser } from '../api/userApi';
 
 const AuthContext = createContext(null);
 
@@ -7,47 +7,47 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                const decoded = jwtDecode(token);
-                // Check if token is expired
-                if (decoded.exp * 1000 > Date.now()) {
-                    setUser({ 
-                        email: decoded.sub, 
-                        role: decoded.auth, // Assuming role is stored in 'auth' claim
-                        isLoggedIn: true 
-                    });
-                } else {
-                    localStorage.removeItem('token');
-                }
-            } catch (error) {
-                console.error("Invalid token", error);
-                localStorage.removeItem('token');
+    const getUserDetails = useCallback(async () => {
+        setLoading(true);
+        try {
+            const data = await fetchCurrentUser();
+            if (data.loggedIn) {
+                setUser({ 
+                    email: data.email, 
+                    role: data.role, 
+                    userId: data.userId, 
+                    isLoggedIn: true 
+                });
+            } else {
+                setUser(null);
             }
+        } catch (error) {
+            console.error("Error fetching user details:", error);
+            setUser(null);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }, []);
 
-    const login = (token) => {
-        localStorage.setItem('token', token);
-        try {
-            const decoded = jwtDecode(token);
-            setUser({ 
-                email: decoded.sub, 
-                role: decoded.auth, 
-                isLoggedIn: true 
-            });
-        } catch (error) {
-            console.error("Invalid token", error);
-        }
-    };
+    useEffect(() => {
+        getUserDetails();
+    }, [getUserDetails]);
 
-    const logout = () => {
-        localStorage.removeItem('token');
-        setUser(null);
-    };
+    const login = useCallback(async () => {
+        // After successful login (cookie set by backend), fetch user details
+        await getUserDetails();
+    }, [getUserDetails]);
+
+    const logout = useCallback(async () => {
+        try {
+            await logoutUser();
+            setUser(null);
+            alert('로그아웃 되었습니다.');
+        } catch (error) {
+            console.error('Logout failed:', error);
+            alert('로그아웃 실패.');
+        }
+    }, []);
 
     const authContextValue = {
         user,
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         isLoggedIn: user?.isLoggedIn,
         isAdmin: user?.role === 'ROLE_ADMIN',
-        userId: user?.email
+        userId: user?.userId
     };
 
     return (
