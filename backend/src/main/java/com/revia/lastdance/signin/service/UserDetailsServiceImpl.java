@@ -20,9 +20,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserVO userVO = signinMapper.findUserByEmail(username);
+        UserVO userVO = signinMapper.findUserByEmailOrUserId(username);
         if (userVO == null) {
-            throw new UsernameNotFoundException("User not found with email: " + username);
+            throw new UsernameNotFoundException("User not found with identifier: " + username);
         }
         // Ensure roleType is prefixed with 'ROLE_' for Spring Security
         String role = userVO.getRoleType().startsWith("ROLE_") ? userVO.getRoleType() : "ROLE_" + userVO.getRoleType();

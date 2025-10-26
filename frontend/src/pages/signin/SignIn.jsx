@@ -9,7 +9,8 @@ import './SignIn.css';
 
 function SignIn() {
     const getNavLinkClass = ({ isActive }) => `signin-link ${isActive ? 'active' : ''}`;
-    const email = useInput('');
+    // email 대신 identifier 사용
+    const identifier = useInput('');
     const password = useInput('');
     const [error, setError] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
@@ -22,7 +23,7 @@ function SignIn() {
         setError(null);
         try {
             const response = await api.post('/api/signin', {
-                username: email.value,
+                username: identifier.value, // identifier.value 사용
                 password: password.value,
             });
             // Backend now sets HttpOnly cookie, so no JWT in response.data.jwt
@@ -46,8 +47,8 @@ function SignIn() {
                 <h2 className="signin-title">로그인</h2>
                 <form onSubmit={handleLogin}>
                     <div className="signin-form-group">
-                        <label className="signin-label">이메일:</label>
-                        <input type="email" className="signin-input" {...email} required />
+                        <label className="signin-label">아이디 또는 이메일:</label> {/* 레이블 변경 */}
+                        <input type="text" className="signin-input" {...identifier} required /> {/* type="text"로 변경 */}
                     </div>
                     <div className="signin-form-group">
                         <label className="signin-label">비밀번호:</label>
