@@ -8,7 +8,7 @@
     padding: 20px;
 }
 
-.signin-form-card {
+.signin-form {
     background-color: #ffffff;
     padding: 40px;
     border-radius: 8px;
@@ -25,11 +25,11 @@
     text-align: center;
 }
 
-.pf-row {
+.signin-form-group {
     margin-bottom: 20px;
 }
 
-.pf-label {
+.signin-label {
     display: block;
     font-size: 14px;
     color: #555;
@@ -37,7 +37,7 @@
     font-weight: bold;
 }
 
-.pf-input {
+.signin-input {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
@@ -46,13 +46,13 @@
     box-sizing: border-box;
 }
 
-.pf-input:focus {
+.signin-input:focus {
     border-color: #007bff;
     outline: none;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-.pf-submit {
+.signin-button {
     width: 100%;
     padding: 12px 20px;
     background-color: #007bff;
@@ -67,11 +67,11 @@
     justify-content: center;
 }
 
-.pf-submit:hover {
+.signin-button:hover {
     background-color: #0056b3;
 }
 
-.pf-submit:disabled {
+.signin-button:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
 }
@@ -84,22 +84,22 @@
 }
 
 .signin-links {
-    text-align: center;
     margin-top: 20px;
+    text-align: center;
 }
 
-.signin-links .tab {
+.signin-links .signin-link {
     color: #007bff;
     text-decoration: none;
     font-size: 14px;
     margin: 0 10px;
 }
 
-.signin-links .tab:hover {
+.signin-links .signin-link:hover {
     text-decoration: underline;
 }
 
-.signin-links .tab.active {
+.signin-links .signin-link.active {
     font-weight: bold;
 }
 

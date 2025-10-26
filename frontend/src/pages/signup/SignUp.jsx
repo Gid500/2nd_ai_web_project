@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useInput from '../../common/hook/useInput';
 import { useSignupApi } from './api/signupApi';
-import { useAuth } from '../../common/hook/useAuth';
+import { useAuth } from '../../common/hook/AuthProvider';
 import './SignUp.css'; // Import the CSS file
 
 function SignUp() {
@@ -17,7 +17,13 @@ function SignUp() {
     const nickname = useInput('');
     const verificationCode = useInput('');
 
-    const [error, setError] = useState('');
+    // Specific error states for each input
+    const [idError, setIdError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [nicknameError, setNicknameError] = useState('');
+    const [generalError, setGeneralError] = useState(''); // For non-field specific errors
+
     const [success, setSuccess] = useState('');
     const [emailVerificationMessage, setEmailVerificationMessage] = useState('');
     const [idVerificationMessage, setIdVerificationMessage] = useState('');
@@ -28,7 +34,7 @@ function SignUp() {
     const [isIdUnique, setIsIdUnique] = useState(false);
     const [isEmailUnique, setIsEmailUnique] = useState(false);
     const [isNicknameUnique, setIsNicknameUnique] = useState(false);
-    const [passwordMatchMessage, setPasswordMatchMessage] = useState({ message: '', type: '' }); // 비밀번호 일치 메시지 추가
+    const [passwordMatchMessage, setPasswordMatchMessage] = useState({ message: '', type: '' });
 
     useEffect(() => {
         let timer;
@@ -38,134 +44,165 @@ function SignUp() {
         return () => clearTimeout(timer);
     }, [countdown]);
 
-    // 비밀번호와 비밀번호 확인 필드 값이 변경될 때마다 일치 여부 확인
     useEffect(() => {
         if (password.value && confirmPassword.value) {
             if (password.value === confirmPassword.value) {
                 setPasswordMatchMessage({ message: '비밀번호가 일치합니다.', type: 'success' });
+                setPasswordError('');
             } else {
                 setPasswordMatchMessage({ message: '비밀번호가 일치하지 않습니다.', type: 'error' });
+                setPasswordError('비밀번호가 일치하지 않습니다.');
             }
-        } else {
+        } else if (password.value || confirmPassword.value) {
+            // 한쪽만 입력되었을 경우 메시지를 비웁니다.
             setPasswordMatchMessage({ message: '', type: '' });
+            setPasswordError('');
+        } else {
+            // 둘 다 비어있을 경우 메시지를 비웁니다.
+            setPasswordMatchMessage({ message: '', type: '' });
+            setPasswordError('');
         }
     }, [password.value, confirmPassword.value]);
 
+
+
     const handleSendVerificationEmail = async () => {
-        setError('');
+        setEmailError('');
+        setGeneralError('');
         setSuccess('');
         if (!email.value) {
-            setError('이메일을 입력해주세요.');
+            setEmailError('이메일을 입력해주세요.');
             return;
         }
 
         try {
-            // First, check email duplication
             const emailDuplicationResponse = await checkEmailDuplication(email.value);
             if (!emailDuplicationResponse.isUnique) {
-                setError('이미 사용 중인 이메일입니다.');
+                setEmailError('이미 사용 중인 이메일입니다.');
                 setIsEmailUnique(false);
                 return;
             }
             setIsEmailUnique(true);
 
-            // If email is unique, send verification email
             await sendVerificationEmail(email.value);
             setEmailSent(true);
             setCountdown(180); // 3 minutes
             setSuccess('인증 코드가 이메일로 전송되었습니다.');
         } catch (err) {
-            setError(err.response?.data?.message || '이메일 확인 및 인증 코드 전송 실패');
+            setEmailError(err.response?.data?.message || '이메일 확인 및 인증 코드 전송 실패');
         }
     };
 
     const handleVerifyEmailCode = async () => {
-        setError('');
-        setSuccess(''); // Clear general success message
-        setEmailVerificationMessage(''); // Clear previous email verification message
+        setEmailError('');
+        setGeneralError('');
+        setSuccess('');
+        setEmailVerificationMessage('');
         if (!email.value || !verificationCode.value) {
-            setError('이메일과 인증 코드를 모두 입력해주세요.');
+            setEmailError('이메일과 인증 코드를 모두 입력해주세요.');
             return;
         }
         try {
             const response = await verifyEmailCode(email.value, verificationCode.value);
             if (response.isVerified) {
                 setEmailVerified(true);
-                setEmailVerificationMessage('이메일이 성공적으로 인증되었습니다.'); // Set specific message
+                setEmailVerificationMessage('이메일이 성공적으로 인증되었습니다.');
+                setEmailError('');
             } else {
-                setError('인증 코드가 일치하지 않습니다.');
+                setEmailError('인증 코드가 일치하지 않습니다.');
             }
         } catch (err) {
-            setError(err.response?.data?.message || '인증 코드 확인 실패');
+            setEmailError(err.response?.data?.message || '인증 코드 확인 실패');
         }
     };
 
     const handleCheckIdDuplication = async () => {
-        setError('');
+        setIdError('');
+        setGeneralError('');
         setSuccess('');
-        setIdVerificationMessage(''); // Clear previous ID verification message
+        setIdVerificationMessage('');
         if (!id.value) {
-            setError('아이디를 입력해주세요.');
+            setIdError('아이디를 입력해주세요.');
             return;
         }
         try {
             const response = await checkIdDuplication(id.value);
             if (response.isUnique) {
                 setIsIdUnique(true);
-                setIdVerificationMessage('사용 가능한 아이디입니다.'); // Set specific message
+                setIdVerificationMessage('사용 가능한 아이디입니다.');
+                setIdError('');
             } else {
                 setIsIdUnique(false);
-                setError('이미 사용 중인 아이디입니다.');
+                setIdError('이미 사용 중인 아이디입니다.');
             }
         } catch (err) {
-            setError(err.response?.data?.message || '아이디 중복 확인 실패');
+            setIdError(err.response?.data?.message || '아이디 중복 확인 실패');
         }
     };
 
     const handleCheckNicknameDuplication = async () => {
-        setError('');
+        setNicknameError('');
+        setGeneralError('');
         setSuccess('');
-        setNicknameVerificationMessage(''); // Clear previous nickname verification message
+        setNicknameVerificationMessage('');
         if (!nickname.value) {
-            setError('닉네임을 입력해주세요.');
+            setNicknameError('닉네임을 입력해주세요.');
             return;
         }
         try {
             const response = await checkNicknameDuplication(nickname.value);
             if (response.isUnique) {
                 setIsNicknameUnique(true);
-                setNicknameVerificationMessage('사용 가능한 닉네임입니다.'); // Set specific message
+                setNicknameVerificationMessage('사용 가능한 닉네임입니다.');
+                setNicknameError('');
             } else {
                 setIsNicknameUnique(false);
-                setError('이미 사용 중인 닉네임입니다.');
+                setNicknameError('이미 사용 중인 닉네임입니다.');
             }
         } catch (err) {
-            setError(err.response?.data?.message || '닉네임 중복 확인 실패');
+            setNicknameError(err.response?.data?.message || '닉네임 중복 확인 실패');
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
+        setGeneralError('');
         setSuccess('');
 
+        // Clear all specific errors at the start of submission
+        setIdError('');
+        setEmailError('');
+        setPasswordError('');
+        setNicknameError('');
+
+        let hasError = false;
+
         if (password.value !== confirmPassword.value) {
-            setError('비밀번호가 일치하지 않습니다.');
-            return;
+            setPasswordError('비밀번호가 일치하지 않습니다.');
+            setPasswordMatchMessage({ message: '비밀번호가 일치하지 않습니다.', type: 'error' });
+            hasError = true;
+        } else {
+            setPasswordError('');
+            setPasswordMatchMessage({ message: '비밀번호가 일치합니다.', type: 'success' });
         }
 
         if (!isIdUnique) {
-            setError('아이디 중복 확인을 완료해주세요.');
-            return;
+            setIdError('아이디 중복 확인을 완료해주세요.');
+            hasError = true;
         }
 
         if (!emailVerified) {
-            setError('이메일 인증을 완료해주세요.');
-            return;
+            setEmailError('이메일 인증을 완료해주세요.');
+            hasError = true;
         }
 
         if (!isNicknameUnique) {
-            setError('닉네임 중복 확인을 완료해주세요.');
+            setNicknameError('닉네임 중복 확인을 완료해주세요.');
+            hasError = true;
+        }
+
+        if (hasError) {
+            setGeneralError('모든 필수 정보를 올바르게 입력해주세요.');
             return;
         }
 
@@ -177,20 +214,18 @@ function SignUp() {
                 userNickname: nickname.value,
             });
             setSuccess('회원가입 성공! 로그인 페이지로 이동합니다.');
-            // Optionally log in the user immediately after signup
-            // await login(email.value, password.value);
             setTimeout(() => {
                 navigate('/signin');
             }, 2000);
         } catch (err) {
-            setError(err.response?.data?.message || '회원가입 실패');
+            setGeneralError(err.response?.data?.message || '회원가입 실패');
         }
     };
 
     return (
         <div className="signup-container">
             <form onSubmit={handleSubmit} className="signup-form">
-                {error && <p className="signup-error">{error}</p>}
+                {generalError && <p className="signup-error">{generalError}</p>}
                 {success && <p className="signup-success">{success}</p>}
 
                 <div className="signup-form-group">
@@ -202,7 +237,7 @@ function SignUp() {
                             {...id}
                             required
                             className="signup-input"
-                            onChange={(e) => { id.onChange(e); setIsIdUnique(false); setIdVerificationMessage(''); }}
+                            onChange={(e) => { id.onChange(e); setIsIdUnique(false); setIdVerificationMessage(''); setIdError(''); }}
                         />
                         <button
                             type="button"
@@ -213,6 +248,7 @@ function SignUp() {
                             {isIdUnique ? '확인 완료' : '중복 확인'}
                         </button>
                     </div>
+                    {idError && <p className="signup-error">{idError}</p>}
                     {idVerificationMessage && isIdUnique && (
                         <p className="signup-success">{idVerificationMessage}</p>
                     )}
@@ -228,7 +264,7 @@ function SignUp() {
                             required
                             className="signup-input"
                             disabled={emailSent}
-                            onChange={(e) => { email.onChange(e); setIsEmailUnique(false); setEmailSent(false); setEmailVerified(false); setCountdown(0); setEmailVerificationMessage(''); }}
+                            onChange={(e) => { email.onChange(e); setIsEmailUnique(false); setEmailSent(false); setEmailVerified(false); setCountdown(0); setEmailVerificationMessage(''); setEmailError(''); }}
                         />
                         <button
                             type="button"
@@ -239,6 +275,7 @@ function SignUp() {
                             {emailSent && countdown > 0 ? `재전송 (${countdown}s)` : '인증 코드 전송'}
                         </button>
                     </div>
+                    {emailError && <p className="signup-error">{emailError}</p>}
                 </div>
 
                 {emailSent && (
@@ -252,6 +289,7 @@ function SignUp() {
                                 required
                                 className="signup-input"
                                 disabled={emailVerified}
+                                onChange={(e) => { verificationCode.onChange(e); setEmailError(''); }}
                             />
                             <button
                                 type="button"
@@ -262,6 +300,7 @@ function SignUp() {
                                 {emailVerified ? '인증 완료' : '코드 확인'}
                             </button>
                         </div>
+                        {emailError && <p className="signup-error">{emailError}</p>}
                         {emailVerificationMessage && emailVerified && (
                             <p className="signup-success">{emailVerificationMessage}</p>
                         )}
@@ -276,6 +315,7 @@ function SignUp() {
                         {...password}
                         required
                         className="signup-input"
+                        onChange={(e) => { password.onChange(e); setPasswordError(''); }}
                     />
                 </div>
                 <div className="signup-form-group">
@@ -286,6 +326,7 @@ function SignUp() {
                         {...confirmPassword}
                         required
                         className="signup-input"
+                        onChange={(e) => { confirmPassword.onChange(e); setPasswordError(''); }}
                     />
                     {passwordMatchMessage.message && (
                         <p className={passwordMatchMessage.type === 'error' ? 'signup-password-mismatch' : 'signup-password-match'}>
@@ -304,7 +345,7 @@ function SignUp() {
                             {...nickname}
                             required
                             className="signup-input"
-                            onChange={(e) => { nickname.onChange(e); setIsNicknameUnique(false); setNicknameVerificationMessage(''); }}
+                            onChange={(e) => { nickname.onChange(e); setIsNicknameUnique(false); setNicknameVerificationMessage(''); setNicknameError(''); }}
                         />
                         <button
                             type="button"
@@ -315,6 +356,7 @@ function SignUp() {
                             {isNicknameUnique ? '확인 완료' : '중복 확인'}
                         </button>
                     </div>
+                    {nicknameError && <p className="signup-error">{nicknameError}</p>}
                     {nicknameVerificationMessage && isNicknameUnique && (
                         <p className="signup-success">{nicknameVerificationMessage}</p>
                     )}

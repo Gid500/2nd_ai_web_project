@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
 import './SignIn.css'; // Import SignIn.css
 
 function SignIn() {
-    const getNavLinkClass = ({ isActive }) => `tab ${isActive ? 'active' : ''}`;
+    const getNavLinkClass = ({ isActive }) => `signin-link ${isActive ? 'active' : ''}`;
     const identifier = useInput('');
     const password = useInput('');
     const [error, setError] = React.useState(null);
@@ -40,19 +40,19 @@ function SignIn() {
 
     return (
         <div className="signin-container">
-            <div className="signin-form-card">
+            <div className="signin-form">
                 <h2 className="signin-title">로그인</h2>
                 <form onSubmit={handleLogin}>
-                    <div className="pf-row">
-                        <label className="pf-label">아이디 또는 이메일:</label>
-                        <input type="text" className="pf-input" {...identifier} required />
+                    <div className="signin-form-group">
+                        <label className="signin-label">아이디 또는 이메일:</label>
+                        <input type="text" className="signin-input" {...identifier} required />
                     </div>
-                    <div className="pf-row">
-                        <label className="pf-label">비밀번호:</label>
-                        <input type="password" className="pf-input" {...password} required />
+                    <div className="signin-form-group">
+                        <label className="signin-label">비밀번호:</label>
+                        <input type="password" className="signin-input" {...password} required />
                     </div>
                     {error && <div className="signin-error">{error}</div>}
-                    <button type="submit" className="pf-submit" disabled={loading}>
+                    <button type="submit" className="signin-button" disabled={loading}>
                         {loading ? <><LoadingSpinner /> <span style={{ marginLeft: '8px' }}>로그인 중...</span></> : '로그인'}
                     </button>
                 </form>
