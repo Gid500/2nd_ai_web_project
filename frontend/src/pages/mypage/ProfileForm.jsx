@@ -9,7 +9,6 @@ function ProfileForm({ userId }) {
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [nickname, setNickname] = useState('');
-  const [bio, setBio] = useState('');
 
   // 유효성/피드백
   const [error, setError] = useState('');
@@ -21,10 +20,8 @@ function ProfileForm({ userId }) {
     const fetchUserData = async () => {
       if (!userId) return; // Ensure userId is available
       try {
-        // Assuming there's an endpoint to fetch user details by userId
-        const response = await api.get(`/api/user/${userId}`);
+        const response = await api.get(`/api/mypage/user/${userId}`); // Corrected API endpoint
         setNickname(response.data.userNickname);
-        // setBio(response.data.bio); // Uncomment if bio is fetched
         setAvatarPreview(response.data.userImgUrl); // Set avatar preview from fetched user data
       } catch (err) {
         console.error("Failed to fetch user data:", err);
@@ -92,8 +89,6 @@ function ProfileForm({ userId }) {
         setAvatarPreview(response.data.userImgUrl); // Update preview with new URL from backend
       }
 
-      // TODO: Handle bio update separately if needed
-
       setSuccess('프로필이 저장되었어요!');
     } catch (err) {
       console.error("Error saving profile:", err);
@@ -160,21 +155,6 @@ function ProfileForm({ userId }) {
           onChange={(e) => setNickname(e.target.value)}
           maxLength={20}
         />
-      </div>
-
-      {/* 소개글 */}
-      <div className="pf-row">
-        <label htmlFor="bio" className="pf-label">소개</label>
-        <textarea
-          id="bio"
-          className="pf-textarea"
-          placeholder="한 줄 소개를 적어보세요"
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-          rows={3}
-          maxLength={120}
-        />
-        <div className="pf-counter">{bio.length}/120</div>
       </div>
 
       {/* 피드백 */}

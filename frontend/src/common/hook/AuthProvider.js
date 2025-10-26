@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
             const response = await api.get('/api/checkSession');
             setIsLoggedIn(response.data.isAuthenticated);
             setIsAdmin(response.data.roleType && response.data.roleType.toLowerCase() === 'admin');
-            setUserId(response.data.userId || null); // Store userId
+            setUserId(response.data.user ? response.data.user.userId : null); // Correctly extract userId
         } catch (error) {
             console.error('Failed to check login status:', error);
             setIsLoggedIn(false);

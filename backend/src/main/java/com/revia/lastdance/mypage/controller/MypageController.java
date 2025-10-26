@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 import java.io.IOException;
 import java.util.Map;
 
@@ -18,6 +18,16 @@ public class MypageController {
 
     @Autowired
     private MypageService mypageService;
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<UserVO> getUserById(@PathVariable("userId") String userId) {
+        UserVO user = mypageService.getUserById(userId);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PostMapping("/nickname")
     public ResponseEntity<String> updateNickname(@RequestBody UserVO userVO) {
@@ -75,6 +85,33 @@ public class MypageController {
             return ResponseEntity.ok("Profile image uploaded successfully: " + userImgUrl);
         } catch (IOException e) {
             return new ResponseEntity<>("Failed to upload profile image: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/delete-account/request-code")
+    public ResponseEntity<String> requestDeleteAccountCode(@RequestBody Map<String, String> payload) {
+        String userEmail = payload.get("userEmail");
+        if (userEmail == null || userEmail.isEmpty()) {
+            return new ResponseEntity<>("Email is required", HttpStatus.BAD_REQUEST);
+        }
+        try {
+            mypageService.requestDeleteAccountCode(userEmail);
+            return ResponseEntity.ok("Account deletion verification email sent successfully");
+        } catch (MessagingException e) {
+            return new ResponseEntity<>("Failed to send email: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/delete-account/{userId}")
+    public ResponseEntity<String> deleteAccount(@PathVariable("userId") String userId,
+                                                @RequestParam("emailCode") String emailCode) {
+        try {
+            mypageService.deleteAccount(userId, emailCode);
+            return ResponseEntity.ok("Account deleted successfully.");
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to delete account: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

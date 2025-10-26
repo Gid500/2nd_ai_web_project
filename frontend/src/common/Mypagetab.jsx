@@ -8,7 +8,6 @@ function Mypagetab() {
 
   const handleLogout = () => {
     logout();
-    alert('로그아웃되었습니다!');
     navigate('/signin');
   };
 

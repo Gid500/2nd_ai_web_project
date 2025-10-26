@@ -43,4 +43,16 @@
         SELECT COUNT(*) FROM tb_user WHERE user_nickname = #{userNickname} AND user_id != #{userId}
     </select>
 
+    <delete id="deleteAccount" parameterType="string">
+        DELETE FROM tb_user
+        WHERE user_id = #{userId}
+    </delete>
+
+    <select id="getUserById" parameterType="string" resultType="com.revia.lastdance.signup.vo.UserVO">
+        SELECT user_id, user_email, user_nickname, user_img_url
+        FROM tb_user
+        WHERE user_id = #{userId}
+    </select>
+
 </mapper>
+

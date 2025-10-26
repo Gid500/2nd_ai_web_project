@@ -12,8 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,6 +40,10 @@ public class MypageService {
 
     @Value("${file.upload-dir}")
     private String uploadDir;
+
+    public UserVO getUserById(String userId) {
+        return mypageMapper.getUserById(userId);
+    }
 
     public void updateUserNickname(UserVO userVO) {
         // Check for duplicate nickname, excluding the current user
@@ -131,6 +135,61 @@ public class MypageService {
         mypageMapper.updateUserImgUrl(userVO);
 
         return userImgUrl;
+    }
+
+    public void requestDeleteAccountCode(String userEmail) throws MessagingException {
+        // Generate a random 6-digit code
+        SecureRandom random = new SecureRandom();
+        int code = 100000 + random.nextInt(900000); // 6-digit code
+        String emailCode = String.valueOf(code);
+
+        // Set expiration time
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MILLISECOND, (int) emailVerificationProperties.getExpiration());
+        Timestamp verifiTime = new Timestamp(calendar.getTimeInMillis());
+
+        // Save to database
+        EmailVerificationVO emailVerificationVO = new EmailVerificationVO();
+        emailVerificationVO.setUserEmail(userEmail);
+        emailVerificationVO.setEmailCode(emailCode);
+        emailVerificationVO.setVerifiTime(verifiTime);
+        mypageMapper.insertEmailVerification(emailVerificationVO);
+
+        // Send email
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setTo(userEmail);
+        helper.setSubject("[LastDance] Account Deletion Verification Code");
+        helper.setText("Your account deletion verification code is: " + emailCode + ". This code is valid for " + (emailVerificationProperties.getExpiration() / 60000) + " minutes.", true);
+        mailSender.send(message);
+    }
+
+    public void deleteAccount(String userId, String emailCode) {
+        // First, get the user's email from userId
+        UserVO user = mypageMapper.getUserById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found.");
+        }
+        String userEmail = user.getUserEmail();
+
+        EmailVerificationVO storedVerification = new EmailVerificationVO();
+        storedVerification.setUserEmail(userEmail);
+        storedVerification.setEmailCode(emailCode);
+        storedVerification = mypageMapper.selectEmailVerification(storedVerification);
+
+        if (storedVerification == null) {
+            throw new IllegalArgumentException("Invalid or expired verification code.");
+        }
+
+        // Check if the code has expired
+        if (storedVerification.getVerifiTime().before(new Timestamp(System.currentTimeMillis()))) {
+            mypageMapper.deleteEmailVerification(storedVerification); // Delete expired code
+            throw new IllegalArgumentException("Verification code has expired.");
+        }
+
+        // If verification is successful, proceed with account deletion
+        mypageMapper.deleteAccount(userId);
+        mypageMapper.deleteEmailVerification(storedVerification); // Delete verification record after successful deletion
     }
 
 }
