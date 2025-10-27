@@ -1,7 +1,7 @@
 import React, { useState } from 'react'; // useState 추가
 import { useAuth } from '../../../common/hook/useAuth';
 import './PostDetail.css';
-import { useNavigate } from 'react-router-dom'; // useNavigate 임포트
+import { Link, useNavigate } from 'react-router-dom'; // Link, useNavigate 임포트
 // CommentList와 CommentForm 컴포넌트 import
 import CommentList from './CommentList'; // 경로 수정
 import CommentForm from './CommentForm'; // 경로 수정
@@ -17,7 +17,7 @@ const REPORT_TYPES = [
     { id: 3, name: '음란물' },
 ];
 
-const PostDetail = ({ post, onBackToList, onEdit, onDelete, comments, fetchComments }) => {
+const PostDetail = ({ post, onBackToList, onDelete, comments, fetchComments }) => {
     const { user, isAdmin } = useAuth();
     const navigate = useNavigate(); // useNavigate 훅 사용
     const [editingComment, setEditingComment] = useState(null); // 댓글 수정 상태 관리
@@ -30,10 +30,6 @@ const PostDetail = ({ post, onBackToList, onEdit, onDelete, comments, fetchComme
     }
 
     const decodedContent = post.postContent || '';
-
-    const handleEditClick = () => {
-        onEdit(post); // useCommPage의 handleEditPost 호출
-    };
 
     const handleDeleteClick = () => {
         onDelete(post.postId); // useCommPage의 handleDeletePost 호출
@@ -63,7 +59,7 @@ const PostDetail = ({ post, onBackToList, onEdit, onDelete, comments, fetchComme
 
     // 댓글 삭제 핸들러
     const handleDeleteComment = async (commentId) => {
-        if (window.confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+        if (window.confirm('정말로 이 댓글을 삭제하시겠십니까?')) {
             try {
                 await deleteComment(commentId);
                 fetchComments(post.postId); // 댓글 목록 새로고침
@@ -152,7 +148,7 @@ const PostDetail = ({ post, onBackToList, onEdit, onDelete, comments, fetchComme
                 <button onClick={onBackToList}>목록으로 돌아가기</button>
                 {(isAdmin || (user && user.userId === post.userId)) && (
                     <> 
-                        <button onClick={handleEditClick}>수정</button>
+                        <Link to={`/comm/${post.postId}/edit`} className="button">수정</Link>
                         <button onClick={handleDeleteClick}>삭제</button>
                     </>
                 )}

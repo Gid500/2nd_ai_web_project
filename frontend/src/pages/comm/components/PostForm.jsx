@@ -11,14 +11,14 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
     const postContent = useInput(initialData.postContent || '');
     const [postType, setPostType] = useState(initialData.isNotice ? 'notice' : 'general');
     const [selectedFiles, setSelectedFiles] = useState([]); // 새로 선택된 파일
-    const [existingFiles, setExistingFiles] = useState(initialData.files || []); // 기존 파일
+    const [existingFiles, setExistingFiles] = useState(isEditMode ? [] : initialData.files || []); // 기존 파일
     const [deletedFileIds, setDeletedFileIds] = useState([]); // 삭제할 파일 ID 목록
 
     useEffect(() => {
         setPostType(initialData.isNotice ? 'notice' : 'general');
-        setExistingFiles(initialData.files || []);
+        setExistingFiles(isEditMode ? [] : initialData.files || []);
         setDeletedFileIds([]); // 초기화
-    }, [initialData]);
+    }, [initialData, isEditMode]);
 
     const handleFileChange = (e) => {
         setSelectedFiles(Array.from(e.target.files));
