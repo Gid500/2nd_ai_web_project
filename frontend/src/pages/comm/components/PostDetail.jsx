@@ -6,14 +6,24 @@ import { useNavigate } from 'react-router-dom'; // useNavigate 임포트
 import CommentList from './CommentList'; // 경로 수정
 import CommentForm from './CommentForm'; // 경로 수정
 import { addComment, updateComment, deleteComment } from '../api/commCommentApi'; // commCommentApi 임포트
+import { createReport } from '../api/commApi'; // createReport 임포트
 
 // 백엔드 기본 URL (환경 변수 또는 설정 파일에서 가져오는 것이 좋지만, 일단 하드코딩)
 const BACKEND_BASE_URL = 'http://localhost:8080';
+
+const REPORT_TYPES = [
+    { id: 1, name: '욕설' },
+    { id: 2, name: '광고' },
+    { id: 3, name: '음란물' },
+];
 
 const PostDetail = ({ post, onBackToList, onEdit, onDelete, comments, fetchComments }) => {
     const { user, isAdmin } = useAuth();
     const navigate = useNavigate(); // useNavigate 훅 사용
     const [editingComment, setEditingComment] = useState(null); // 댓글 수정 상태 관리
+    const [showReportModal, setShowReportModal] = useState(false); // 신고 모달 표시 여부
+    const [selectedReportTypeId, setSelectedReportTypeId] = useState(REPORT_TYPES[0].id); // 선택된 신고 유형 ID
+    const [reportReason, setReportReason] = useState(''); // 신고 사유
 
     if (!post) {
         return <p>게시글을 찾을 수 없습니다.</p>;
@@ -64,6 +74,47 @@ const PostDetail = ({ post, onBackToList, onEdit, onDelete, comments, fetchComme
         }
     };
 
+    const handleReportPost = () => {
+        if (!user) {
+            alert('로그인 후 신고할 수 있습니다.');
+            return;
+        }
+        setShowReportModal(true);
+    };
+
+    const handleReportSubmit = async () => {
+        if (!reportReason.trim()) {
+            alert('신고 사유를 입력해야 합니다.');
+            return;
+        }
+
+        const reportData = {
+            reportedPostId: post.postId,
+            reporterUserId: user.userId,
+            reportedUserId: post.userId, // 게시글 작성자 ID
+            reportContent: reportReason,
+            reportTypeId: selectedReportTypeId,
+            reportContentType: "post"
+        };
+
+        try {
+            await createReport(reportData);
+            alert('게시글이 성공적으로 신고되었습니다.');
+            setShowReportModal(false);
+            setReportReason('');
+            setSelectedReportTypeId(REPORT_TYPES[0].id);
+        } catch (error) {
+            console.error('Error reporting post:', error);
+            alert('게시글 신고 중 오류가 발생했습니다.');
+        }
+    };
+
+    const handleCloseReportModal = () => {
+        setShowReportModal(false);
+        setReportReason('');
+        setSelectedReportTypeId(REPORT_TYPES[0].id);
+    };
+
     return (
         <div className="post-detail-container">
             <h2 className="post-detail-title">
@@ -105,6 +156,9 @@ const PostDetail = ({ post, onBackToList, onEdit, onDelete, comments, fetchComme
                         <button onClick={handleDeleteClick}>삭제</button>
                     </>
                 )}
+                {user && user.userId !== post.userId && !isAdmin && (
+                    <button onClick={handleReportPost} className="report-button">신고</button>
+                )}
             </div>
 
             {/* 댓글 섹션 추가 */}
@@ -125,6 +179,43 @@ const PostDetail = ({ post, onBackToList, onEdit, onDelete, comments, fetchComme
                     isAdmin={isAdmin}
                 />
             </div>
+
+            {/* 신고 모달 */}
+            {showReportModal && (
+                <div className="report-modal-overlay">
+                    <div className="report-modal-content">
+                        <h3>게시글 신고</h3>
+                        <div className="form-group">
+                            <label htmlFor="reportType">신고 유형:</label>
+                            <select
+                                id="reportType"
+                                value={selectedReportTypeId}
+                                onChange={(e) => setSelectedReportTypeId(parseInt(e.target.value))}
+                                className="report-select"
+                            >
+                                {REPORT_TYPES.map(type => (
+                                    <option key={type.id} value={type.id}>{type.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="reportReason">신고 사유:</label>
+                            <textarea
+                                id="reportReason"
+                                value={reportReason}
+                                onChange={(e) => setReportReason(e.target.value)}
+                                placeholder="신고 사유를 자세히 입력해주세요."
+                                rows="5"
+                                className="report-textarea"
+                            ></textarea>
+                        </div>
+                        <div className="modal-actions">
+                            <button onClick={handleReportSubmit} className="report-submit-button">신고 제출</button>
+                            <button onClick={handleCloseReportModal} className="report-cancel-button">취소</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

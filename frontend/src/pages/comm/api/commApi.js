@@ -60,3 +60,13 @@ export const deletePost = async (postId) => {
         throw error;
     }
 };
+
+export const createReport = async (reportData) => {
+    try {
+        const response = await api.post('/api/report', reportData);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating report:', error);
+        throw error;
+    }
+};
