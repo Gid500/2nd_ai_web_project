@@ -27,12 +27,14 @@ function App() {
         <Route path="/explain" element={<Explain/>} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/comm" element={<Comm/>} />
+        <Route path="/comm/:postId" element={<Comm/>} /> {/* 게시글 상세 */}
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/comm" element={<Comm/>} />
+          
           <Route path="/comm/new" element={<Comm/>} /> {/* 새 게시글 작성 */}
           <Route path="/comm/:postId/edit" element={<Comm/>} /> {/* 게시글 수정 */}
-          <Route path="/comm/:postId" element={<Comm/>} /> {/* 게시글 상세 */}
+          
           <Route path="/mypage" element={<Mypage/>} />
           <Route path="/care" element={<CareAccoount />} />
         </Route>

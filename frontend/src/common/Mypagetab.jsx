@@ -6,10 +6,6 @@ function Mypagetab() {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/signin');
-  };
 
   return (
     <div>
@@ -28,9 +24,7 @@ function Mypagetab() {
           계정 관리
         </NavLink>
 
-        <button className="mypage-logout-btn" onClick={handleLogout}>
-          로그아웃
-        </button>
+
       </nav>
     </div>
   );
