@@ -44,7 +44,6 @@ pip install Flask Flask-Cors Werkzeug openai tensorflow numpy Pillow python-dote
 
 #### `ai_backend/` 디렉토리 (Python Flask 기반 AI 백엔드)
 
-*   **`.gitignore`**: Git이 추적하지 않을 파일 및 디렉토리 패턴을 정의합니다. (예: `__pycache__`, `.env` 등)
 *   **`app.py`**: Flask 애플리케이션의 메인 진입점으로, 앱 인스턴스 생성, CORS 설정, 블루프린트 등록, 정적 파일 제공 라우트 등을 담당합니다.
 *   **`cat_predictor.py`**: 고양이 이미지의 감정을 예측하는 AI 모델 로직을 포함합니다. 이미지 전처리, 모델 로드, 예측 수행 등의 기능을 제공합니다.
 *   **`config.py`**: Flask 애플리케이션 및 AI 백엔드에서 사용되는 설정 값(예: 업로드 폴더, 허용 확장자, OpenAI API 키)을 정의합니다.
@@ -56,7 +55,6 @@ pip install Flask Flask-Cors Werkzeug openai tensorflow numpy Pillow python-dote
 
 #### `ai_model/` 디렉토리 (AI 모델 관련 파일)
 
-*   **`.gitignore`**: Git이 추적하지 않을 파일 및 디렉토리 패턴을 정의합니다.
 *   **`dog_emotion_mobilenet_transfer_leaning.ipynb`**: 강아지 감정 인식 모델을 위한 전이 학습(Transfer Learning) 과정을 담은 Jupyter Notebook 파일입니다.
 *   **`train_cat_emotion_mobilenet_v2.py`**: 고양이 감정 인식 모델을 MobileNetV2 기반으로 학습시키는 Python 스크립트입니다.
 *   **`train_cat_emotion_model.ipynb`**: 고양이 감정 인식 모델 학습 과정을 담은 Jupyter Notebook 파일입니다.
@@ -65,8 +63,6 @@ pip install Flask Flask-Cors Werkzeug openai tensorflow numpy Pillow python-dote
 
 #### `backend/` 디렉토리 (Java Spring Boot 백엔드)
 
-*   **`.gitattributes`**: Git이 특정 파일 경로에 대해 속성을 정의하는 데 사용됩니다. (예: 텍스트 파일의 줄 끝 처리)
-*   **`.gitignore`**: Git이 추적하지 않을 파일 및 디렉토리 패턴을 정의합니다.
 *   **`build.gradle`**: Gradle 빌드 시스템의 설정 파일로, 프로젝트의 의존성, 빌드 스크립트 등을 정의합니다.
 *   **`gradlew`, `gradlew.bat`**: Gradle Wrapper 스크립트로, Gradle이 설치되어 있지 않아도 프로젝트를 빌드할 수 있게 해줍니다. (`.bat`은 Windows용)
 *   **`settings.gradle`**: Gradle 멀티 프로젝트 빌드에서 서브 프로젝트를 정의하는 데 사용됩니다.
