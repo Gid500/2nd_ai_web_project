@@ -24,7 +24,7 @@ function ProfileForm({ userId }) {
 
       {/* 아바타 업로드 */}
       <div className="mypage-row">
-        <label className="mypage-label">프로필 이미지</label>
+        <label className="mypage-label"></label>
         <div className="mypage-avatarRow">
           <div className="mypage-avatar">
             {avatarPreview ? (
@@ -42,6 +42,7 @@ function ProfileForm({ userId }) {
               onChange={onPickFile}
               style={{ display: 'none' }}
             />
+            <p className="mypage-hint">PNG/JPG/WebP/GIF, 최대 5MB</p>
             <button
               type="button"
               className="mypage-btn"
@@ -58,14 +59,14 @@ function ProfileForm({ userId }) {
                 선택 취소
               </button>
             )}
-            <p className="mypage-hint">PNG/JPG/WebP/GIF, 최대 5MB</p>
+            
           </div>
         </div>
       </div>
 
       {/* 닉네임 */}
       <div className="mypage-row">
-        <label htmlFor="nickname" className="mypage-label">닉네임</label>
+        <label htmlFor="nickname" className="mypage-label"></label>
         <div className="mypage-input-button-group">
           <input
             id="nickname"
@@ -77,7 +78,7 @@ function ProfileForm({ userId }) {
             maxLength={20}
           />
           <button className="mypage-submit" disabled={saving}>
-            {saving ? '저장 중…' : '저장하기'}
+            {saving ? '저장 중…' : '저장'}
           </button>
         </div>
       </div>

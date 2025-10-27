@@ -4,6 +4,7 @@ import './Mypage.css'; // Import Mypage.css for styling
 import { useAuth } from '../../common/hook/useAuth';
 import { useNavigate } from 'react-router-dom';
 import api from '../../common/api/api';
+import PasswordResetForm from './components/PasswordResetForm';
 
 function CareAccoount() {
     const { userId, logout } = useAuth();
@@ -118,6 +119,8 @@ function CareAccoount() {
                         </button>
                     </div>
                 )}
+
+                <PasswordResetForm />
             </div>
         </div>
     );
