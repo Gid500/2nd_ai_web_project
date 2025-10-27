@@ -74,22 +74,4 @@ public class SignupController {
         boolean isDuplicated = signupService.isUserIdDuplicated(userId);
         return ResponseEntity.ok(Map.of("isDuplicated", isDuplicated));
     }
-
-    @PostMapping("/signup/send-verification")
-    public ResponseEntity<?> sendVerificationEmail(@RequestBody Map<String, String> payload) {
-        String email = payload.get("email");
-        signupService.sendVerificationEmail(email);
-        return ResponseEntity.ok("인증 코드가 발송되었습니다.");
-    }
-
-    @PostMapping("/signup/verify-code")
-    public ResponseEntity<?> verifyCode(@RequestBody Map<String, String> payload) {
-        String email = payload.get("email");
-        String code = payload.get("code");
-        boolean isVerified = signupService.verifyEmailCode(email, code);
-        if (isVerified) {
-            return ResponseEntity.ok(Map.of("isVerified", true));
-        }
-        return ResponseEntity.badRequest().body(Map.of("isVerified", false));
-    }
 }

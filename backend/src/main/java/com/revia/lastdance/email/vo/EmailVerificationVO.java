@@ -1,12 +1,12 @@
-package com.revia.lastdance.email;
+package com.revia.lastdance.email.vo;
 
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 public class EmailVerificationVO {
     private String userEmail;
     private String emailCode;
-    private Timestamp verifiTime;
+    private LocalDateTime verifiTime;
 }

@@ -5,7 +5,7 @@ import './PostForm.css';
 
 const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
     const isEditMode = !!initialData.postId;
-    const { user, isAdmin } = useAuth(); // isAdmin 다시 가져오기
+    const { user, isAdmin } = useAuth();
 
     const postTitle = useInput(initialData.postTitle || '');
     const postContent = useInput(initialData.postContent || '');
@@ -52,7 +52,7 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
     };
 
     const postOptions = [];
-    if (isAdmin) { // isAdmin 조건 다시 추가
+    if (isAdmin) {
         postOptions.push({ value: 'notice', label: '공지사항' });
     }
     postOptions.push({ value: 'general', label: '일반' });

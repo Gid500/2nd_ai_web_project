@@ -1,9 +1,9 @@
 import React from 'react';
 import LoadingSpinner from '../../common/components/LoadingSpinner';
-import { useAdminCheck } from './hook/useAdminCheck'; // 새로 생성한 훅 임포트
+import { useAdminCheck } from './hook/useAdminCheck';
 
 function Admin() {
-    const { isAdmin, error, loading } = useAdminCheck();
+    const { isAdmin, loading } = useAdminCheck();
 
     if (loading) {
         return (
@@ -11,10 +11,6 @@ function Admin() {
                 <LoadingSpinner />
             </div>
         );
-    }
-
-    if (error) {
-        return <div>오류 발생: {error.message}</div>;
     }
 
     return (

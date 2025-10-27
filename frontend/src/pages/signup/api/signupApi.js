@@ -13,7 +13,7 @@ export const useSignupApi = () => {
 
     const sendVerificationEmail = async (email) => {
         try {
-            const response = await signupApiInstance.post('/api/signup/send-verification', { email });
+            const response = await signupApiInstance.post('/api/email/send-verification', { email });
             return response.data;
         } catch (error) {
             throw error;
@@ -22,7 +22,7 @@ export const useSignupApi = () => {
 
     const verifyEmailCode = async (email, code) => {
         try {
-            const response = await signupApiInstance.post('/api/signup/verify-code', { email, code });
+            const response = await signupApiInstance.post('/api/email/verify-code', { email, code });
             return response.data;
         } catch (error) {
             throw error;
