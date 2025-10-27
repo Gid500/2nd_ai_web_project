@@ -59,11 +59,6 @@ const useCommPage = () => {
         navigate(`/comm/${id}`);
     };
 
-    const handleCreateNewPost = () => {
-        setEditingPostData(null); // 새 게시글 작성 시 기존 수정 데이터 초기화
-        navigate('/comm/new');
-    };
-
     const handleEditPost = (post) => {
         setEditingPostData(post); // 수정할 게시글 데이터 설정
         navigate(`/comm/${post.postId}/edit`);
@@ -121,7 +116,6 @@ const useCommPage = () => {
         currentPage,
         postsPerPage,
         handleViewDetail,
-        handleCreateNewPost,
         handleEditPost,
         handleDeletePost,
         handleSubmitForm,

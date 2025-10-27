@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom'; // useLocation 추가
 import PostList from './components/PostList';
 import PostDetail from './components/PostDetail';
 import PostForm from './components/PostForm';
@@ -11,9 +11,13 @@ import { useAuth } from '../../common/hook/AuthProvider';
 import './Comm.css';
 
 function Comm() {
-    const { postId, action } = useParams(); // postId와 action (new, edit)을 URL에서 가져옴
+    const { postId } = useParams(); // postId만 가져옴
     const navigate = useNavigate();
+    const location = useLocation(); // useLocation 훅 사용
     const { user, isAdmin } = useAuth();
+
+    const isNewPost = location.pathname === '/comm/new';
+    const isEditPost = location.pathname.endsWith('/edit');
 
     const {
         posts,
@@ -28,7 +32,6 @@ function Comm() {
         currentPage,
         postsPerPage,
         handleViewDetail,
-        handleCreateNewPost,
         handleEditPost,
         handleDeletePost,
         handleSubmitForm,
@@ -45,13 +48,13 @@ function Comm() {
     if (error) return <p>에러 발생: {error.message}</p>;
 
     // 게시글 작성/수정 폼 렌더링
-    if (action === 'new' || (action === 'edit' && postId)) {
+    if (isNewPost || (isEditPost && postId)) {
         return (
             <div className="comm-container">
-                <h1 className="comm-header">{action === 'new' ? '새 게시글 작성' : '게시글 수정'}</h1>
+                <h1 className="comm-header">{isNewPost ? '새 게시글 작성' : '게시글 수정'}</h1>
                 <PostForm
                     onSubmit={handleSubmitForm}
-                    initialData={action === 'edit' ? editingPostData : null}
+                    initialData={isEditPost ? editingPostData : {}}
                     onCancel={handleCancelForm}
                 />
             </div>
@@ -60,6 +63,13 @@ function Comm() {
 
     // 게시글 상세 보기 렌더링
     if (postId) {
+        if (!currentPostDetail) {
+            return (
+                <div className="comm-loading-spinner-container">
+                    <LoadingSpinner />
+                </div>
+            );
+        }
         return (
             <div className="comm-container">
                 <h1 className="comm-header">게시글 상세</h1>
@@ -91,8 +101,6 @@ function Comm() {
             </div>
             <PostList
                 posts={posts}
-                onViewDetail={handleViewDetail}
-                onCreateNewPost={handleCreateNewPost}
                 currentUser={user}
             />
             <Pagination

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useAuth } from '../../../common/hook/useAuth';
 import './PostList.css';
-import { useNavigate } from 'react-router-dom'; // useNavigate 임포트
+import { useNavigate, Link } from 'react-router-dom'; // useNavigate, Link 임포트
 
-const PostList = ({ posts, onCreateNewPost, currentUser }) => {
+const PostList = ({ posts, currentUser }) => {
     const { user, isAdmin } = useAuth();
     const navigate = useNavigate(); // useNavigate 훅 사용
 
@@ -16,10 +16,6 @@ const PostList = ({ posts, onCreateNewPost, currentUser }) => {
         // Notices come before non-notices
         return b.isNotice - a.isNotice;
     });
-
-    const handleViewDetail = (id) => {
-        navigate(`/comm/${id}`);
-    };
 
     const handleEdit = (post) => {
         // PostDetail에서 onEdit을 호출할 때 navigate를 사용하도록 변경
@@ -36,7 +32,7 @@ const PostList = ({ posts, onCreateNewPost, currentUser }) => {
             <div className="post-list-header">
                 <h2 className="post-list-title">게시글 목록</h2>
                 {currentUser && ( // 로그인된 사용자에게만 버튼 표시
-                    <button className="comm-create-post-button" onClick={onCreateNewPost}>새 게시글 작성</button>
+                    <Link to="/comm/new" className="comm-create-post-button">새 게시글 작성</Link>
                 )}
             </div>
             {sortedPosts.length === 0 ? (
@@ -45,10 +41,12 @@ const PostList = ({ posts, onCreateNewPost, currentUser }) => {
                 <ul className="post-list-ul">
                     {sortedPosts.map(post => (
                         <li key={post.postId} className={`post-list-item ${post.isNotice ? 'notice' : ''}`}>
-                            <h3 onClick={() => handleViewDetail(post.postId)} className="post-list-item-title">
-                                {post.isNotice && <span className="post-list-notice-tag">[공지]</span>}
-                                {post.postTitle}
-                            </h3>
+                            <Link to={`/comm/${post.postId}`} className="post-list-item-title-link">
+                                <h3 className="post-list-item-title">
+                                    {post.isNotice && <span className="post-list-notice-tag">[공지]</span>}
+                                    {post.postTitle}
+                                </h3>
+                            </Link>
                             <p className="post-list-meta-info">작성자: {post.anoyUserName || post.userId}</p>
                             <p className="post-list-meta-info">작성일: {new Date(post.createdDate).toLocaleString()}</p>
                             {(isAdmin || (user && user.userId === post.userId)) && (
