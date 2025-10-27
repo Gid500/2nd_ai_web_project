@@ -14,7 +14,7 @@ import Explain from './pages/explain/Explain';
 import Mypage from './pages/mypage/Mypage';
 import CareAccoount from './pages/mypage/CareAccount';
 import ProtectedRoute from './common/components/ProtectedRoute';
-import NewPostPage from './pages/comm/NewPostPage';
+
 
 function App() {
   return (
@@ -31,12 +31,14 @@ function App() {
         <Route path="/comm" element={<Comm/>} />
         <Route path="/comm/:postId" element={<Comm/>} /> {/* 게시글 상세 */}
 
+
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/comm/new" element={<NewPostPage />} /> {/* 새 게시글 작성 */}
+          
           <Route path="/comm/:postId/edit" element={<Comm/>} /> {/* 게시글 수정 */}
           <Route path="/mypage" element={<Mypage/>} />
           <Route path="/care" element={<CareAccoount />} />
+
         </Route>
 
         <Route path="/403" element={<Error403 />} />
