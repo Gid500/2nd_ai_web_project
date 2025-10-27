@@ -33,21 +33,12 @@ function App() {
         <Route path="/comm" element={<Comm/>} />
         <Route path="/comm/:postId" element={<Comm/>} /> {/* 게시글 상세 */}
 
-<<<<<<< HEAD
-
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoute />}>
-          
-          <Route path="/comm/:postId/edit" element={<Comm/>} /> {/* 게시글 수정 */}
-=======
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/comm/new" element={<NewPostPage />} /> {/* 새 게시글 작성 */}
           <Route path="/comm/:postId/edit" element={<EditPostPage/>} /> {/* 게시글 수정 */}
->>>>>>> 511c969 (fix)
           <Route path="/mypage" element={<Mypage/>} />
           <Route path="/care" element={<CareAccoount />} />
-
         </Route>
 
         <Route path="/403" element={<Error403 />} />

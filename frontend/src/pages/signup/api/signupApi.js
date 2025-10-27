@@ -5,7 +5,7 @@ export const useSignupApi = () => {
     const signup = async (userData) => {
         try {
             const response = await signupApiInstance.post('/api/signup/register', userData);
-            return response.data;
+            return response;
         } catch (error) {
             throw error;
         }
