@@ -63,8 +63,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/comments/post/**").permitAll() // 댓글 목록 조회 허용
                         .requestMatchers(HttpMethod.POST, "/api/comments/delete/**").authenticated() // 댓글 삭제는 인증된 사용자만 (세부 권한은 서비스 계층에서 확인)
                         .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated() // 댓글 작성, 수정은 인증된 사용자만
-                        // DELETE 요청에 대한 권한 설정을 authenticated()로 변경하여 PostController의 @PreAuthorize에 위임
-                        .requestMatchers(HttpMethod.DELETE, "/api/posts/delete/**").authenticated()
+                        // 관리자용 사용자 조회 및 삭제 엔드포인트
+                        .requestMatchers(HttpMethod.GET, "/api/user/all").hasRole("admin")
                         .requestMatchers(HttpMethod.DELETE, "/api/user/**").authenticated() // 회원 탈퇴는 인증된 사용자만
                         .requestMatchers(HttpMethod.POST, "/api/email/send-verification", "/api/email/verify-code").permitAll() // 이메일 인증은 모두 허용
                         // 신고 관련 엔드포인트 권한 설정

@@ -87,7 +87,7 @@ const useCommPage = () => {
             navigate(`/comm/${editingPostData.postId}`); // 수정 후 상세 페이지로 이동
         }
         else {
-            const newPost = await addPost(postData); // 새 게시글 추가 후 반환된 게시글 정보 사용
+            await addPost(postData); // 새 게시글 추가 후 반환된 게시글 정보 사용
             navigate('/comm'); // 작성 후 목록으로 이동
         }
         setEditingPostData(null); // 폼 제출 후 수정 데이터 초기화
