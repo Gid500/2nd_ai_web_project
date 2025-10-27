@@ -1,7 +1,8 @@
-package com.revia.lastdance.withdrawal;
+package com.revia.lastdance.withdrawal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.revia.lastdance.withdrawal.dao.WithdrawalDAO;
 
 @Service
 public class WithdrawalService {

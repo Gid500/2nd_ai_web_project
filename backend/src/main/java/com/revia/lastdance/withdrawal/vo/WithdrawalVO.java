@@ -1,4 +1,4 @@
-package com.revia.lastdance.withdrawal;
+package com.revia.lastdance.withdrawal.vo;
 
 import lombok.Data;
 

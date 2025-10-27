@@ -1,4 +1,4 @@
-package com.revia.lastdance.withdrawal;
+package com.revia.lastdance.withdrawal.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
