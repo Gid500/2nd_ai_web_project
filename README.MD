@@ -81,7 +81,6 @@ pip install Flask Flask-Cors Werkzeug openai tensorflow numpy Pillow python-dote
 #### `frontend/` 디렉토리 (React 웹 애플리케이션)
 
 *   **`.env`**: 환경 변수를 정의하는 파일로, API 키나 개발/배포 환경별 설정을 포함합니다.
-*   **`.gitignore`**: Git이 추적하지 않을 파일 및 디렉토리 패턴을 정의합니다.
 *   **`package-lock.json`**: Node.js 프로젝트의 정확한 의존성 트리를 기록하여, 팀원 간 또는 배포 환경에서 일관된 패키지 설치를 보장합니다.
 *   **`package.json`**: Node.js 프로젝트의 메타데이터(이름, 버전, 스크립트, 의존성 등)를 정의합니다.
 *   **`README.md`**: `frontend` 모듈에 대한 별도의 설명 문서입니다.
