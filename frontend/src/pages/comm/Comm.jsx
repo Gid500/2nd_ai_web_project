@@ -68,6 +68,13 @@ function Comm() {
         setCurrentPage(1);
     };
 
+    const handleReset = () => {
+        setSearchType('title');
+        setSearchKeyword('');
+        setSearchParams(new URLSearchParams()); // 모든 검색 파라미터 제거
+        setCurrentPage(1);
+    };
+
     if (loading) return (
         <div className="comm-loading-spinner-container">
             <LoadingSpinner />
@@ -114,6 +121,7 @@ function Comm() {
                         className="comm-search-input"
                     />
                     <button type="submit" className="comm-search-button">검색</button>
+                    <button type="button" onClick={handleReset} className="comm-reset-button">초기화</button>
                 </form>
             </div>
 
