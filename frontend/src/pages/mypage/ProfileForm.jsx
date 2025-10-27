@@ -14,13 +14,84 @@ function ProfileForm({ userId }) {
     onPickFile,
     clearAvatar,
     handleSubmit,
+    handleDeleteAccount,
+    // 이메일 인증 관련 상태 및 함수
+    showEmailVerification,
+    setShowEmailVerification,
+    verificationEmail,
+    setVerificationEmail,
+    verificationCode,
+    setVerificationCode,
+    emailSent,
+    emailVerified,
+    emailVerificationError,
+    sendVerificationEmailRequest,
+    verifyEmailCodeRequest,
   } = useProfileForm(userId);
-
-  
 
   return (
     <form className="mypage-profile-form" onSubmit={handleSubmit}>
-      
+      {/* 이메일 인증 모달/섹션 */}
+      {showEmailVerification && (
+        <div className="mypage-email-verification-overlay">
+          <div className="mypage-email-verification-modal">
+            <h3>회원 탈퇴를 위한 이메일 인증</h3>
+            <p>회원 탈퇴를 진행하려면 이메일 인증이 필요합니다.</p>
+
+            <div className="mypage-row">
+              <label htmlFor="verificationEmail" className="mypage-label">이메일</label>
+              <input
+                id="verificationEmail"
+                className="mypage-input"
+                type="email"
+                value={verificationEmail}
+                readOnly
+              />
+              <button
+                type="button"
+                className="mypage-btn"
+                onClick={sendVerificationEmailRequest}
+                disabled={emailSent}
+              >
+                {emailSent ? '재전송' : '인증 코드 발송'}
+              </button>
+            </div>
+
+            {emailSent && !emailVerified && (
+              <div className="mypage-row">
+                <label htmlFor="verificationCode" className="mypage-label">인증 코드</label>
+                <input
+                  id="verificationCode"
+                  className="mypage-input"
+                  type="text"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                  maxLength={6}
+                />
+                <button
+                  type="button"
+                  className="mypage-btn"
+                  onClick={verifyEmailCodeRequest}
+                >
+                  인증 확인
+                </button>
+              </div>
+            )}
+
+            {emailVerificationError && <div className="mypage-error">{emailVerificationError}</div>}
+
+            <div className="mypage-modal-actions">
+              <button
+                type="button"
+                className="mypage-btn mypage-ghost"
+                onClick={() => setShowEmailVerification(false)}
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 아바타 업로드 */}
       <div className="mypage-row">
@@ -85,6 +156,17 @@ function ProfileForm({ userId }) {
       {/* 피드백 */}
       {error && <div className="mypage-error">{error}</div>}
       {success && <div className="mypage-success">{success}</div>}
+
+      {/* 회원 탈퇴 버튼 */}
+      <div className="mypage-row">
+        <button
+          type="button"
+          className="mypage-btn mypage-delete-account"
+          onClick={handleDeleteAccount}
+        >
+          회원 탈퇴
+        </button>
+      </div>
     </form>
   );
 }

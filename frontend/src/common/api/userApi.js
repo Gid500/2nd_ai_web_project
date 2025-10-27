@@ -21,7 +21,36 @@ export const logoutUser = async () => {
         const response = await api.post('/api/logout'); // Assuming a /api/logout endpoint to clear cookie
         return response.data;
     } catch (error) {
-        console.error("Error logging out user:", error);
         throw error;
     }
 };
+
+export const deleteUser = async (userId) => {
+    try {
+        const response = await api.delete(`/api/user/${userId}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const sendVerificationEmail = async (userEmail) => {
+    try {
+        const response = await api.post('/api/email/send-verification', { userEmail });
+        return response.data;
+    } catch (error) {
+        console.error("Error sending verification email:", error);
+        throw error;
+    }
+};
+
+export const verifyEmailCode = async (userEmail, code) => {
+    try {
+        const response = await api.post('/api/email/verify-code', { userEmail, code });
+        return response.data;
+    } catch (error) {
+        console.error("Error verifying email code:", error);
+        throw error;
+    }
+};
+

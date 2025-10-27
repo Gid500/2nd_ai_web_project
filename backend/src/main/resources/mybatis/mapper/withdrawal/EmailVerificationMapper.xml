@@ -1,0 +1,26 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.revia.lastdance.email.EmailVerificationDAO">
+    <resultMap id="emailVerificationMap" type="com.revia.lastdance.email.EmailVerificationVO">
+        <id property="userEmail" column="user_email"/>
+        <result property="emailCode" column="email_code"/>
+        <result property="verifiTime" column="verifi_time"/>
+    </resultMap>
+
+    <insert id="saveVerificationCode">
+        INSERT INTO tb_email_verification (user_email, email_code, verifi_time)
+        VALUES (#{userEmail}, #{emailCode}, #{verifiTime})
+    </insert>
+
+    <select id="findVerificationCode" resultMap="emailVerificationMap">
+        SELECT user_email, email_code, verifi_time
+        FROM tb_email_verification
+        WHERE user_email = #{userEmail} AND email_code = #{emailCode}
+        ORDER BY verifi_time DESC
+        LIMIT 1
+    </select>
+
+    <delete id="deleteVerificationCode">
+        DELETE FROM tb_email_verification
+        WHERE user_email = #{userEmail}
+    </delete>
+</mapper>
