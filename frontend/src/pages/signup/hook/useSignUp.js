@@ -243,6 +243,7 @@ const useSignUp = () => {
         setEmailError, // setEmailError도 훅에서 반환하여 컴포넌트에서 사용할 수 있도록 합니다.
         setNicknameVerificationMessage, // setNicknameVerificationMessage도 훅에서 반환하여 컴포넌트에서 사용할 수 있도록 합니다.
         setNicknameError, // setNicknameError도 훅에서 반환하여 컴포넌트에서 사용할 수 있도록 합니다.
+        setEmailVerificationMessage, // setEmailVerificationMessage도 훅에서 반환하여 컴포넌트에서 사용할 수 있도록 합니다.
     };
 };
 

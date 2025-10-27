@@ -12,7 +12,7 @@ function SignUp() {
         handleSendVerificationEmail, handleVerifyEmailCode, handleCheckIdDuplication,
         handleCheckNicknameDuplication, handleSubmit, navigate,
         setEmailSent, setEmailVerified, setCountdown, setIsIdUnique, setIsNicknameUnique,
-        setIdVerificationMessage, setIdError, setEmailError, setNicknameVerificationMessage, setNicknameError
+        setIdVerificationMessage, setIdError, setEmailError, setNicknameVerificationMessage, setNicknameError, setEmailVerificationMessage
     } = useSignUp();
 
     return (
