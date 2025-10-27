@@ -13,7 +13,7 @@ function Mypage() {
     <div className="parents">
       <div className="mypage-content-wrapper">
         <div className="mypage-profile-form">
-          <h2 className="mypage-title">프로필 수정</h2>
+          
 
           {authLoading ? (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>

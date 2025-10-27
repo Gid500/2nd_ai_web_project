@@ -35,9 +35,6 @@
 }
 
 
-.mypage-password-reset-form {
-}
-
 .mypage-title {
   margin: 0 0 14px;
   font-size: 18px;
@@ -53,16 +50,16 @@
   margin-bottom: 8px;
 }
 
-.mypage-avatarRow { display: flex; gap: 16px; align-items: center; }
 
 .mypage-avatar {
-  width: 92px; height: 92px;
+  width: 250px; height: 250px;
   border-radius: 50%;
   overflow: hidden;
   background: var(--mypage-light-bg);
   border: 1px solid var(--mypage-border-medium);
   flex: 0 0 auto;
 }
+
 .mypage-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .mypage-avatarPlaceholder {
   width: 100%; height: 100%;
@@ -135,3 +132,48 @@
   padding: 10px 16px; cursor: pointer;
 }
 .mypage-submit:disabled { opacity: 0.6; cursor: default; }
+
+.mypage-profile-form{
+
+  border: 1px solid #e0e0e0;
+  background-color: #fdfdfd;
+  
+  
+
+}
+
+form.mypage-profile-form{
+
+  display: flex;
+  
+  flex-direction: column;
+}
+
+
+
+.mypage-actions{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+
+
+
+div.mypage-avatarRow{
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 세로 */
+  align-items: center;     /* 가로 */
+  min-height: 200px;
+
+}
+
+.mypage-btn{
+
+  width: 90px;
+
+}
+
