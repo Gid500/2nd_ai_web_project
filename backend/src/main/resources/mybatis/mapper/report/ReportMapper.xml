@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.revia.lastdance.report.dao.ReportDao">
+
+    <resultMap id="reportResultMap" type="com.revia.lastdance.report.vo.ReportVo">
+        <id property="reportId" column="report_id"/>
+        <result property="reportedPostId" column="reported_post_id"/>
+        <result property="reportedCommentId" column="reported_comment_id"/>
+        <result property="reporterUserId" column="reporter_user_id"/>
+        <result property="reportedUserId" column="reported_user_id"/>
+        <result property="reportContent" column="report_content"/>
+        <result property="reportTypeId" column="report_type_id"/>
+        <result property="reportContentType" column="report_content_type"/>
+        <result property="typeName" column="type_name"/>
+    </resultMap>
+
+    <resultMap id="reportTypeResultMap" type="com.revia.lastdance.report.vo.ReportVo">
+        <id property="reportTypeId" column="report_type_id"/>
+        <result property="typeName" column="type_name"/>
+    </resultMap>
+
+    <insert id="insertReport" parameterType="com.revia.lastdance.report.vo.ReportVo">
+        INSERT INTO tb_report (reported_post_id, reported_comment_id, reporter_user_id, reported_user_id, report_content, report_type_id, report_content_type)
+        VALUES (#{reportedPostId}, #{reportedCommentId}, #{reporterUserId}, #{reportedUserId}, #{reportContent}, #{reportTypeId}, #{reportContentType})
+    </insert>
+
+    <select id="selectAllReports" resultMap="reportResultMap">
+        SELECT
+            r.report_id,
+            r.reported_post_id,
+            r.reported_comment_id,
+            r.reporter_user_id,
+            r.reported_user_id,
+            r.report_content,
+            r.report_type_id,
+            r.report_content_type,
+            rt.type_name
+        FROM tb_report r
+        JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
+    </select>
+
+    <select id="selectReportById" parameterType="int" resultMap="reportResultMap">
+        SELECT
+            r.report_id,
+            r.reported_post_id,
+            r.reported_comment_id,
+            r.reporter_user_id,
+            r.reported_user_id,
+            r.report_content,
+            r.report_type_id,
+            r.report_content_type,
+            rt.type_name
+        FROM tb_report r
+        JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
+        WHERE r.report_id = #{reportId}
+    </select>
+
+    <update id="updateReport" parameterType="com.revia.lastdance.report.vo.ReportVo">
+        UPDATE tb_report
+        SET
+            reported_post_id = #{reportedPostId},
+            reported_comment_id = #{reportedCommentId},
+            reporter_user_id = #{reporterUserId},
+            reported_user_id = #{reportedUserId},
+            report_content = #{reportContent},
+            report_type_id = #{reportTypeId},
+            report_content_type = #{reportContentType}
+        WHERE report_id = #{reportId}
+    </update>
+
+    <delete id="deleteReport" parameterType="int">
+        DELETE FROM tb_report
+        WHERE report_id = #{reportId}
+    </delete>
+
+    <select id="selectReportTypes" resultMap="reportTypeResultMap">
+        SELECT
+            report_type_id,
+            type_name
+        FROM tb_report_type
+    </select>
+
+    <select id="selectReportsByContentType" parameterType="String" resultMap="reportResultMap">
+        SELECT
+            r.report_id,
+            r.reported_post_id,
+            r.reported_comment_id,
+            r.reporter_user_id,
+            r.reported_user_id,
+            r.report_content,
+            r.report_type_id,
+            r.report_content_type,
+            rt.type_name
+        FROM tb_report r
+        JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
+        WHERE r.report_content_type = #{reportContentType}
+    </select>
+
+</mapper>
