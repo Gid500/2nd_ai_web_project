@@ -76,6 +76,8 @@ const useCommPage = () => {
     const handleSubmitForm = async (postData) => {
         if (editingPostData && editingPostData.postId) {
             await editPost(editingPostData.postId, postData);
+            const updatedPost = await fetchPostById(editingPostData.postId); // 수정된 게시글 다시 가져오기
+            setCurrentPostDetail(updatedPost); // currentPostDetail 업데이트
             navigate(`/comm/${editingPostData.postId}`); // 수정 후 상세 페이지로 이동
         }
         else {
