@@ -70,3 +70,19 @@ export const createReport = async (reportData) => {
         throw error;
     }
 };
+
+export const searchPosts = async (searchType, searchKeyword, page = 1, size = 10) => {
+    try {
+        const params = new URLSearchParams();
+        if (searchType) params.append('searchType', searchType);
+        if (searchKeyword) params.append('searchKeyword', searchKeyword);
+        params.append('page', page);
+        params.append('size', size);
+
+        const response = await api.get(`/api/posts/search?${params.toString()}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error searching posts:', error);
+        throw error;
+    }
+};

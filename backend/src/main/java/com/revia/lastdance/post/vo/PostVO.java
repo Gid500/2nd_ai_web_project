@@ -18,4 +18,8 @@ public class PostVO {
     private String updatedId;
     private List<FileVO> files;
     private List<Integer> deletedFileIds; // 추가: 삭제할 파일 ID 목록
+
+    // 검색 필드
+    private String searchType;
+    private String searchKeyword;
 }

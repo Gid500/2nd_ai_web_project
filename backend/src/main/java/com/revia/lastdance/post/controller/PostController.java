@@ -69,4 +69,14 @@ public class PostController {
         postService.deletePost(postId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Map<String, Object>> searchPosts(
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String searchKeyword,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Map<String, Object> postsData = postService.searchPosts(searchType, searchKeyword, page, size);
+        return new ResponseEntity<>(postsData, HttpStatus.OK);
+    }
 }

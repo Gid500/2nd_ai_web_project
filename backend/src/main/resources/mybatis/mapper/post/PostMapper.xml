@@ -162,4 +162,62 @@
         SELECT COUNT(*) FROM tb_post WHERE is_notice = FALSE
     </select>
 
+    <!-- New: 게시물 검색 -->
+    <select id="searchPosts" resultMap="postWithFilesResultMap">
+        SELECT
+            p.post_id,
+            p.user_id,
+            p.post_title,
+            p.post_content,
+            p.is_notice,
+            p.created_date,
+            p.created_id,
+            p.updated_date,
+            p.updated_id,
+            f.file_id,
+            f.upload_name,
+            f.file_type,
+            f.img_url
+        FROM tb_post p
+        LEFT JOIN tb_file f ON p.post_id = f.post_id
+        <where>
+            p.is_notice = FALSE
+            <if test="searchType == 'title' and searchKeyword != null and searchKeyword != ''">
+                AND p.post_title LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchType == 'content' and searchKeyword != null and searchKeyword != ''">
+                AND p.post_content LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchType == 'title_content' and searchKeyword != null and searchKeyword != ''">
+                AND (p.post_title LIKE CONCAT('%', #{searchKeyword}, '%') OR p.post_content LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="searchType == 'userId' and searchKeyword != null and searchKeyword != ''">
+                AND p.user_id LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+        </where>
+        ORDER BY p.created_date DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- New: 검색된 게시물 카운트 -->
+    <select id="countSearchPosts" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_post p
+        <where>
+            p.is_notice = FALSE
+            <if test="searchType == 'title' and searchKeyword != null and searchKeyword != ''">
+                AND p.post_title LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchType == 'content' and searchKeyword != null and searchKeyword != ''">
+                AND p.post_content LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchType == 'title_content' and searchKeyword != null and searchKeyword != ''">
+                AND (p.post_title LIKE CONCAT('%', #{searchKeyword}, '%') OR p.post_content LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="searchType == 'userId' and searchKeyword != null and searchKeyword != ''">
+                AND p.user_id LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+        </where>
+    </select>
+
 </mapper>

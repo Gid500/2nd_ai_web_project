@@ -19,4 +19,8 @@ public interface PostMapper {
     List<PostVO> selectTopNotices(@Param("count") int count);
     List<PostVO> selectAllGeneralPostsPaged(@Param("size") int size, @Param("offset") int offset);
     int countAllGeneralPosts();
+
+    // New methods for searching posts
+    List<PostVO> searchPosts(@Param("searchType") String searchType, @Param("searchKeyword") String searchKeyword, @Param("size") int size, @Param("offset") int offset);
+    int countSearchPosts(@Param("searchType") String searchType, @Param("searchKeyword") String searchKeyword);
 }

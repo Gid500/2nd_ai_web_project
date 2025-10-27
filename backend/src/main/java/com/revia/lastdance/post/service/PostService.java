@@ -107,4 +107,17 @@ public class PostService {
         return Objects.equals(post.getUserId(), userId);
     }
 
+    public Map<String, Object> searchPosts(String searchType, String searchKeyword, int page, int size) {
+        int offset = (page - 1) * size;
+        List<PostVO> posts = postMapper.searchPosts(searchType, searchKeyword, size, offset);
+        int totalPosts = postMapper.countSearchPosts(searchType, searchKeyword);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("posts", posts);
+        response.put("totalPosts", totalPosts);
+        response.put("currentPage", page);
+        response.put("pageSize", size);
+        response.put("totalPages", (int) Math.ceil((double) totalPosts / size));
+        return response;
+    }
 }
