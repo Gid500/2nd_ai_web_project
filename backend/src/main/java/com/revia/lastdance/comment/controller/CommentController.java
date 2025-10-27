@@ -11,6 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.access.AccessDeniedException;
 import com.revia.lastdance.signin.dto.CustomUserDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -99,7 +101,7 @@ public class CommentController {
             return new ResponseEntity<>("사용자 정보를 찾을 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+                .anyMatch(r -> r.getAuthority().toUpperCase().equals("ROLE_ADMIN")); // 대소문자 구분 없이 비교
 
         try {
             commentService.deleteComment(commentId, currentUserId, isAdmin);

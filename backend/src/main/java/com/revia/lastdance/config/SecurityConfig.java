@@ -61,7 +61,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/signup/**", "/api/signin", "/api/flask/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/comments/post/**").permitAll() // 댓글 목록 조회 허용
-                        .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated() // 댓글 작성, 수정, 삭제는 인증된 사용자만
+                        .requestMatchers(HttpMethod.POST, "/api/comments/delete/**").authenticated() // 댓글 삭제는 인증된 사용자만 (세부 권한은 서비스 계층에서 확인)
+                        .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated() // 댓글 작성, 수정은 인증된 사용자만
                         // DELETE 요청에 대한 권한 설정을 authenticated()로 변경하여 PostController의 @PreAuthorize에 위임
                         .requestMatchers(HttpMethod.DELETE, "/api/posts/delete/**").authenticated()
                         .anyRequest().authenticated()

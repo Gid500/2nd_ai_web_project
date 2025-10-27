@@ -122,6 +122,7 @@ const PostDetail = ({ post, onBackToList, onEdit, onDelete, comments, fetchComme
                     onEditComment={handleEditComment}
                     onDeleteComment={handleDeleteComment}
                     currentUserId={user?.userId} // 현재 로그인한 사용자 ID 전달
+                    isAdmin={isAdmin}
                 />
             </div>
         </div>

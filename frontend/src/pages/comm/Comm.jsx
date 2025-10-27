@@ -13,7 +13,7 @@ import './Comm.css';
 function Comm() {
     const { postId, action } = useParams(); // postId와 action (new, edit)을 URL에서 가져옴
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, isAdmin } = useAuth();
 
     const {
         posts,
@@ -70,6 +70,7 @@ function Comm() {
                     onDelete={handleDeletePost}
                     comments={comments}
                     fetchComments={fetchCommentsForPost}
+                    isAdmin={isAdmin}
                 />
             </div>
         );
