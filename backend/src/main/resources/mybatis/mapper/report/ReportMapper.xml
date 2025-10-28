@@ -38,9 +38,9 @@
             r.report_type_id,
             r.report_content_type,
             rt.type_name,
-            p.post_title,
-            p.post_content,
-            c.comment
+            COALESCE(p.post_title, '') AS post_title,
+            COALESCE(p.post_content, '') AS post_content,
+            COALESCE(c.comment, '') AS comment
         FROM tb_report r
         JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
         LEFT JOIN tb_post p ON r.reported_post_id = p.post_id
@@ -65,9 +65,9 @@
             r.report_type_id,
             r.report_content_type,
             rt.type_name,
-            p.post_title,
-            p.post_content,
-            c.comment
+            COALESCE(p.post_title, '') AS post_title,
+            COALESCE(p.post_content, '') AS post_content,
+            COALESCE(c.comment, '') AS comment
         FROM tb_report r
         JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
         LEFT JOIN tb_post p ON r.reported_post_id = p.post_id
