@@ -22,9 +22,9 @@ function Mypage() {
           ) : (
             userId ? <ProfileForm userId={userId} /> : <p>로그인 정보가 없습니다.</p>
           )}
-        </div>
 
-        <PasswordResetForm />
+          <PasswordResetForm />
+        </div>
         
         <MypageTab />
       </div>
