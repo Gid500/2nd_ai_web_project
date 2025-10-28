@@ -57,7 +57,7 @@
         WHERE comment_id = #{commentId}
     </delete>
 
-    <select id="selectAllComments" resultMap="CommentVOResultMap">
+    <select id="selectPaginatedComments" resultMap="CommentVOResultMap">
         SELECT
             c.comment_id,
             c.post_id,
@@ -69,6 +69,12 @@
         FROM tb_comment c
         JOIN tb_user u ON c.user_id = u.user_id
         ORDER BY c.created_date DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="countAllComments" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_comment
     </select>
 
 </mapper>

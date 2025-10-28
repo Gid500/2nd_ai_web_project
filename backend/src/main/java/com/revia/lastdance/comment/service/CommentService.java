@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CommentService {
@@ -43,7 +45,14 @@ public class CommentService {
         }
     }
 
-    public List<CommentVO> getAllComments() {
-        return commentDAO.selectAllComments();
+    public Map<String, Object> getAllComments(int page, int size) {
+        int offset = (page - 1) * size;
+        List<CommentVO> comments = commentDAO.selectPaginatedComments(offset, size);
+        int totalComments = commentDAO.countAllComments();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("comments", comments);
+        result.put("totalComments", totalComments);
+        return result;
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.security.access.AccessDeniedException;
 import com.revia.lastdance.signin.dto.CustomUserDetails;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -111,22 +113,24 @@ public class CommentController {
         }
     }
 
-    // 관리자용: 모든 댓글 조회
+    // 관리자용: 모든 댓글 조회 (페이지네이션 적용)
     @GetMapping("/admin/all")
-    public ResponseEntity<List<CommentVO>> getAllCommentsForAdmin() {
+    public ResponseEntity<Map<String, Object>> getAllCommentsForAdmin(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            return new ResponseEntity<>(java.util.Collections.emptyList(), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new HashMap<>(), HttpStatus.UNAUTHORIZED);
         }
 
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(r -> r.getAuthority().toUpperCase().equals("ROLE_ADMIN"));
 
         if (!isAdmin) {
-            return new ResponseEntity<>(java.util.Collections.emptyList(), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(new HashMap<>(), HttpStatus.FORBIDDEN);
         }
 
-        List<CommentVO> allComments = commentService.getAllComments();
-        return new ResponseEntity<>(allComments, HttpStatus.OK);
+        Map<String, Object> result = commentService.getAllComments(page, size);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

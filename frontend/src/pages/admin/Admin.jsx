@@ -22,6 +22,9 @@ function Admin() {
     const [comments, setComments] = useState([]); // New state for comments
     const [commentsLoading, setCommentsLoading] = useState(true); // New state for comments loading
     const [commentsError, setCommentsError] = useState(null); // New state for comments error
+    const [currentCommentPage, setCurrentCommentPage] = useState(1); // New state for comments current page
+    const [commentsPerPage, setCommentsPerPage] = useState(10); // New state for comments per page
+    const [totalComments, setTotalComments] = useState(0); // New state for total comments
 
     const fetchUsers = useCallback(async () => {
         setUsersLoading(true);
@@ -56,16 +59,18 @@ function Admin() {
     const fetchComments = useCallback(async () => { // New function to fetch comments
         setCommentsLoading(true);
         try {
-            const data = await getAllComments();
-            setComments(data);
+            const data = await getAllComments(currentCommentPage, commentsPerPage);
+            setComments(data.comments || []); // Ensure comments is always an array
+            setTotalComments(data.totalComments || 0);
             setCommentsError(null);
         } catch (err) {
             setCommentsError(err);
             setComments([]);
+            setTotalComments(0);
         } finally {
             setCommentsLoading(false);
         }
-    }, []);
+    }, [currentCommentPage, commentsPerPage]);
 
     useEffect(() => {
         if (isAdmin) {
@@ -115,10 +120,16 @@ function Admin() {
     };
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const paginateComments = (pageNumber) => setCurrentCommentPage(pageNumber);
 
     const handlePostsPerPageChange = (e) => {
         setPostsPerPage(parseInt(e.target.value));
         setCurrentPage(1); // 페이지당 게시물 수 변경 시 1페이지로 리셋
+    };
+
+    const handleCommentsPerPageChange = (e) => {
+        setCommentsPerPage(parseInt(e.target.value));
+        setCurrentCommentPage(1); // 페이지당 댓글 수 변경 시 1페이지로 리셋
     };
 
     if (loading || usersLoading || postsLoading || commentsLoading) { // Include commentsLoading
@@ -227,6 +238,14 @@ function Admin() {
             />
 
             <h2 style={{ marginTop: '40px' }}>댓글 관리</h2> {/* New section for comments */}
+            <div className="comm-posts-per-page-selector">
+                <label>페이지당 댓글 수:</label>
+                <select value={commentsPerPage} onChange={handleCommentsPerPageChange}>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={40}>40</option>
+                </select>
+            </div>
             {comments.length > 0 ? (
                 <table>
                     <thead>
@@ -247,7 +266,7 @@ function Admin() {
                                 <td>{comment.postId}</td>
                                 <td>{comment.userId}</td>
                                 <td>{comment.userNickname}</td>
-                                <td>{comment.commentContent}</td>
+                                <td>{comment.comment}</td>
                                 <td>{new Date(comment.createdDate).toLocaleString()}</td>
                                 <td>
                                     <button onClick={() => handleDeleteComment(comment.commentId)}>삭제</button>
@@ -259,6 +278,12 @@ function Admin() {
             ) : (
                 <p>등록된 댓글이 없습니다.</p>
             )}
+            <AdminPagination
+                postsPerPage={commentsPerPage}
+                totalPosts={totalComments}
+                onPageChange={paginateComments}
+                currentPage={currentCommentPage}
+            />
         </div>
     );
 }

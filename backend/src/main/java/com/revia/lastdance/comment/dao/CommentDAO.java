@@ -2,6 +2,7 @@ package com.revia.lastdance.comment.dao;
 
 import com.revia.lastdance.comment.vo.CommentVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,5 +13,6 @@ public interface CommentDAO {
     CommentVO selectCommentById(int commentId);
     void updateComment(CommentVO commentVO);
     void deleteComment(int commentId);
-    List<CommentVO> selectAllComments();
+    List<CommentVO> selectPaginatedComments(@Param("offset") int offset, @Param("size") int size);
+    int countAllComments();
 }
