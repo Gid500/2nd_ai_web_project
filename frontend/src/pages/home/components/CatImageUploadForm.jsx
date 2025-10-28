@@ -4,7 +4,7 @@ import LoadingSpinner from '../../../common/components/LoadingSpinner';
 import './CatImageUploadForm.css'; // Import the CSS file
 
 const CatImageUploadForm = () => {
-    const { file, uploading, error, result, analysisData, analysisLoading, analysisError, handleFileChange, handleUpload } = useCatImageUpload();
+    const { file, uploading, error, result, analysisData, analysisLoading, analysisError, handleFileChange, handleUpload, handleSharePost } = useCatImageUpload(); // Add handleSharePost
     const [imagePreview, setImagePreview] = useState(null);
 
     useEffect(() => {
@@ -77,6 +77,12 @@ const CatImageUploadForm = () => {
                         {analysisData.openaiAnalysis.replace('{analysis=', '').replace('}', '')}
                     </p>
                 </div>
+            )}
+
+            {(result || analysisData) && ( // Render share button if there's any result or analysis data
+                <button onClick={handleSharePost} className="cat-image-upload-form-share-button">
+                    게시물 공유
+                </button>
             )}
 
             {file && <p className="cat-image-upload-form-selected-file-info">선택된 파일: {file.name}</p>} {/* Replaced style with className */} 

@@ -4,7 +4,7 @@ import LoadingSpinner from '../../../common/components/LoadingSpinner';
 import './DogImageUploadForm.css'; // Import the CSS file
 
 const DogImageUploadForm = () => {
-    const { file, uploading, error, result, analysisData, analysisLoading, analysisError, handleFileChange, handleUpload } = useDogImageUpload();
+    const { file, uploading, error, result, analysisData, analysisLoading, analysisError, handleFileChange, handleUpload, handleSharePost } = useDogImageUpload(); // Add handleSharePost
     const [imagePreview, setImagePreview] = useState(null);
 
     useEffect(() => {
@@ -15,7 +15,7 @@ const DogImageUploadForm = () => {
             return () => URL.revokeObjectURL(objectUrl);
         }
         setImagePreview(null);
-    });
+    }, [file]); // Added file to dependency array
 
     return (
         <div className="dog-image-upload-form">
@@ -75,6 +75,12 @@ const DogImageUploadForm = () => {
                     <h3>OpenAI 분석 결과:</h3>
                     <p>{analysisData.openaiAnalysis.replace('{analysis=', '').replace('}', '')}</p>
                 </div>
+            )}
+
+            {(result || analysisData) && ( // Render share button if there's any result or analysis data
+                <button onClick={handleSharePost} className="dog-image-upload-form-share-button">
+                    게시물 공유
+                </button>
             )}
 
             {file && <p className="dog-image-upload-form-selected-file-info">선택된 파일: {file.name}</p>}
