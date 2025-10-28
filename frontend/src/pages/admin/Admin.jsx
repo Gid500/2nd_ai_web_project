@@ -3,6 +3,7 @@ import LoadingSpinner from '../../common/components/LoadingSpinner';
 import { useAdminCheck } from './hook/useAdminCheck';
 import { getAllUsers, adminDeleteUser } from '../../common/api/userApi';
 import { getAllPosts, deletePost } from '../../pages/comm/api/commApi';
+import { getAllComments, adminDeleteComment } from '../../pages/comm/api/commentApi'; // Import comment API
 import AdminPagination from './components/AdminPagination'; // AdminPagination 컴포넌트 임포트
 
 function Admin() {
@@ -17,6 +18,10 @@ function Admin() {
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(10);
     const [totalPosts, setTotalPosts] = useState(0);
+
+    const [comments, setComments] = useState([]); // New state for comments
+    const [commentsLoading, setCommentsLoading] = useState(true); // New state for comments loading
+    const [commentsError, setCommentsError] = useState(null); // New state for comments error
 
     const fetchUsers = useCallback(async () => {
         setUsersLoading(true);
@@ -48,12 +53,27 @@ function Admin() {
         }
     }, [currentPage, postsPerPage]);
 
+    const fetchComments = useCallback(async () => { // New function to fetch comments
+        setCommentsLoading(true);
+        try {
+            const data = await getAllComments();
+            setComments(data);
+            setCommentsError(null);
+        } catch (err) {
+            setCommentsError(err);
+            setComments([]);
+        } finally {
+            setCommentsLoading(false);
+        }
+    }, []);
+
     useEffect(() => {
         if (isAdmin) {
             fetchUsers();
             fetchPosts();
+            fetchComments(); // Fetch comments when admin is true
         }
-    }, [isAdmin, fetchUsers, fetchPosts]);
+    }, [isAdmin, fetchUsers, fetchPosts, fetchComments]);
 
     const handleDeleteUser = async (userId) => {
         if (window.confirm(`정말로 사용자 ID: ${userId} 를 강제로 탈퇴시키겠습니까?`)) {
@@ -81,6 +101,19 @@ function Admin() {
         }
     };
 
+    const handleDeleteComment = async (commentId) => { // New function to delete comment
+        if (window.confirm(`정말로 댓글 ID: ${commentId} 를 삭제하시겠습니까?`)) {
+            try {
+                await adminDeleteComment(commentId);
+                alert(`댓글 ${commentId} 가 성공적으로 삭제되었습니다.`);
+                fetchComments(); // 댓글 목록 새로고침
+            } catch (error) {
+                alert(`댓글 ${commentId} 삭제 처리 중 오류가 발생했습니다: ${error.message}`);
+                console.error(`Error deleting comment ${commentId}:`, error);
+            }
+        }
+    };
+
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const handlePostsPerPageChange = (e) => {
@@ -88,7 +121,7 @@ function Admin() {
         setCurrentPage(1); // 페이지당 게시물 수 변경 시 1페이지로 리셋
     };
 
-    if (loading || usersLoading || postsLoading) {
+    if (loading || usersLoading || postsLoading || commentsLoading) { // Include commentsLoading
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
                 <LoadingSpinner />
@@ -106,6 +139,10 @@ function Admin() {
 
     if (postsError) {
         return <p>게시물 목록을 불러오는 중 오류가 발생했습니다: {postsError.message}</p>;
+    }
+
+    if (commentsError) { // New error handling for comments
+        return <p>댓글 목록을 불러오는 중 오류가 발생했습니다: {commentsError.message}</p>;
     }
 
     return (
@@ -188,6 +225,40 @@ function Admin() {
                 onPageChange={paginate}
                 currentPage={currentPage}
             />
+
+            <h2 style={{ marginTop: '40px' }}>댓글 관리</h2> {/* New section for comments */}
+            {comments.length > 0 ? (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Comment ID</th>
+                            <th>Post ID</th>
+                            <th>User ID</th>
+                            <th>Author</th>
+                            <th>Content</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {comments.map(comment => (
+                            <tr key={comment.commentId}>
+                                <td>{comment.commentId}</td>
+                                <td>{comment.postId}</td>
+                                <td>{comment.userId}</td>
+                                <td>{comment.userNickname}</td>
+                                <td>{comment.commentContent}</td>
+                                <td>{new Date(comment.createdDate).toLocaleString()}</td>
+                                <td>
+                                    <button onClick={() => handleDeleteComment(comment.commentId)}>삭제</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p>등록된 댓글이 없습니다.</p>
+            )}
         </div>
     );
 }

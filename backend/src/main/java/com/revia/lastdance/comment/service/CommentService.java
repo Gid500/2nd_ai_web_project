@@ -42,4 +42,8 @@ public class CommentService {
             throw new AccessDeniedException("댓글을 삭제할 권한이 없습니다.");
         }
     }
+
+    public List<CommentVO> getAllComments() {
+        return commentDAO.selectAllComments();
+    }
 }

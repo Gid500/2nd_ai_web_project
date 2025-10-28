@@ -65,6 +65,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated() // 댓글 작성, 수정은 인증된 사용자만
                         // 관리자용 사용자 조회 및 삭제 엔드포인트
                         .requestMatchers(HttpMethod.GET, "/api/user/all").hasRole("admin")
+                        .requestMatchers(HttpMethod.GET, "/api/comments/admin/all").hasRole("admin") // 관리자용 모든 댓글 조회
                         .requestMatchers(HttpMethod.DELETE, "/api/user/**").authenticated() // 회원 탈퇴는 인증된 사용자만
                         .requestMatchers(HttpMethod.POST, "/api/email/send-verification", "/api/email/verify-code").permitAll() // 이메일 인증은 모두 허용
                         // 신고 관련 엔드포인트 권한 설정

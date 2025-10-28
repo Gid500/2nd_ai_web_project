@@ -11,8 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.access.AccessDeniedException;
 import com.revia.lastdance.signin.dto.CustomUserDetails;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class CommentController {
     public ResponseEntity<String> addComment(@RequestBody CommentVO commentVO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            return new ResponseEntity<>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<String>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
         }
         // 현재 로그인한 사용자의 ID를 commentVO에 설정
         Object principal = authentication.getPrincipal();
@@ -111,5 +109,24 @@ public class CommentController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    // 관리자용: 모든 댓글 조회
+    @GetMapping("/admin/all")
+    public ResponseEntity<List<CommentVO>> getAllCommentsForAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return new ResponseEntity<>(java.util.Collections.emptyList(), HttpStatus.UNAUTHORIZED);
+        }
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().toUpperCase().equals("ROLE_ADMIN"));
+
+        if (!isAdmin) {
+            return new ResponseEntity<>(java.util.Collections.emptyList(), HttpStatus.FORBIDDEN);
+        }
+
+        List<CommentVO> allComments = commentService.getAllComments();
+        return new ResponseEntity<>(allComments, HttpStatus.OK);
     }
 }

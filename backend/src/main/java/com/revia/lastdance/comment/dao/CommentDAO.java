@@ -12,5 +12,5 @@ public interface CommentDAO {
     CommentVO selectCommentById(int commentId);
     void updateComment(CommentVO commentVO);
     void deleteComment(int commentId);
-
+    List<CommentVO> selectAllComments();
 }
