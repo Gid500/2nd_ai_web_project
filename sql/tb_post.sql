@@ -1,18 +1,17 @@
 CREATE TABLE IF NOT EXISTS `lastdance`.`tb_post` (
   `post_id` INT NOT NULL AUTO_INCREMENT,
-  `user_id` VARCHAR(128) NULL,
+  `user_id` VARCHAR(128) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NULL DEFAULT NULL,
+  `create_at_nickname` VARCHAR(128) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NULL DEFAULT NULL,
   `post_title` VARCHAR(128) NOT NULL,
-  `post_content` text NOT NULL,
-  `is_notice` TINYINT NULL,
+  `post_content` TEXT NOT NULL,
+  `is_notice` TINYINT NULL DEFAULT NULL,
+  `post_view_cunt` INT NULL DEFAULT NULL,
   `created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `created_id` VARCHAR(128) NULL DEFAULT NULL,
   `updated_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_id` VARCHAR(128) NULL DEFAULT NULL,
-  `post_title` VARCHAR(128) NULL DEFAULT NULL,
   PRIMARY KEY (`post_id`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 66
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
-ALTER TABLE `tb_post`
-	ADD COLUMN `is_notice` TINYINT NULL DEFAULT NULL AFTER `post_content`;
