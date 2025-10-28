@@ -79,7 +79,7 @@ const DogImageUploadForm = () => {
 
             {(result || analysisData) && ( // Render share button if there's any result or analysis data
                 <button onClick={handleSharePost} className="dog-image-upload-form-share-button">
-                    게시물 공유
+                    게시판에 결과 공유
                 </button>
             )}
 

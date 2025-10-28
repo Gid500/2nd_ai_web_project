@@ -81,7 +81,7 @@ const CatImageUploadForm = () => {
 
             {(result || analysisData) && ( // Render share button if there's any result or analysis data
                 <button onClick={handleSharePost} className="cat-image-upload-form-share-button">
-                    게시물 공유
+                    게시판에 결과 공유
                 </button>
             )}
 
