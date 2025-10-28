@@ -64,6 +64,7 @@ function Header() {
               <NavLink to="/comm" className={getNavLinkClass}>자랑해요!</NavLink>
               <NavLink to="/explain" className={getNavLinkClass}>사이트 소개</NavLink>
               <NavLink to="/map" className={getNavLinkClass}>주변 시설</NavLink>
+              {isAdmin && <NavLink to="/admin" className={getNavLinkClass}>관리자 페이지</NavLink>}
             </nav>
           
 
