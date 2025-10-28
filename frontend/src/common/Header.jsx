@@ -63,6 +63,7 @@ function Header() {
               <NavLink to="/" end className={getNavLinkClass}>궁금해요!</NavLink>
               <NavLink to="/comm" className={getNavLinkClass}>자랑해요!</NavLink>
               <NavLink to="/explain" className={getNavLinkClass}>사이트 소개</NavLink>
+              <NavLink to="/map" className={getNavLinkClass}>주변 시설</NavLink>
             </nav>
           
 

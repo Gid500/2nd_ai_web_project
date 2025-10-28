@@ -16,6 +16,7 @@ import CareAccoount from './pages/mypage/CareAccount';
 import ProtectedRoute from './common/components/ProtectedRoute';
 import NewPostPage from './pages/comm/NewPostPage';
 import EditPostPage from './pages/comm/EditPostPage'; // EditPostPage 임포트
+import MapPage from './pages/home/MapPage'; // MapPage 임포트
 
 
 function App() {
@@ -26,6 +27,8 @@ function App() {
         <Route path="/" element={<Intro />} />
         <Route path="/cat" element={<Cat />} />
         <Route path="/dog" element={<Dog />} />
+        <Route path="/map" element={<MapPage />} /> {/* MapPage 라우트 추가 */}
+
         <Route path='/admin/*' element={<AdminRouteWrapper />} />
         <Route path="/explain" element={<Explain/>} />
         <Route path="/signin" element={<SignIn />} />
