@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useCatImageUpload from '../hook/useCatImageUpload';
 import LoadingSpinner from '../../../common/components/LoadingSpinner';
+import './CatImageUploadForm.css'; // Import the CSS file
 
 const CatImageUploadForm = () => {
     const { file, uploading, error, result, analysisData, analysisLoading, analysisError, handleFileChange, handleUpload } = useCatImageUpload();
@@ -17,56 +18,45 @@ const CatImageUploadForm = () => {
     }, [file]);
 
     return (
-        <div style={{ padding: '20px', borderRadius: '8px', maxWidth: '500px', margin: '20px auto' }}>
+        <div className="cat-image-upload-form"> {/* Replaced style with className */} 
             <h2>고양이 이미지 업로드</h2>
-            <input type="file" onChange={handleFileChange} accept="image/*" style={{ marginBottom: '10px', display: 'block' }} />
-            <button onClick={handleUpload} disabled={!file || uploading} style={{
-                padding: '10px 15px',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                opacity: (!file || uploading) ? 0.6 : 1,
-                display: 'flex', // Use flexbox for alignment
-                alignItems: 'center', // Center items vertically
-                justifyContent: 'center' // Center items horizontally
-            }}>
-                {uploading ? <><LoadingSpinner /> <span style={{ marginLeft: '8px' }}>업로드 중...</span></> : '업로드'}
+            <input type="file" onChange={handleFileChange} accept="image/*" className="cat-image-upload-form-file-input" /> {/* Replaced style with className */} 
+            <button onClick={handleUpload} disabled={!file || uploading} className="cat-image-upload-form-upload-button"> {/* Replaced style with className */} 
+                {uploading ? <><LoadingSpinner /> <span className="cat-image-upload-form-upload-button-text">업로드 중...</span></> : '업로드'}
             </button>
 
-            {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
-            {result && <p style={{ color: 'green', marginTop: '10px' }}>업로드 성공!</p>}
+            {error && <p className="cat-image-upload-form-error-message">{error}</p>} {/* Replaced style with className */} 
+            {result && <p className="cat-image-upload-form-success-message">업로드 성공!</p>} {/* Replaced style with className */} 
 
             {imagePreview && (
-                <div style={{ marginTop: '20px' }}>
+                <div className="cat-image-upload-form-image-preview-container"> {/* Replaced style with className */} 
                     <h3>선택된 이미지:</h3>
-                    <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', height: 'auto', border: '1px solid #eee' }} />
+                    <img src={imagePreview} alt="Preview" className="cat-image-upload-form-image-preview" /> {/* Replaced style with className */} 
                 </div>
             )}
 
             {result && result.predicted_emotion && result.confidence !== undefined && (
-                <div style={{ marginTop: '20px' }}>
+                <div className="cat-image-upload-form-prediction-results"> {/* Replaced style with className */} 
                     <h3>예측 결과:</h3>
                     <p><strong>가장 높은 감정:</strong> {result.predicted_emotion} (확신도: {(result.confidence * 100).toFixed(2)}%)</p>
                 </div>
             )}
 
             {result && result.all_predictions && (
-                <div style={{ marginTop: '20px' }}>
+                <div className="cat-image-upload-form-prediction-results"> {/* Replaced style with className */} 
                     <h4>모든 감정 예측:</h4>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <table className="cat-image-upload-form-all-predictions-table"> {/* Replaced style with className */} 
                         <thead>
                             <tr>
-                                <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>감정</th>
-                                <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>확신도</th>
+                                <th className="cat-image-upload-form-table-header">감정</th> {/* Replaced style with className */} 
+                                <th className="cat-image-upload-form-table-header">확신도</th> {/* Replaced style with className */} 
                             </tr>
                         </thead>
                         <tbody>
                             {Object.entries(result.all_predictions).map(([emotion, confidence]) => (
                                 <tr key={emotion}>
-                                    <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{emotion}</td>
-                                    <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{(confidence * 100).toFixed(2)}%</td>
+                                    <td className="cat-image-upload-form-table-data">{emotion}</td> {/* Replaced style with className */} 
+                                    <td className="cat-image-upload-form-table-data">{(confidence * 100).toFixed(2)}%</td> {/* Replaced style with className */} 
                                 </tr>
                             ))}
                         </tbody>
@@ -75,13 +65,13 @@ const CatImageUploadForm = () => {
             )}
 
             {analysisLoading && (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}>
-                    <LoadingSpinner /> <span style={{ marginLeft: '8px' }}>OpenAI 분석 중...</span>
+                <div className="cat-image-upload-form-analysis-loading"> {/* Replaced style with className */} 
+                    <LoadingSpinner /> <span className="cat-image-upload-form-analysis-loading-text">OpenAI 분석 중...</span>
                 </div>
             )}
-            {analysisError && <p style={{ color: 'red', marginTop: '10px' }}>OpenAI 분석 오류: {analysisError.message}</p>}
+            {analysisError && <p className="cat-image-upload-form-analysis-error">OpenAI 분석 오류: {analysisError.message}</p>} {/* Replaced style with className */} 
             {analysisData && analysisData.openaiAnalysis && (
-                <div style={{ marginTop: '20px' }}>
+                <div className="cat-image-upload-form-analysis-results"> {/* Replaced style with className */} 
                     <h3>OpenAI 분석 결과:</h3>
                     <p>
                         {analysisData.openaiAnalysis.replace('{analysis=', '').replace('}', '')}
@@ -89,7 +79,7 @@ const CatImageUploadForm = () => {
                 </div>
             )}
 
-            {file && <p style={{ marginTop: '10px' }}>선택된 파일: {file.name}</p>}
+            {file && <p className="cat-image-upload-form-selected-file-info">선택된 파일: {file.name}</p>} {/* Replaced style with className */} 
         </div>
     );
 };
