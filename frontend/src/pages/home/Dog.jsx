@@ -4,9 +4,7 @@ import DogImageUploadForm from './components/DogImageUploadForm';
 
 function Dog() {
     return (
-        <>
-            
-           
+        <> 
             <DogImageUploadForm />
         </>
     );

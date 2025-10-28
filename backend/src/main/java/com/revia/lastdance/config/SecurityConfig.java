@@ -60,20 +60,20 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/signup/**", "/api/signin", "/api/flask/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/comments/post/**").permitAll() // 댓글 목록 조회 허용
-                        .requestMatchers(HttpMethod.POST, "/api/comments/delete/**").authenticated() // 댓글 삭제는 인증된 사용자만 (세부 권한은 서비스 계층에서 확인)
                         .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated() // 댓글 작성, 수정은 인증된 사용자만
                         .requestMatchers(HttpMethod.POST, "/api/posts/delete/**").authenticated() // 게시물 삭제는 인증된 사용자만
+                        .requestMatchers(HttpMethod.GET, "/api/comments/post/**").permitAll() // 댓글 목록 조회 허용
+                        .requestMatchers(HttpMethod.POST, "/api/comments/delete/**").authenticated() // 댓글 삭제는 인증된 사용자만 (세부 권한은 서비스 계층에서 확인)
                         // 관리자용 사용자 조회 및 삭제 엔드포인트
+                        .requestMatchers(HttpMethod.POST, "/api/email/send-verification", "/api/email/verify-code").permitAll() // 이메일 인증은 모두 허용
                         .requestMatchers(HttpMethod.GET, "/api/user/all").hasRole("admin")
                         .requestMatchers(HttpMethod.GET, "/api/comments/admin/all").hasRole("admin") // 관리자용 모든 댓글 조회
                         .requestMatchers(HttpMethod.DELETE, "/api/user/**").authenticated() // 회원 탈퇴는 인증된 사용자만
-                        .requestMatchers(HttpMethod.POST, "/api/email/send-verification", "/api/email/verify-code").permitAll() // 이메일 인증은 모두 허용
                         // 신고 관련 엔드포인트 권한 설정
+                        .requestMatchers(HttpMethod.POST, "/api/report").authenticated() // 신고 생성은 인증된 사용자만
                         .requestMatchers(HttpMethod.GET, "/api/report").hasRole("admin") // 모든 신고 조회는 admin만 가능
                         .requestMatchers(HttpMethod.GET, "/api/report/types").hasRole("admin") // 신고 타입 조회는 admin만 가능
                         .requestMatchers(HttpMethod.GET, "/api/report/{reportId}").hasRole("admin") // 특정 신고 조회는 admin만 가능
-                        .requestMatchers(HttpMethod.POST, "/api/report").authenticated() // 신고 생성은 인증된 사용자만
                         .requestMatchers(HttpMethod.POST, "/api/report/update").hasRole("admin") // 신고 업데이트는 admin만 가능
                         .requestMatchers(HttpMethod.POST, "/api/report/delete/{reportId}").hasRole("admin") // 신고 삭제는 admin만 가능
                         .anyRequest().authenticated()
