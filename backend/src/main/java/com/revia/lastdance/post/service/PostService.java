@@ -10,6 +10,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
@@ -46,7 +47,9 @@ public class PostService {
         return postMapper.selectTopNotices(count);
     }
 
+    @Transactional
     public PostVO getPostById(int postId) {
+        postMapper.incrementPostViewCunt(postId); // 조회수 증가
         return postMapper.selectPostById(postId);
     }
 

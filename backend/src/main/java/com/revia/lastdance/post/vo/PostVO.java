@@ -12,6 +12,7 @@ public class PostVO {
     private String postTitle; // Added
     private String postContent;
     private Boolean isNotice;
+    private Integer postViewCunt; // 조회수 추가
     private Timestamp createdDate;
     private String createdId;
     private Timestamp updatedDate;

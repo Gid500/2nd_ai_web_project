@@ -8,6 +8,7 @@
         <result property="postTitle" column="post_title"/>
         <result property="postContent" column="post_content"/>
         <result property="isNotice" column="is_notice"/>
+        <result property="postViewCunt" column="post_view_cunt"/> <!-- postViewCunt 추가 -->
         <result property="createdDate" column="created_date"/>
         <result property="createdId" column="created_id"/>
         <result property="updatedDate" column="updated_date"/>
@@ -34,6 +35,7 @@
             p.post_title,
             p.post_content,
             p.is_notice,
+            p.post_view_cunt, <!-- postViewCunt 추가 -->
             p.created_date,
             p.created_id,
             p.updated_date,
@@ -54,6 +56,10 @@
         SELECT COUNT(*) FROM tb_post WHERE is_notice = FALSE
     </select>
 
+    <delete id="deletePost">
+        DELETE FROM tb_post WHERE post_id = #{postId}
+    </delete>
+
     <select id="selectPostById" resultMap="postWithFilesResultMap">
         SELECT
             p.post_id,
@@ -61,6 +67,7 @@
             p.post_title,
             p.post_content,
             p.is_notice,
+            p.post_view_cunt, <!-- postViewCunt 추가 -->
             p.created_date,
             p.created_id,
             p.updated_date,
@@ -80,6 +87,7 @@
             post_title,
             post_content,
             is_notice,
+            post_view_cunt, <!-- postViewCunt 추가 -->
             created_date,
             user_id,
             <if test="createdId != null">created_id,</if>
@@ -88,6 +96,7 @@
             #{postTitle},
             #{postContent},
             #{isNotice},
+            0, <!-- 초기 조회수 0으로 설정 -->
             CURRENT_TIMESTAMP,
             #{userId},
             <if test="createdId != null">#{createdId},</if>
@@ -107,9 +116,13 @@
         WHERE post_id = #{postId}
     </update>
 
-    <delete id="deletePost">
-        DELETE FROM tb_post WHERE post_id = #{postId}
-    </delete>
+    <!-- 조회수 증가 -->
+    <update id="incrementPostViewCunt">
+        UPDATE tb_post
+        SET
+            post_view_cunt = post_view_cunt + 1
+        WHERE post_id = #{postId}
+    </update>
 
     <!-- New: 상위 N개 공지사항 조회 -->
     <select id="selectTopNotices" resultMap="postWithFilesResultMap">
@@ -119,6 +132,7 @@
             p.post_title,
             p.post_content,
             p.is_notice,
+            p.post_view_cunt, <!-- postViewCunt 추가 -->
             p.created_date,
             p.created_id,
             p.updated_date,
@@ -142,6 +156,7 @@
             p.post_title,
             p.post_content,
             p.is_notice,
+            p.post_view_cunt, <!-- postViewCunt 추가 -->
             p.created_date,
             p.created_id,
             p.updated_date,
@@ -170,6 +185,7 @@
             p.post_title,
             p.post_content,
             p.is_notice,
+            p.post_view_cunt, <!-- postViewCunt 추가 -->
             p.created_date,
             p.created_id,
             p.updated_date,

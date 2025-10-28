@@ -63,12 +63,17 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{postId}") // Changed to DeleteMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_admin') or @postService.isOwner(#postId, authentication.principal.userId)")
-    public ResponseEntity<Void> deletePost(@PathVariable("postId") int postId) {
-        postService.deletePost(postId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    @PostMapping("/delete/{postId}") // Changed to PostMapping
+
+        @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_admin') or @postService.isOwner(#postId, authentication.principal.userId)")
+
+        public ResponseEntity<Void> deletePostByPostId( @PathVariable("postId") int postId) {
+
+            postService.deletePost(postId);
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        }
 
     @GetMapping("/search")
     public ResponseEntity<Map<String, Object>> searchPosts(

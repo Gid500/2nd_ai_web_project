@@ -14,6 +14,7 @@ public interface PostMapper {
     void insertPost(PostVO postVO);
     void updatePost(PostVO postVO);
     void deletePost(int postId);
+    void incrementPostViewCunt(int postId); // 조회수 증가 메서드 추가
 
     // New methods for notices and general posts
     List<PostVO> selectTopNotices(@Param("count") int count);
