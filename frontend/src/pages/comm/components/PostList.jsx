@@ -50,6 +50,7 @@ const PostList = ({ posts, currentUser }) => {
                                 </Link>
                                 <div className="post-list-meta-group">
                                     <span className="post-list-meta-info">작성자: {post.anoyUserName || post.userId}</span>
+                                    <span className="post-list-meta-info">조회수: {post.postViewCunt}</span>
                                     <span className="post-list-meta-info">작성일: {new Date(post.createdDate).toLocaleString()}</span>
                                     {post.updatedDate && <span className="post-list-meta-info">수정일: {new Date(post.updatedDate).toLocaleString()}</span>}
                                 </div>

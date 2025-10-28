@@ -118,6 +118,7 @@ const PostDetail = ({ post, onBackToList, onDelete, comments, fetchComments }) =
                 {post.postTitle}
             </h2>
             <p className="post-detail-meta-info">작성자: {post.userNickname || post.userId}</p> {/* userNickname 사용 */}
+            <p className="post-detail-meta-info">조회수: {post.postViewCunt}</p>
             <p className="post-detail-meta-info">작성일: {new Date(post.createdDate).toLocaleString()}</p>
             {post.updatedDate && new Date(post.updatedDate).getTime() !== new Date(post.createdDate).getTime() && (
                 <p className="post-detail-meta-info">수정일: {new Date(post.updatedDate).toLocaleString()}</p>
