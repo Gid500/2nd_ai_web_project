@@ -43,9 +43,16 @@ public class EmailVerificationService {
     public boolean verifyEmailCode(String email, String code) {
         EmailVerificationVO storedCode = emailVerificationMapper.getEmailVerificationCode(email);
 
-        if (storedCode != null && storedCode.getEmailCode().equals(code)) {
-            // 유효 시간 확인
-            if (LocalDateTime.now().isBefore(storedCode.getVerifiTime())) {
+        if (storedCode != null) {
+            // 1. 유효 시간 만료 여부 확인
+            if (LocalDateTime.now().isAfter(storedCode.getVerifiTime())) {
+                // 유효 시간 만료 시 DB에서 코드 삭제
+                emailVerificationMapper.deleteEmailVerificationCodeByUserEmail(email);
+                return false;
+            }
+
+            // 2. 코드 일치 여부 확인 (유효 시간 내에 있는 경우)
+            if (storedCode.getEmailCode().equals(code)) {
                 emailVerificationMapper.deleteEmailVerificationCodeByUserEmail(email); // 인증 성공 후 코드 삭제
                 return true;
             }
