@@ -12,10 +12,10 @@
   gap: 8px;
 
   padding: 14px 16px;
-  background: var(--mypage-white);
+  background: #ffffff; /* 흰색 유지 */
   border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  border: 1px solid var(--mypage-border-light);          /* 은은한 테두리(사이트 톤) */
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12); /* intro.css의 그림자 스타일 유지 */
+  border: 1px solid #d8c6b4;          /* intro.css의 테두리 색상과 유사하게 조정 */
   min-width: 120px;                    /* 카드 최소 너비 */
 }
 
@@ -25,7 +25,7 @@
   display: block;
   padding: 8px 10px;
   text-decoration: none;
-  color: var(--mypage-primary-color);
+  color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
   border-radius: 8px;
   font-size: 14px;
   line-height: 1.2;
@@ -33,21 +33,21 @@
 
 /* hover 효과 */
 .mypage-tabs a:hover {
-  background: var(--mypage-light-bg);
+  background: #f8f4f0; /* intro.css의 배경색과 유사한 톤으로 조정 */
 }
 
 /* 활성 탭 강조 (NavLink의 active 클래스 대응) */
 .mypage-tabs .active {
   font-weight: 700;
-  background: var(--mypage-active-bg);
-  border: 1px solid var(--mypage-border-medium);
+  background: #f0e4d8; /* intro.css의 배경색과 유사한 톤으로 조정 */
+  border: 1px solid #caa27a; /* intro.css의 호버 테두리 색상과 유사하게 조정 */
 }
 
 /* 로그아웃 버튼(탭 옆 스타일로 맞춤) */
 .mypage-tabs .mypage-logout-btn {
   background: none;
   border: 1px solid transparent;
-  color: var(--mypage-error-text);
+  color: #7A5230; /* intro.css의 텍스트 색상과 유사하게 조정 */
   padding: 8px 10px;
   border-radius: 8px;
   text-align: left;
@@ -55,8 +55,8 @@
   font-size: 14px;
 }
 .mypage-tabs .mypage-logout-btn:hover {
-  background: var(--mypage-error-bg);
-  border-color: var(--mypage-error-border);
+  background: #ffe0e0; /* 에러 관련 색상은 유지하되, 톤을 맞춤 */
+  border-color: #ffb3b3; /* 에러 관련 색상은 유지하되, 톤을 맞춤 */
 }
 
 /* 반응형: 화면 좁을 땐 살짝 붙이고, 매우 좁으면 접기 */

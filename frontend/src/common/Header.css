@@ -1,6 +1,6 @@
 header{
 
-    background-color: #EAD9C9;
+    background-color: #EAD9C9; /* intro.css의 배경색 #f8f4f0와 유사한 따뜻한 톤 유지 */
     display: flex;
     justify-content: center;
 }
@@ -24,21 +24,21 @@ header{
 .tab {
   padding: 8px 16px;
   text-decoration: none;
-  color: #7A5230;
+  color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
   border-bottom: 2px solid transparent;
   transition: color .2s ease, border-color .2s ease, transform .15s ease;
 }
 
 .tab:hover {
-  color: #CAA27A;
-  border-bottom-color: #CAA27A;
+  color: #CAA27A; /* intro.css의 호버 색상과 일치 */
+  border-bottom-color: #CAA27A; /* intro.css의 호버 색상과 일치 */
   transform: translateY(-2px);
 }
 
 .tab.active {
-  color: #7A5230;
+  color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
   font-weight: bold;
-  border-bottom-color: #7A5230;
+  border-bottom-color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
 }
 
 
@@ -48,7 +48,7 @@ header{
   right: 30px;
   top: 4.5%;
   transform: translateY(-50%);
-  border: 3px #7A5230 solid;
+  border: 3px #7A5230 solid; /* intro.css의 텍스트 색상과 일치 */
   border-radius: 30px;
   padding: 2px;
 
@@ -60,7 +60,7 @@ header{
 .profile{
 
   font-size: 22px;
-  color: #7A5230;
+  color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
 
 }
 
@@ -71,24 +71,24 @@ header{
   line-height: 1; border-radius: 10px;
 }
 .profile-btn:hover { background: rgba(0,0,0,0.05); }
-.profile-btn i { font-size: 20px; color: #6b4a2f; }
+.profile-btn i { font-size: 20px; color: #7A5230; /* intro.css의 텍스트 색상과 유사한 톤으로 조정 */ }
 
 .profile-menu {
   position: absolute; right: 0; top: calc(100% + 10px);
-  min-width: 160px; background:#fff; border:1px solid #eadbcc;
+  min-width: 160px; background:#fff; border:1px solid #d8c6b4; /* intro.css의 테두리 색상과 유사한 톤으로 조정 */
   border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.12);
   padding:8px; z-index:1000;
 }
 .profile-menu .menu-caret {
   position:absolute; top:-7px; right:12px; width:12px; height:12px;
-  background:#fff; border-left:1px solid #eadbcc; border-top:1px solid #eadbcc;
+  background:#fff; border-left:1px solid #d8c6b4; border-top:1px solid #d8c6b4; /* intro.css의 테두리 색상과 유사한 톤으로 조정 */
   transform:rotate(45deg);
 }
 .menu-item {
   width:100%; text-align:left; background:none; border:0;
-  padding:10px; border-radius:8px; cursor:pointer; color:#6b4a2f; font-size:14px;
+  padding:10px; border-radius:8px; cursor:pointer; color:#7A5230; /* intro.css의 텍스트 색상과 유사한 톤으로 조정 */ font-size:14px;
 }
-.menu-item:hover { background:#f5eee7; }
+.menu-item:hover { background:#f8f4f0; /* intro.css의 배경색과 유사한 톤으로 조정 */ }
 .menu-item.danger { color:#c2352c; }
 .menu-item.danger:hover { background:#fdeeee; }
-.menu-sep { height:1px; background:#f0e4d8; margin:6px 0; }
+.menu-sep { height:1px; background:#f0e4d8; /* intro.css의 배경색과 유사한 톤으로 조정 */ margin:6px 0; }

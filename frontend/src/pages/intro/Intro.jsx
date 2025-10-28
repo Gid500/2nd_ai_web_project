@@ -9,10 +9,10 @@ function Intro() {
   const [dogHover, setDogHover] = useState(false);
 
   return (
-    <div>
+    <div className="intro-container">
         <div
           className="cat"
-          onClick={() => navigate('/Cat')}
+          onClick={() => navigate('/cat')}
           onMouseEnter={() => setCatHover(true)}
           onMouseLeave={() => setCatHover(false)}
         >
@@ -28,7 +28,7 @@ function Intro() {
         </div>
         <div
           className="cat"
-          onClick={() => navigate('/Dog')}
+          onClick={() => navigate('/dog')}
           onMouseEnter={() => setDogHover(true)}
           onMouseLeave={() => setDogHover(false)}
         >

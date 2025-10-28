@@ -1,9 +1,10 @@
 /* PostList.css */
 .post-list-container {
     padding: 20px;
-    border: 1px solid #eee;
+    border: 1px solid #d8c6b4; /* intro.css의 테두리 색상과 유사하게 조정 */
     border-radius: 8px;
-    background-color: #fff;
+    background-color: #ffffff; /* 흰색 유지 */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* intro.css의 그림자 스타일과 유사하게 조정 */
 }
 
 .post-list-header {
@@ -15,13 +16,16 @@
 
 .post-list-title {
     font-size: 1.8em;
-    color: #333;
+    color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
 }
 
 .post-list-empty {
     text-align: center;
-    color: #777;
+    color: #a0a0a0; /* intro.css의 텍스트 색상과 유사한 톤으로 조정 */
     padding: 20px;
+    border: 1px dashed #d8c6b4; /* intro.css의 테두리 색상과 유사하게 조정 */
+    border-radius: 5px;
+    background-color: #f8f4f0; /* intro.css의 배경색과 유사한 톤 */
 }
 
 .post-list-ul {
@@ -30,48 +34,72 @@
 }
 
 .post-list-item {
-    border: 1px solid #ddd;
+    border: 1px solid #d8c6b4; /* intro.css의 테두리 색상과 유사하게 조정 */
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 15px;
-    background-color: #f9f9f9;
+    background-color: #ffffff; /* 흰색 유지 */
     transition: box-shadow 0.3s ease;
 }
 
 .post-list-item:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(202, 162, 122, 0.15); /* intro.css의 호버 그림자 스타일과 유사하게 조정 */
 }
 
 .post-list-item.notice {
-    border: 2px solid #ffcc00;
-    background-color: #fffaf0; /* Slightly different background for notices */
+    border: 2px solid #CAA27A; /* intro.css의 호버 색상과 유사하게 조정 */
+    background-color: #fffaf0; /* intro.css의 배경색과 유사한 톤 */
+}
+
+.post-list-item-title-link {
+    text-decoration: none; /* 링크 밑줄 제거 */
+}
+
+.post-list-item-content {
+    padding-left: 0;
 }
 
 .post-list-item-title {
-    font-size: 1.3em;
-    color: #007bff;
+    font-size: 1.2em; /* 요청에 따라 12px에서 1.2em으로 변경 */
+    color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
     cursor: pointer;
-    margin-bottom: 5px;
+    margin-bottom: 5px; /* 제목 아래에 간격 추가 */
+    margin-left: 0;
+    white-space: nowrap; /* 제목이 길어져도 줄바꿈되지 않도록 */
+    overflow: hidden;
+    text-overflow: ellipsis; /* 넘치는 텍스트는 ...으로 표시 */
 }
 
 .post-list-item-title:hover {
     text-decoration: underline;
+    color: #CAA27A; /* intro.css의 호버 색상과 유사하게 조정 */
 }
 
 .post-list-notice-tag {
     margin-right: 10px;
-    color: red;
+    color: #dc3545; /* 공지 태그 색상은 유지하되, 톤을 맞춤 */
     font-weight: bold;
+}
+
+.post-list-meta-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* 화면이 작아질 경우 줄바꿈 허용 */
+    margin-left: 0;
+}
+
+.post-list-meta-group > .post-list-meta-info:not(:first-child) {
+    margin-left: 15px; /* 첫 번째 요소가 아닌 경우에만 마진 적용 */
 }
 
 .post-list-meta-info {
     font-size: 0.9em;
-    color: #666;
-    margin-bottom: 5px;
+    color: #a0a0a0; /* intro.css의 텍스트 색상과 유사한 톤으로 조정 */
+    white-space: nowrap; /* 메타 정보가 길어져도 줄바꿈되지 않도록 */
 }
 
 .post-list-actions button {
-    background-color: #6c757d;
+    background-color: #CAA27A; /* intro.css의 호버 색상과 유사한 톤으로 변경 */
     color: white;
     padding: 5px 10px;
     border: none;
@@ -80,22 +108,24 @@
     font-size: 0.8em;
     margin-right: 5px;
     margin-top: 10px;
+    transition: background-color 0.2s ease;
 }
 
 .post-list-actions button:hover {
-    background-color: #5a6268;
+    background-color: #7A5230; /* intro.css의 텍스트 색상과 유사한 톤으로 변경 */
 }
 
 .comm-create-post-button {
-    background-color: #007bff;
+    background-color: #7A5230; /* intro.css의 텍스트 색상과 유사한 톤으로 변경 */
     color: white;
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    transition: background-color 0.2s ease;
 }
 
 .comm-create-post-button:hover {
-    background-color: #0056b3;
+    background-color: #CAA27A; /* intro.css의 호버 색상과 유사한 톤으로 변경 */
 }
