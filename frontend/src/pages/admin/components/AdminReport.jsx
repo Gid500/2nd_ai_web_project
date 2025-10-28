@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getAllReports, deleteReport } from '../../../common/api/reportApi';
+import { deleteComment } from '../../comm/api/commCommentApi';
 import AdminPagination from './AdminPagination';
 
 function AdminReport() {
@@ -30,15 +31,21 @@ function AdminReport() {
         fetchReports();
     }, [fetchReports]);
 
-    const handleDeleteReport = async (reportId) => {
-        if (window.confirm(`정말로 신고 ID: ${reportId} 를 삭제하시겠습니까?`)) {
+    const handleDeleteReport = async (report) => {
+        if (window.confirm(`정말로 신고 ID: ${report.reportId} 를 삭제하시겠습니까?`)) {
             try {
-                await deleteReport(reportId);
-                alert(`신고 ${reportId} 가 성공적으로 삭제되었습니다.`);
+                if (report.reportedCommentId) {
+                    // 댓글 신고인 경우, 댓글 먼저 삭제
+                    await deleteComment(report.reportedCommentId);
+                    alert(`댓글 ID: ${report.reportedCommentId} 가 성공적으로 삭제되었습니다.`);
+                }
+                // 신고 기록 삭제
+                await deleteReport(report.reportId);
+                alert(`신고 ${report.reportId} 가 성공적으로 삭제되었습니다.`);
                 fetchReports(); // 신고 목록 새로고침
             } catch (error) {
-                alert(`신고 ${reportId} 삭제 처리 중 오류가 발생했습니다: ${error.message}`);
-                console.error(`Error deleting report ${reportId}:`, error);
+                alert(`신고 ${report.reportId} 삭제 처리 중 오류가 발생했습니다: ${error.message}`);
+                console.error(`Error deleting report ${report.reportId}:`, error);
             }
         }
     };
@@ -75,7 +82,10 @@ function AdminReport() {
                         <tr>
                             <th>신고 ID</th>
                             <th>신고된 게시물 ID</th>
+                            <th>신고된 게시물 제목</th>
+                            <th>신고된 게시물 내용</th>
                             <th>신고된 댓글 ID</th>
+                            <th>신고된 댓글 내용</th>
                             <th>신고자 ID</th>
                             <th>신고된 사용자 ID</th>
                             <th>신고 내용</th>
@@ -88,13 +98,16 @@ function AdminReport() {
                             <tr key={report.reportId}>
                                 <td>{report.reportId}</td>
                                 <td>{report.reportedPostId || 'N/A'}</td>
+                                <td>{report.reportedPostTitle || 'N/A'}</td>
+                                <td>{report.reportedPostContent || 'N/A'}</td>
                                 <td>{report.reportedCommentId || 'N/A'}</td>
+                                <td>{report.reportedCommentText || 'N/A'}</td>
                                 <td>{report.reporterUserId}</td>
                                 <td>{report.reportedUserId}</td>
                                 <td>{report.reportContent}</td>
                                 <td>{report.typeName}</td>
                                 <td>
-                                    <button onClick={() => handleDeleteReport(report.reportId)}>삭제</button>
+                                    <button onClick={() => handleDeleteReport(report)}>삭제</button>
                                 </td>
                             </tr>
                         ))}

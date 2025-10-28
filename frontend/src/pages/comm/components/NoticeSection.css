@@ -35,6 +35,7 @@
     font-weight: bold;
     color: #7A5230; /* intro.css의 텍스트 색상과 유사하게 조정 */
     cursor: pointer;
+    margin-top: 5px;
     margin-bottom: 5px;
 }
 

@@ -2,6 +2,7 @@ package com.revia.lastdance.post.service;
 
 import com.revia.lastdance.post.dao.PostMapper;
 import com.revia.lastdance.post.vo.PostVO;
+import com.revia.lastdance.report.service.ReportService; // ReportService 임포트
 import com.revia.lastdance.signin.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ public class PostService {
     private final PostMapper postMapper;
     private final FileService fileService; // FileService 주입
     private final PasswordEncoder passwordEncoder;
+    private final ReportService reportService; // ReportService 주입
 
     public Map<String, Object> getAllPosts(int page, int size) {
         int offset = (page - 1) * size;
@@ -97,6 +99,7 @@ public class PostService {
     public void deletePost(int postId) {
         // 게시물 삭제 전에 연결된 파일 정보도 삭제
         fileService.deleteFilesByPostId(postId);
+        reportService.deleteReportsByReportedPostId(postId); // 게시물에 연결된 신고 삭제
         postMapper.deletePost(postId);
     }
 

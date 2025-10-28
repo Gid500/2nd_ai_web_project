@@ -146,16 +146,18 @@ const PostDetail = ({ post, onBackToList, onDelete, comments, fetchComments }) =
                 </div>
             )}
             <div className="post-detail-actions">
-                <button onClick={onBackToList}>목록으로 돌아가기</button>
-                {(isAdmin || (user && user.userId === post.userId)) && (
-                    <> 
-                        <Link to={`/comm/${post.postId}/edit`} className="button">수정</Link>
-                        <button onClick={handleDeleteClick}>삭제</button>
-                    </>
-                )}
-                {user && user.userId !== post.userId && !isAdmin && (
-                    <button onClick={handleReportPost} className="report-button">신고</button>
-                )}
+                <button onClick={onBackToList} className="back-button">목록으로 돌아가기</button>
+                <div>
+                    {(isAdmin || (user && user.userId === post.userId)) && (
+                        <>
+                            <Link to={`/comm/${post.postId}/edit`} className="button">수정</Link>
+                            <button onClick={handleDeleteClick}>삭제</button>
+                        </>
+                    )}
+                    {user && user.userId !== post.userId && !isAdmin && (
+                        <button onClick={handleReportPost} className="report-button">신고</button>
+                    )}
+                </div>
             </div>
 
             {/* 댓글 섹션 추가 */}

@@ -63,6 +63,7 @@
     font-size: 1.2em; /* 요청에 따라 12px에서 1.2em으로 변경 */
     color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
     cursor: pointer;
+    margin-top: 5px;
     margin-bottom: 5px; /* 제목 아래에 간격 추가 */
     margin-left: 0;
     white-space: nowrap; /* 제목이 길어져도 줄바꿈되지 않도록 */

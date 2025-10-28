@@ -86,7 +86,6 @@ function Comm() {
     if (postId) {
         return (
             <div className="comm-container">
-                <h1 className="comm-header">게시글 상세</h1>
                 <PostDetail
                     post={currentPostDetail}
                     onBackToList={() => navigate('/comm')}
@@ -102,7 +101,6 @@ function Comm() {
     // 게시글 목록 렌더링
     return (
         <div className="comm-container">
-            <h1 className="comm-header">커뮤니티 게시판</h1>
             <NoticeSection notices={notices} onViewDetail={handleViewDetail} />
 
             <div className="comm-search-section">

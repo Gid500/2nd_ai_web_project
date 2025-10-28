@@ -52,11 +52,19 @@ public class ReportService {
         reportDao.deleteReport(reportId);
     }
 
+    public void deleteReportsByReportedPostId(int reportedPostId) {
+        reportDao.deleteReportsByReportedPostId(reportedPostId);
+    }
+
+    public void deleteReportsByReportedCommentId(int reportedCommentId) {
+        reportDao.deleteReportsByReportedCommentId(reportedCommentId);
+    }
+
     public List<ReportVo> getReportTypes() {
         return reportDao.selectReportTypes();
     }
 
-    public List<ReportVo> getReportsByContentType(String reportContentType) {
+    public List<ReportVo> selectReportsByContentType(String reportContentType) {
         return reportDao.selectReportsByContentType(reportContentType);
     }
 }

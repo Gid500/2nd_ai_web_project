@@ -15,6 +15,8 @@ public interface ReportDao {
     ReportVo selectReportById(int reportId);
     void updateReport(ReportVo reportVo);
     void deleteReport(int reportId);
+    void deleteReportsByReportedPostId(int reportedPostId);
+    void deleteReportsByReportedCommentId(int reportedCommentId);
     List<ReportVo> selectReportTypes();
     List<ReportVo> selectReportsByContentType(String reportContentType);
 }

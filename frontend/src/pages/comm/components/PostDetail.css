@@ -71,7 +71,7 @@
 }
 
 .post-detail-actions button {
-    background-color: #6c757d;
+    background-color: #dc3545; /* Red color for delete */
     color: white;
     padding: 8px 15px;
     border: none;
@@ -82,11 +82,42 @@
 }
 
 .post-detail-actions button:hover {
-    background-color: #5a6268;
+    background-color: #c82333; /* Darker red on hover */
 }
 
 .post-detail-actions button:last-child {
     margin-right: 0;
+}
+
+.post-detail-actions .button {
+    display: inline-block; /* Make it behave like a button */
+    background-color: #007bff; /* Example color, can be adjusted */
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none; /* Remove underline for links */
+    text-align: center;
+    margin-right: 10px; /* Align with other buttons */
+}
+
+.post-detail-actions .button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+.post-detail-actions .back-button {
+    background-color: #6c757d; /* Original grey color */
+}
+
+.post-detail-actions .back-button:hover {
+    background-color: #5a6268; /* Darker grey on hover */
+}
+
+.post-detail-actions {
+    display: flex;
+    justify-content: space-between;
 }
 
 /* 신고 모달 스타일 */

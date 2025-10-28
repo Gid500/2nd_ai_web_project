@@ -12,6 +12,9 @@
         <result property="reportTypeId" column="report_type_id"/>
         <result property="reportContentType" column="report_content_type"/>
         <result property="typeName" column="type_name"/>
+        <result property="reportedPostTitle" column="post_title"/>
+        <result property="reportedPostContent" column="post_content"/>
+        <result property="reportedCommentText" column="comment"/>
     </resultMap>
 
     <resultMap id="reportTypeResultMap" type="com.revia.lastdance.report.vo.ReportVo">
@@ -34,9 +37,14 @@
             r.report_content,
             r.report_type_id,
             r.report_content_type,
-            rt.type_name
+            rt.type_name,
+            p.post_title,
+            p.post_content,
+            c.comment
         FROM tb_report r
         JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
+        LEFT JOIN tb_post p ON r.reported_post_id = p.post_id
+        LEFT JOIN tb_comment c ON r.reported_comment_id = c.comment_id
         ORDER BY r.report_id DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
@@ -56,9 +64,14 @@
             r.report_content,
             r.report_type_id,
             r.report_content_type,
-            rt.type_name
+            rt.type_name,
+            p.post_title,
+            p.post_content,
+            c.comment
         FROM tb_report r
         JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
+        LEFT JOIN tb_post p ON r.reported_post_id = p.post_id
+        LEFT JOIN tb_comment c ON r.reported_comment_id = c.comment_id
         WHERE r.report_id = #{reportId}
     </select>
 
@@ -80,6 +93,16 @@
         WHERE report_id = #{reportId}
     </delete>
 
+    <delete id="deleteReportsByReportedPostId" parameterType="int">
+        DELETE FROM tb_report
+        WHERE reported_post_id = #{reportedPostId}
+    </delete>
+
+    <delete id="deleteReportsByReportedCommentId" parameterType="int">
+        DELETE FROM tb_report
+        WHERE reported_comment_id = #{reportedCommentId}
+    </delete>
+
     <select id="selectReportTypes" resultMap="reportTypeResultMap">
         SELECT
             report_type_id,
@@ -97,9 +120,14 @@
             r.report_content,
             r.report_type_id,
             r.report_content_type,
-            rt.type_name
+            rt.type_name,
+            p.post_title,
+            p.post_content,
+            c.comment
         FROM tb_report r
         JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
+        LEFT JOIN tb_post p ON r.reported_post_id = p.post_id
+        LEFT JOIN tb_comment c ON r.reported_comment_id = c.comment_id
         WHERE r.report_content_type = #{reportContentType}
     </select>
 
