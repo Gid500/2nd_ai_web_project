@@ -167,11 +167,11 @@ function Admin() {
                         {posts.map(post => (
                             <tr key={post.postId}>
                                 <td>{post.postId}</td>
-                                <td>{post.title}</td>
+                                <td>{post.postTitle}</td>
                                 <td>{post.userId}</td>
                                 <td>{post.userNickname}</td>
                                 <td>{new Date(post.createdDate).toLocaleString()}</td>
-                                <td>{post.updatedAt ? new Date(post.updatedDate).toLocaleString() : 'N/A'}</td>
+                                <td>{post.updatedDate ? new Date(post.updatedDate).toLocaleString() : 'N/A'}</td>
                                 <td>
                                     <button onClick={() => handleDeletePost(post.postId)}>삭제</button>
                                 </td>
