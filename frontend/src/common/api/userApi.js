@@ -44,9 +44,9 @@ export const adminDeleteUser = async (userId) => {
     }
 };
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (page = 1, limit = 10) => {
     try {
-        const response = await api.get('/api/user/all');
+        const response = await api.get(`/api/user/all?page=${page}&limit=${limit}`);
         return response.data;
     } catch (error) {
         console.error("Error fetching all users:", error);

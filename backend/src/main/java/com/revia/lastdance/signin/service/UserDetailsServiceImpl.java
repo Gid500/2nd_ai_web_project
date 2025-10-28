@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,13 +34,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new CustomUserDetails(userVO.getUserEmail(), userVO.getUserPwd(), Collections.singletonList(new SimpleGrantedAuthority(role)), userVO.getUserId());
     }
 
-    public List<AdminUserVO> getAllUsers() {
-        List<AdminUserVO> users = signinMapper.selectAllAdminUsers();
+    public Map<String, Object> getAllUsers(int page, int limit) {
+        int offset = (page - 1) * limit;
+        List<AdminUserVO> users = signinMapper.selectPagedAdminUsers(offset, limit);
+        int totalUsers = signinMapper.countAllAdminUsers();
+
         users.forEach(user -> {
             int reportCount = signinMapper.getReportCountByUserId(user.getUserId());
             user.setReportCount(reportCount);
         });
-        return users;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("users", users);
+        result.put("totalUsers", totalUsers);
+        return result;
     }
 }
 

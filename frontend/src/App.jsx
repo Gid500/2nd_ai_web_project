@@ -26,7 +26,7 @@ function App() {
         <Route path="/" element={<Intro />} />
         <Route path="/cat" element={<Cat />} />
         <Route path="/dog" element={<Dog />} />
-        <Route path='/admin' element={<AdminRouteWrapper />} />
+        <Route path='/admin/*' element={<AdminRouteWrapper />} />
         <Route path="/explain" element={<Explain/>} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />

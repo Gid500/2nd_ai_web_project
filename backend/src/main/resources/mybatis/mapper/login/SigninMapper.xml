@@ -86,4 +86,25 @@
             reported_user_id = #{userId}
     </select>
 
+    <select id="selectPagedAdminUsers" resultType="com.revia.lastdance.user.vo.AdminUserVO">
+        SELECT
+            tu.user_id,
+            tu.user_nickname,
+            tu.user_email,
+            tr.role_type
+        FROM
+            tb_user tu
+        LEFT JOIN
+            tb_role tr ON tu.role_id = tr.role_id
+        ORDER BY tu.created_date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countAllAdminUsers" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            tb_user
+    </select>
+
 </mapper>

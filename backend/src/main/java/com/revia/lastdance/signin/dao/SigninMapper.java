@@ -13,4 +13,6 @@ public interface SigninMapper {
     List<UserVO> selectAllUsers();
     List<AdminUserVO> selectAllAdminUsers();
     int getReportCountByUserId(@Param("userId") String userId);
+    List<AdminUserVO> selectPagedAdminUsers(@Param("offset") int offset, @Param("limit") int limit);
+    int countAllAdminUsers();
 }

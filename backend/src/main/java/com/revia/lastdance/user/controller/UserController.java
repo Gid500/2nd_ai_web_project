@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -43,8 +44,10 @@ public class UserController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('admin')")
-    public ResponseEntity<List<AdminUserVO>> getAllUsers() {
-        List<AdminUserVO> users = userDetailsService.getAllUsers();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<Map<String, Object>> getAllUsers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+        Map<String, Object> result = userDetailsService.getAllUsers(page, limit);
+        return ResponseEntity.ok(result);
     }
 }
