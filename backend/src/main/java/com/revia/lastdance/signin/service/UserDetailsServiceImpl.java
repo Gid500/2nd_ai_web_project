@@ -3,6 +3,7 @@ package com.revia.lastdance.signin.service;
 import com.revia.lastdance.signin.dao.SigninMapper;
 import com.revia.lastdance.signin.dto.CustomUserDetails;
 import com.revia.lastdance.signup.vo.UserVO;
+import com.revia.lastdance.user.vo.AdminUserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new CustomUserDetails(userVO.getUserEmail(), userVO.getUserPwd(), Collections.singletonList(new SimpleGrantedAuthority(role)), userVO.getUserId());
     }
 
-    public List<UserVO> getAllUsers() {
-        return signinMapper.selectAllUsers();
+    public List<AdminUserVO> getAllUsers() {
+        List<AdminUserVO> users = signinMapper.selectAllAdminUsers();
+        users.forEach(user -> {
+            int reportCount = signinMapper.getReportCountByUserId(user.getUserId());
+            user.setReportCount(reportCount);
+        });
+        return users;
     }
 }
+

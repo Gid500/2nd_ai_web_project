@@ -84,8 +84,8 @@ function Admin() {
         setReportsLoading(true);
         try {
             const data = await getAllReports(currentReportPage, reportsPerPage);
-            setReports(data || []); // Ensure reports is always an array
-            setTotalReports(data.length || 0); // Assuming total reports is the length of the fetched data if not provided by backend
+            setReports(data.reports || []); // Ensure reports is always an array
+            setTotalReports(data.totalReports || 0);
             setReportsError(null);
         } catch (err) {
             setReportsError(err);
@@ -216,6 +216,7 @@ function Admin() {
                             <th>Nickname</th>
                             <th>Email</th>
                             <th>Role</th>
+                            <th>신고 횟수</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -226,6 +227,8 @@ function Admin() {
                                 <td>{user.userNickname}</td>
                                 <td>{user.userEmail}</td>
                                 <td>{user.roleType}</td>
+                                <td>{user.reportCount}</td>
+                                <td>{user.reportCount}</td>
                                 <td>
                                     <button onClick={() => handleDeleteUser(user.userId)}>강제 탈퇴</button>
                                 </td>

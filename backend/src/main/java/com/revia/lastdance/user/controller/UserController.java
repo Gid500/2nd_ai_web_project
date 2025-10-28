@@ -3,6 +3,7 @@ package com.revia.lastdance.user.controller;
 import com.revia.lastdance.signin.dto.CustomUserDetails;
 import com.revia.lastdance.signin.service.UserDetailsServiceImpl;
 import com.revia.lastdance.signup.vo.UserVO;
+import com.revia.lastdance.user.vo.AdminUserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,8 +43,8 @@ public class UserController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('admin')")
-    public ResponseEntity<List<UserVO>> getAllUsers() {
-        List<UserVO> users = userDetailsService.getAllUsers();
+    public ResponseEntity<List<AdminUserVO>> getAllUsers() {
+        List<AdminUserVO> users = userDetailsService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 }

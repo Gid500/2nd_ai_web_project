@@ -65,4 +65,25 @@
             tu.user_id = #{userId}
     </select>
 
+    <select id="selectAllAdminUsers" resultType="com.revia.lastdance.user.vo.AdminUserVO">
+        SELECT
+            tu.user_id,
+            tu.user_nickname,
+            tu.user_email,
+            tr.role_type
+        FROM
+            tb_user tu
+        LEFT JOIN
+            tb_role tr ON tu.role_id = tr.role_id
+    </select>
+
+    <select id="getReportCountByUserId" parameterType="string" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            tb_report
+        WHERE
+            reported_user_id = #{userId}
+    </select>
+
 </mapper>
