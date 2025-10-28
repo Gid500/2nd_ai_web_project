@@ -124,7 +124,6 @@ const PostDetail = ({ post, onBackToList, onDelete, comments, fetchComments }) =
                 <p className="post-detail-meta-info">수정일: {new Date(post.updatedDate).toLocaleString()}</p>
             )}
             <div className="post-detail-content-section">
-                <h3>내용:</h3>
                 <p>{decodedContent}</p>
             </div>
             {post.files && post.files.length > 0 && (
