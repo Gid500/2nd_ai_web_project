@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import com.revia.lastdance.report.service.ReportService;
 import com.revia.lastdance.report.vo.ReportVo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/report")
@@ -23,9 +25,16 @@ public class ReportController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReportVo>> getAllReports() {
-        List<ReportVo> reports = reportService.getAllReports();
-        return ResponseEntity.ok(reports);
+    public ResponseEntity<Map<String, Object>> getAllReports(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+        List<ReportVo> reports = reportService.getAllReports(page, limit);
+        int totalReports = reportService.getTotalReportCount();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("reports", reports);
+        response.put("totalReports", totalReports);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{reportId}")

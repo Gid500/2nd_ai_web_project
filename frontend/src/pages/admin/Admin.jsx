@@ -4,6 +4,7 @@ import { useAdminCheck } from './hook/useAdminCheck';
 import { getAllUsers, adminDeleteUser } from '../../common/api/userApi';
 import { getAllPosts, deletePost } from '../../pages/comm/api/commApi';
 import { getAllComments, adminDeleteComment } from '../../pages/comm/api/commentApi'; // Import comment API
+import { getAllReports, deleteReport } from '../../common/api/reportApi'; // Import report API
 import AdminPagination from './components/AdminPagination'; // AdminPagination 컴포넌트 임포트
 
 function Admin() {
@@ -25,6 +26,13 @@ function Admin() {
     const [currentCommentPage, setCurrentCommentPage] = useState(1); // New state for comments current page
     const [commentsPerPage, setCommentsPerPage] = useState(10); // New state for comments per page
     const [totalComments, setTotalComments] = useState(0); // New state for total comments
+
+    const [reports, setReports] = useState([]); // New state for reports
+    const [reportsLoading, setReportsLoading] = useState(true); // New state for reports loading
+    const [reportsError, setReportsError] = useState(null); // New state for reports error
+    const [currentReportPage, setCurrentReportPage] = useState(1); // New state for reports current page
+    const [reportsPerPage, setReportsPerPage] = useState(10); // New state for reports per page
+    const [totalReports, setTotalReports] = useState(0); // New state for total reports
 
     const fetchUsers = useCallback(async () => {
         setUsersLoading(true);
@@ -72,13 +80,30 @@ function Admin() {
         }
     }, [currentCommentPage, commentsPerPage]);
 
+    const fetchReports = useCallback(async () => { // New function to fetch reports
+        setReportsLoading(true);
+        try {
+            const data = await getAllReports(currentReportPage, reportsPerPage);
+            setReports(data || []); // Ensure reports is always an array
+            setTotalReports(data.length || 0); // Assuming total reports is the length of the fetched data if not provided by backend
+            setReportsError(null);
+        } catch (err) {
+            setReportsError(err);
+            setReports([]);
+            setTotalReports(0);
+        } finally {
+            setReportsLoading(false);
+        }
+    }, [currentReportPage, reportsPerPage]);
+
     useEffect(() => {
         if (isAdmin) {
             fetchUsers();
             fetchPosts();
             fetchComments(); // Fetch comments when admin is true
+            fetchReports(); // Fetch reports when admin is true
         }
-    }, [isAdmin, fetchUsers, fetchPosts, fetchComments]);
+    }, [isAdmin, fetchUsers, fetchPosts, fetchComments, fetchReports]);
 
     const handleDeleteUser = async (userId) => {
         if (window.confirm(`정말로 사용자 ID: ${userId} 를 강제로 탈퇴시키겠습니까?`)) {
@@ -119,8 +144,22 @@ function Admin() {
         }
     };
 
+    const handleDeleteReport = async (reportId) => { // New function to delete report
+        if (window.confirm(`정말로 신고 ID: ${reportId} 를 삭제하시겠습니까?`)) {
+            try {
+                await deleteReport(reportId);
+                alert(`신고 ${reportId} 가 성공적으로 삭제되었습니다.`);
+                fetchReports(); // 신고 목록 새로고침
+            } catch (error) {
+                alert(`신고 ${reportId} 삭제 처리 중 오류가 발생했습니다: ${error.message}`);
+                console.error(`Error deleting report ${reportId}:`, error);
+            }
+        }
+    };
+
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const paginateComments = (pageNumber) => setCurrentCommentPage(pageNumber);
+    const paginateReports = (pageNumber) => setCurrentReportPage(pageNumber);
 
     const handlePostsPerPageChange = (e) => {
         setPostsPerPage(parseInt(e.target.value));
@@ -132,7 +171,12 @@ function Admin() {
         setCurrentCommentPage(1); // 페이지당 댓글 수 변경 시 1페이지로 리셋
     };
 
-    if (loading || usersLoading || postsLoading || commentsLoading) { // Include commentsLoading
+    const handleReportsPerPageChange = (e) => {
+        setReportsPerPage(parseInt(e.target.value));
+        setCurrentReportPage(1); // 페이지당 신고 수 변경 시 1페이지로 리셋
+    };
+
+    if (loading || usersLoading || postsLoading || commentsLoading || reportsLoading) { // Include reportsLoading
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
                 <LoadingSpinner />
@@ -154,6 +198,10 @@ function Admin() {
 
     if (commentsError) { // New error handling for comments
         return <p>댓글 목록을 불러오는 중 오류가 발생했습니다: {commentsError.message}</p>;
+    }
+
+    if (reportsError) { // New error handling for reports
+        return <p>신고 목록을 불러오는 중 오류가 발생했습니다: {reportsError.message}</p>;
     }
 
     return (
@@ -283,6 +331,56 @@ function Admin() {
                 totalPosts={totalComments}
                 onPageChange={paginateComments}
                 currentPage={currentCommentPage}
+            />
+
+            <h2 style={{ marginTop: '40px' }}>신고 관리</h2>
+            <div className="comm-posts-per-page-selector">
+                <label>페이지당 신고 수:</label>
+                <select value={reportsPerPage} onChange={handleReportsPerPageChange}>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={40}>40</option>
+                </select>
+            </div>
+            {reports.length > 0 ? (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>신고 ID</th>
+                            <th>신고된 게시물 ID</th>
+                            <th>신고된 댓글 ID</th>
+                            <th>신고자 ID</th>
+                            <th>신고된 사용자 ID</th>
+                            <th>신고 내용</th>
+                            <th>신고 타입</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {reports.map(report => (
+                            <tr key={report.reportId}>
+                                <td>{report.reportId}</td>
+                                <td>{report.reportedPostId || 'N/A'}</td>
+                                <td>{report.reportedCommentId || 'N/A'}</td>
+                                <td>{report.reporterUserId}</td>
+                                <td>{report.reportedUserId}</td>
+                                <td>{report.reportContent}</td>
+                                <td>{report.typeName}</td>
+                                <td>
+                                    <button onClick={() => handleDeleteReport(report.reportId)}>삭제</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p>등록된 신고가 없습니다.</p>
+            )}
+            <AdminPagination
+                postsPerPage={reportsPerPage}
+                totalPosts={totalReports}
+                onPageChange={paginateReports}
+                currentPage={currentReportPage}
             />
         </div>
     );
