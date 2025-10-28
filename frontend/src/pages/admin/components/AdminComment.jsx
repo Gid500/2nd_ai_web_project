@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getAllComments, adminDeleteComment } from '../../../pages/comm/api/commentApi';
 import AdminPagination from './AdminPagination';
+import '../../admin/Admin.css'; // Admin.css import
 
 function AdminComment() {
     const [comments, setComments] = useState([]);
@@ -70,7 +71,7 @@ function AdminComment() {
                 </select>
             </div>
             {comments.length > 0 ? (
-                <table>
+                <table className="admin-table"> {/* className 추가 */}
                     <thead>
                         <tr>
                             <th>Comment ID</th>

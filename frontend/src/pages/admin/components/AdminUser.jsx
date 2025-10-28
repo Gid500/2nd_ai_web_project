@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getAllUsers, adminDeleteUser } from '../../../common/api/userApi';
 import AdminPagination from './AdminPagination';
+import '../../admin/Admin.css'; // Admin.css import
 
 function AdminUser() {
     const [users, setUsers] = useState([]);
@@ -70,7 +71,7 @@ function AdminUser() {
                 </select>
             </div>
             {users.length > 0 ? (
-                <table>
+                <table className="admin-table"> {/* className 추가 */}
                     <thead>
                         <tr>
                             <th>User ID</th>

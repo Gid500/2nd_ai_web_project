@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getAllPosts, deletePost } from '../../../pages/comm/api/commApi';
 import AdminPagination from './AdminPagination';
+import '../../admin/Admin.css'; // Admin.css import
 
 function AdminPost() {
     const [posts, setPosts] = useState([]);
@@ -70,7 +71,7 @@ function AdminPost() {
                 </select>
             </div>
             {posts.length > 0 ? (
-                <table>
+                <table className="admin-table"> {/* className 추가 */}
                     <thead>
                         <tr>
                             <th>Post ID</th>

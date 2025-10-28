@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { getAllReports, deleteReport } from '../../../common/api/reportApi';
 import { deleteComment } from '../../comm/api/commCommentApi';
 import AdminPagination from './AdminPagination';
+import '../../admin/Admin.css'; // Admin.css import
 
 function AdminReport() {
     const [reports, setReports] = useState([]);
@@ -77,7 +78,7 @@ function AdminReport() {
                 </select>
             </div>
             {reports.length > 0 ? (
-                <table>
+                <table className="admin-table"> {/* className 추가 */}
                     <thead>
                         <tr>
                             <th>신고 ID</th>
@@ -99,9 +100,9 @@ function AdminReport() {
                                 <td>{report.reportId}</td>
                                 <td>{report.reportedPostId || 'N/A'}</td>
                                 <td>{report.reportedPostTitle || 'N/A'}</td>
-                                <td>{report.reportedPostContent || 'N/A'}</td>
+                                <td className="admin-table-content-cell"><textarea readOnly className="admin-report-textarea" value={report.reportedPostContent || 'N/A'} /></td>
                                 <td>{report.reportedCommentId || 'N/A'}</td>
-                                <td>{report.reportedCommentText || 'N/A'}</td>
+                                <td className="admin-table-content-cell"><textarea readOnly className="admin-report-textarea" value={report.reportedCommentText || 'N/A'} /></td>
                                 <td>{report.reporterUserId}</td>
                                 <td>{report.reportedUserId}</td>
                                 <td>{report.reportContent}</td>
