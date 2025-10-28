@@ -2,6 +2,8 @@ import React from 'react';
 import './Mypage.css';
 import useProfileForm from './hook/useProfileForm'; // 새로 생성한 훅 임포트
 
+const BACKEND_BASE_URL = 'http://localhost:8080';
+
 function ProfileForm({ userId }) {
   const {
     fileRef,
@@ -24,7 +26,7 @@ function ProfileForm({ userId }) {
         <div className="mypage-avatarRow">
           <div className="mypage-avatar">
             {avatarPreview ? (
-              <img src={avatarPreview} alt="미리보기" />
+              <img src={`${BACKEND_BASE_URL}${avatarPreview}`} alt="미리보기" />
             ) : (
               <div className="mypage-avatarPlaceholder">이미지 없음</div>
             )}
