@@ -77,6 +77,7 @@ const useProfileForm = (userId) => {
                 const formData = new FormData();
                 formData.append('file', avatarFile);
                 const data = await uploadProfileImage(userId, formData);
+                console.log("Uploaded image URL:", data.userImgUrl); // 디버깅을 위한 로그 추가
                 setAvatarPreview(data.userImgUrl);
             }
 

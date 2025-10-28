@@ -17,7 +17,7 @@ function ProfileForm({ userId }) {
   } = useProfileForm(userId);
 
   return (
-    <form className="mypage-profile-form" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       {/* 아바타 업로드 */}
       <div className="mypage-row">
         <label className="mypage-label">프로필 이미지</label>

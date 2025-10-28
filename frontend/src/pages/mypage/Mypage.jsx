@@ -25,8 +25,9 @@ function Mypage() {
         </div>
 
         <PasswordResetForm />
+        
+        <MypageTab />
       </div>
-      <MypageTab />
     </div>
   );
 }
