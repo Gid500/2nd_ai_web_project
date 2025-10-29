@@ -10,12 +10,13 @@ export const getAllReports = async (page = 1, limit = 10) => {
     }
 };
 
-export const deleteReport = async (reportId) => {
+export const updateReportStatus = async (reportId, reportStatus) => {
     try {
-        const response = await api.post(`/api/report/delete/${reportId}`);
+        const response = await api.put(`/api/report/${reportId}/status`, { reportStatus });
         return response.data;
     } catch (error) {
-        console.error(`Error deleting report ${reportId}:`, error);
+        console.error(`Error updating report status ${reportId}:`, error);
         throw error;
     }
 };
+

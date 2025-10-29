@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getAllReports, deleteReport } from '../../../common/api/reportApi';
+import { getAllReports, updateReportStatus } from '../../../common/api/reportApi';
 import { deleteComment } from '../../comm/api/commCommentApi';
 import AdminPagination from './AdminPagination';
 import '../../admin/Admin.css'; // Admin.css import
@@ -12,12 +12,28 @@ function AdminReport() {
     const [reportsPerPage, setReportsPerPage] = useState(10);
     const [totalReports, setTotalReports] = useState(0);
 
+    const getReportStatusText = (status) => {
+        switch (status) {
+            case 0: return '대기중';
+            case 1: return '거절됨';
+            case 2: return '승인됨 (처리 완료)';
+            case 3: return '게시물 삭제됨 (처리 완료)';
+            default: return '알 수 없음';
+        }
+    };
+
     const fetchReports = useCallback(async () => {
         setReportsLoading(true);
         try {
             const data = await getAllReports(currentReportPage, reportsPerPage);
-            setReports(data.reports || []);
-            setTotalReports(data.totalReports || 0);
+            // API 응답이 직접 배열인 경우를 처리
+            if (Array.isArray(data)) {
+                setReports(data);
+                setTotalReports(data.length);
+            } else { // 기존처럼 객체 안에 reports 배열이 있는 경우
+                setReports(data.reports || []);
+                setTotalReports(data.totalReports || 0);
+            }
             setReportsError(null);
         } catch (err) {
             setReportsError(err);
@@ -32,21 +48,22 @@ function AdminReport() {
         fetchReports();
     }, [fetchReports]);
 
-    const handleDeleteReport = async (report) => {
-        if (window.confirm(`정말로 신고 ID: ${report.reportId} 를 삭제하시겠습니까?`)) {
+    const handleUpdateReportStatus = async (reportId, newStatus, reportedCommentId) => {
+        const actionText = newStatus === 2 ? '승인' : '거절';
+        if (window.confirm(`정말로 신고 ID: ${reportId} 를 ${actionText}하시겠습니까?`)) {
             try {
-                if (report.reportedCommentId) {
-                    // 댓글 신고인 경우, 댓글 먼저 삭제
-                    await deleteComment(report.reportedCommentId);
-                    alert(`댓글 ID: ${report.reportedCommentId} 가 성공적으로 삭제되었습니다.`);
+                // 댓글 신고인 경우, 승인 시 댓글 먼저 삭제
+                if (newStatus === 2 && reportedCommentId) {
+                    await deleteComment(reportedCommentId);
+                    alert(`댓글 ID: ${reportedCommentId} 가 성공적으로 삭제되었습니다.`);
                 }
-                // 신고 기록 삭제
-                await deleteReport(report.reportId);
-                alert(`신고 ${report.reportId} 가 성공적으로 삭제되었습니다.`);
+                // 신고 상태 업데이트
+                await updateReportStatus(reportId, newStatus);
+                alert(`신고 ${reportId} 가 성공적으로 ${actionText}되었습니다.`);
                 fetchReports(); // 신고 목록 새로고침
             } catch (error) {
-                alert(`신고 ${report.reportId} 삭제 처리 중 오류가 발생했습니다: ${error.message}`);
-                console.error(`Error deleting report ${report.reportId}:`, error);
+                alert(`신고 ${reportId} ${actionText} 처리 중 오류가 발생했습니다: ${error.message}`);
+                console.error(`Error updating report status ${reportId}:`, error);
             }
         }
     };
@@ -91,6 +108,7 @@ function AdminReport() {
                             <th>신고된 사용자 ID</th>
                             <th>신고 내용</th>
                             <th>신고 타입</th>
+                            <th>신고 상태</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -107,8 +125,20 @@ function AdminReport() {
                                 <td>{report.reportedUserId}</td>
                                 <td>{report.reportContent}</td>
                                 <td>{report.typeName}</td>
+                                <td>{getReportStatusText(report.reportStatus)}</td>
                                 <td>
-                                    <button onClick={() => handleDeleteReport(report)}>삭제</button>
+                                    <button
+                                        onClick={() => handleUpdateReportStatus(report.reportId, 2, report.reportedCommentId)}
+                                        disabled={report.reportStatus === 2 || report.reportStatus === 3}
+                                    >
+                                        승인
+                                    </button>
+                                    <button
+                                        onClick={() => handleUpdateReportStatus(report.reportId, 1)}
+                                        disabled={report.reportStatus === 2 || report.reportStatus === 3}
+                                    >
+                                        거절
+                                    </button>
                                 </td>
                             </tr>
                         ))}

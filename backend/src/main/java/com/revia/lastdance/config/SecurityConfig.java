@@ -74,8 +74,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/report").hasRole("admin") // 모든 신고 조회는 admin만 가능
                         .requestMatchers(HttpMethod.GET, "/api/report/types").hasRole("admin") // 신고 타입 조회는 admin만 가능
                         .requestMatchers(HttpMethod.GET, "/api/report/{reportId}").hasRole("admin") // 특정 신고 조회는 admin만 가능
-                        .requestMatchers(HttpMethod.POST, "/api/report/update").hasRole("admin") // 신고 업데이트는 admin만 가능
-                        .requestMatchers(HttpMethod.POST, "/api/report/delete/{reportId}").hasRole("admin") // 신고 삭제는 admin만 가능
+                        .requestMatchers(HttpMethod.PUT, "/api/report/{reportId}/status").hasRole("admin") // 신고 상태 업데이트는 admin만 가능
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

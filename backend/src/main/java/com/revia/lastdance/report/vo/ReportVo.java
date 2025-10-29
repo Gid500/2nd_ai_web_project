@@ -17,4 +17,6 @@ public class ReportVo {
     private String reportedPostTitle; // 신고된 게시글 제목
     private String reportedPostContent; // 신고된 게시글 내용
     private String reportedCommentText; // 신고된 댓글 내용
+    private int reportStatus;
+    private Timestamp createAt;
 }

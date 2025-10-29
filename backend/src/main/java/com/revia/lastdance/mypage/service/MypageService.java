@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder; // BCryptPasswordEncoder 대신 PasswordEncoder 인터페이스 사용
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +36,7 @@ public class MypageService {
     private EmailVerificationProperties emailVerificationProperties;
 
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder passwordEncoder; // BCryptPasswordEncoder 대신 PasswordEncoder 인터페이스 주입
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -103,7 +103,7 @@ public class MypageService {
         // Update password
         UserVO userVO = new UserVO();
         userVO.setUserEmail(userEmail);
-        userVO.setUserPwd(bCryptPasswordEncoder.encode(newPassword));
+        userVO.setUserPwd(passwordEncoder.encode(newPassword)); // bCryptPasswordEncoder 대신 passwordEncoder 사용
         mypageMapper.updateUserPassword(userVO);
 
         // Delete verification record

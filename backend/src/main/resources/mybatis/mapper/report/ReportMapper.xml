@@ -11,124 +11,71 @@
         <result property="reportContent" column="report_content"/>
         <result property="reportTypeId" column="report_type_id"/>
         <result property="reportContentType" column="report_content_type"/>
+        <result property="reportStatus" column="report_status"/>
+        <result property="createAt" column="create_at"/>
         <result property="typeName" column="type_name"/>
         <result property="reportedPostTitle" column="post_title"/>
         <result property="reportedPostContent" column="post_content"/>
         <result property="reportedCommentText" column="comment"/>
     </resultMap>
 
-    <resultMap id="reportTypeResultMap" type="com.revia.lastdance.report.vo.ReportVo">
-        <id property="reportTypeId" column="report_type_id"/>
-        <result property="typeName" column="type_name"/>
-    </resultMap>
-
-    <insert id="insertReport" parameterType="com.revia.lastdance.report.vo.ReportVo">
-        INSERT INTO tb_report (reported_post_id, reported_comment_id, reporter_user_id, reported_user_id, report_content, report_type_id, report_content_type)
-        VALUES (#{reportedPostId}, #{reportedCommentId}, #{reporterUserId}, #{reportedUserId}, #{reportContent}, #{reportTypeId}, #{reportContentType})
-    </insert>
-
-    <select id="selectAllReports" resultMap="reportResultMap">
+    <select id="getAllReports" resultMap="reportResultMap">
         SELECT
-            r.report_id,
-            r.reported_post_id,
-            r.reported_comment_id,
-            r.reporter_user_id,
-            r.reported_user_id,
-            r.report_content,
-            r.report_type_id,
-            r.report_content_type,
+            r.report_id, r.reported_post_id, r.reported_comment_id, r.reporter_user_id, r.reported_user_id,
+            r.report_content, r.report_type_id, r.report_content_type, r.report_status, r.create_at,
             rt.type_name,
-            COALESCE(p.post_title, '') AS post_title,
-            COALESCE(p.post_content, '') AS post_content,
-            COALESCE(c.comment, '') AS comment
+            p.post_title, p.post_content,
+            c.comment
         FROM tb_report r
-        JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
+        LEFT JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
         LEFT JOIN tb_post p ON r.reported_post_id = p.post_id
         LEFT JOIN tb_comment c ON r.reported_comment_id = c.comment_id
-        ORDER BY r.report_id DESC
-        LIMIT #{limit} OFFSET #{offset}
+        ORDER BY r.create_at DESC
     </select>
 
-    <select id="selectTotalReportCount" resultType="int">
-        SELECT COUNT(*)
-        FROM tb_report
-    </select>
-
-    <select id="selectReportById" parameterType="int" resultMap="reportResultMap">
+    <select id="getReportById" resultMap="reportResultMap">
         SELECT
-            r.report_id,
-            r.reported_post_id,
-            r.reported_comment_id,
-            r.reporter_user_id,
-            r.reported_user_id,
-            r.report_content,
-            r.report_type_id,
-            r.report_content_type,
+            r.report_id, r.reported_post_id, r.reported_comment_id, r.reporter_user_id, r.reported_user_id,
+            r.report_content, r.report_type_id, r.report_content_type, r.report_status, r.create_at,
             rt.type_name,
-            COALESCE(p.post_title, '') AS post_title,
-            COALESCE(p.post_content, '') AS post_content,
-            COALESCE(c.comment, '') AS comment
+            p.post_title, p.post_content,
+            c.comment
         FROM tb_report r
-        JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
+        LEFT JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
         LEFT JOIN tb_post p ON r.reported_post_id = p.post_id
         LEFT JOIN tb_comment c ON r.reported_comment_id = c.comment_id
         WHERE r.report_id = #{reportId}
     </select>
 
-    <update id="updateReport" parameterType="com.revia.lastdance.report.vo.ReportVo">
+    <insert id="insertReport" parameterType="com.revia.lastdance.report.vo.ReportVo">
+        INSERT INTO tb_report (
+            reported_post_id, reported_comment_id, reporter_user_id, reported_user_id,
+            report_content, report_type_id, report_content_type, report_status, create_at
+        ) VALUES (
+            #{reportedPostId}, #{reportedCommentId}, #{reporterUserId}, #{reportedUserId},
+            #{reportContent}, #{reportTypeId}, #{reportContentType}, #{reportStatus}, NOW()
+        )
+    </insert>
+
+    <update id="updateReportStatus" parameterType="com.revia.lastdance.report.vo.ReportVo">
         UPDATE tb_report
         SET
-            reported_post_id = #{reportedPostId},
-            reported_comment_id = #{reportedCommentId},
-            reporter_user_id = #{reporterUserId},
-            reported_user_id = #{reportedUserId},
-            report_content = #{reportContent},
-            report_type_id = #{reportTypeId},
-            report_content_type = #{reportContentType}
+            report_status = #{reportStatus}
         WHERE report_id = #{reportId}
     </update>
 
-    <delete id="deleteReport" parameterType="int">
-        DELETE FROM tb_report
-        WHERE report_id = #{reportId}
-    </delete>
-
-    <delete id="deleteReportsByReportedPostId" parameterType="int">
-        DELETE FROM tb_report
+    <update id="updateReportsStatusByReportedPostId">
+        UPDATE tb_report
+        SET
+            report_status = #{newStatus}
         WHERE reported_post_id = #{reportedPostId}
-    </delete>
+    </update>
 
-    <delete id="deleteReportsByReportedCommentId" parameterType="int">
-        DELETE FROM tb_report
+    <update id="updateReportsStatusByReportedCommentId">
+        UPDATE tb_report
+        SET
+            report_status = #{newStatus}
         WHERE reported_comment_id = #{reportedCommentId}
-    </delete>
-
-    <select id="selectReportTypes" resultMap="reportTypeResultMap">
-        SELECT
-            report_type_id,
-            type_name
-        FROM tb_report_type
-    </select>
-
-    <select id="selectReportsByContentType" parameterType="String" resultMap="reportResultMap">
-        SELECT
-            r.report_id,
-            r.reported_post_id,
-            r.reported_comment_id,
-            r.reporter_user_id,
-            r.reported_user_id,
-            r.report_content,
-            r.report_type_id,
-            r.report_content_type,
-            rt.type_name,
-            p.post_title,
-            p.post_content,
-            c.comment
-        FROM tb_report r
-        JOIN tb_report_type rt ON r.report_type_id = rt.report_type_id
-        LEFT JOIN tb_post p ON r.reported_post_id = p.post_id
-        LEFT JOIN tb_comment c ON r.reported_comment_id = c.comment_id
-        WHERE r.report_content_type = #{reportContentType}
-    </select>
+    </update>
 
 </mapper>

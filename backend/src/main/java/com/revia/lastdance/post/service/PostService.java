@@ -99,7 +99,7 @@ public class PostService {
     public void deletePost(int postId) {
         // 게시물 삭제 전에 연결된 파일 정보도 삭제
         fileService.deleteFilesByPostId(postId);
-        reportService.deleteReportsByReportedPostId(postId); // 게시물에 연결된 신고 삭제
+        reportService.updateReportsStatusByReportedPostId(postId, 3); // 게시물에 연결된 신고 상태를 '게시물 삭제됨'으로 업데이트 (3은 예시 상태 코드)
         postMapper.deletePost(postId);
     }
 

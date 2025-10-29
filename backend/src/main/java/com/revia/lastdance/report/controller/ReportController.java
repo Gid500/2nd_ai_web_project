@@ -1,15 +1,14 @@
 package com.revia.lastdance.report.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.revia.lastdance.report.service.ReportService;
 import com.revia.lastdance.report.vo.ReportVo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/report")
@@ -18,46 +17,43 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-    @PostMapping
-    public ResponseEntity<Void> addReport(@RequestBody ReportVo reportVo) {
-        reportService.addReport(reportVo);
-        return ResponseEntity.ok().build();
-    }
-
+    // 모든 신고 조회 (관리자만 가능)
+    @PreAuthorize("hasRole('admin')")
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllReports(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int limit) {
-        List<ReportVo> reports = reportService.getAllReports(page, limit);
-        int totalReports = reportService.getTotalReportCount();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("reports", reports);
-        response.put("totalReports", totalReports);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<List<ReportVo>> getAllReports() {
+        List<ReportVo> reports = reportService.getAllReports();
+        return new ResponseEntity<>(reports, HttpStatus.OK);
     }
 
+    // 특정 신고 조회 (관리자만 가능)
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/{reportId}")
-    public ResponseEntity<ReportVo> getReportById(@PathVariable int reportId) {
+    public ResponseEntity<ReportVo> getReportById(@PathVariable("reportId") int reportId) {
         ReportVo report = reportService.getReportById(reportId);
-        return report != null ? ResponseEntity.ok(report) : ResponseEntity.notFound().build();
+        if (report != null) {
+            return new ResponseEntity<>(report, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @PostMapping("/update") // PUT 대신 POST 사용
-    public ResponseEntity<Void> updateReport(@RequestBody ReportVo reportVo) {
-        reportService.updateReport(reportVo);
-        return ResponseEntity.ok().build();
+    // 신고 추가 (모든 사용자 가능)
+    @PostMapping
+    public ResponseEntity<Void> insertReport(@RequestBody ReportVo reportVo) {
+        reportService.insertReport(reportVo);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/delete/{reportId}") // DELETE 대신 POST 사용
-    public ResponseEntity<Void> deleteReport(@PathVariable int reportId) {
-        reportService.deleteReport(reportId);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/types")
-    public ResponseEntity<List<ReportVo>> getReportTypes() {
-        List<ReportVo> reportTypes = reportService.getReportTypes();
-        return ResponseEntity.ok(reportTypes);
+    // 신고 상태 업데이트 (관리자만 가능)
+    @PreAuthorize("hasRole('admin')")
+    @PutMapping("/{reportId}/status")
+    public ResponseEntity<Void> updateReportStatus(@PathVariable("reportId") int reportId, @RequestBody ReportVo reportVo) {
+        ReportVo existingReport = reportService.getReportById(reportId);
+        if (existingReport == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        existingReport.setReportStatus(reportVo.getReportStatus());
+        reportService.updateReportStatus(existingReport);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -43,7 +43,7 @@ public class CommentService {
         }
 
         if (isAdmin || comment.getUserId().equals(userId)) { // String 비교는 .equals() 사용
-            reportService.deleteReportsByReportedCommentId(commentId); // 댓글에 연결된 신고 삭제
+            reportService.updateReportsStatusByReportedCommentId(commentId, 3); // 댓글에 연결된 신고 상태를 '댓글 삭제됨'으로 업데이트 (3은 예시 상태 코드)
             commentDAO.deleteComment(commentId);
         } else {
             throw new AccessDeniedException("댓글을 삭제할 권한이 없습니다.");
