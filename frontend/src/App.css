@@ -14,18 +14,18 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #EAD9C9; /* intro.css의 배경색과 유사한 톤으로 조정 */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #7A5230; /* intro.css의 텍스트 색상과 유사한 톤으로 조정 */
 }
 
 .App-link {
-  color: #61dafb;
+  color: #CAA27A; /* intro.css의 호버 색상과 유사한 톤으로 조정 */
 }
 
 @keyframes App-logo-spin {
@@ -40,7 +40,7 @@
 body{
 
 
-    background-color:#FFFAF0 ;
+    background-color:#f8f4f0; /* intro.css의 배경색과 일치 */
 
 }
 

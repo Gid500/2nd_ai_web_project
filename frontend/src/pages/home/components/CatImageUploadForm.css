@@ -1,0 +1,98 @@
+/* CatImageUploadForm.css */
+
+.cat-image-upload-form {
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.cat-image-upload-form-file-input {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.cat-image-upload-form-upload-button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cat-image-upload-form-upload-button:disabled {
+    opacity: 0.6;
+}
+
+.cat-image-upload-form-upload-button-text {
+    margin-left: 8px;
+}
+
+.cat-image-upload-form-error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.cat-image-upload-form-success-message {
+    color: green;
+    margin-top: 10px;
+}
+
+.cat-image-upload-form-image-preview-container {
+    margin-top: 20px;
+}
+
+.cat-image-upload-form-image-preview {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #eee;
+}
+
+.cat-image-upload-form-prediction-results {
+    margin-top: 20px;
+}
+
+.cat-image-upload-form-all-predictions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cat-image-upload-form-table-header {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.cat-image-upload-form-table-data {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.cat-image-upload-form-analysis-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.cat-image-upload-form-analysis-loading-text {
+    margin-left: 8px;
+}
+
+.cat-image-upload-form-analysis-error {
+    color: red;
+    margin-top: 10px;
+}
+
+.cat-image-upload-form-analysis-results {
+    margin-top: 20px;
+}
+
+.cat-image-upload-form-selected-file-info {
+    margin-top: 10px;
+}

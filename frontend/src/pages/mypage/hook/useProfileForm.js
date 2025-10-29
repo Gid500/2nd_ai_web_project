@@ -1,8 +1,12 @@
 import { useRef, useState, useEffect } from 'react';
 import { fetchUserProfile, updateNickname, uploadProfileImage } from '../api/mypageApi';
+import { useAuth } from '../../../common/hook/AuthProvider'; // useAuth 임포트
+import { useNavigate } from 'react-router-dom'; // useNavigate 임포트
 
 const useProfileForm = (userId) => {
     const fileRef = useRef(null);
+    const { logout } = useAuth(); // useAuth 훅에서 logout 함수 가져오기
+    const navigate = useNavigate(); // useNavigate 훅 사용
 
     const [avatarFile, setAvatarFile] = useState(null);
     const [avatarPreview, setAvatarPreview] = useState(null);
@@ -73,6 +77,7 @@ const useProfileForm = (userId) => {
                 const formData = new FormData();
                 formData.append('file', avatarFile);
                 const data = await uploadProfileImage(userId, formData);
+                console.log("Uploaded image URL:", data.userImgUrl); // 디버깅을 위한 로그 추가
                 setAvatarPreview(data.userImgUrl);
             }
 

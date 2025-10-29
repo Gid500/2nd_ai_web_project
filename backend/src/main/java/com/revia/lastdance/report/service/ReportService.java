@@ -31,8 +31,13 @@ public class ReportService {
         reportDao.insertReport(reportVo);
     }
 
-    public List<ReportVo> getAllReports() {
-        return reportDao.selectAllReports();
+    public List<ReportVo> getAllReports(int page, int limit) {
+        int offset = (page - 1) * limit;
+        return reportDao.selectAllReports(limit, offset);
+    }
+
+    public int getTotalReportCount() {
+        return reportDao.selectTotalReportCount();
     }
 
     public ReportVo getReportById(int reportId) {
@@ -47,11 +52,19 @@ public class ReportService {
         reportDao.deleteReport(reportId);
     }
 
+    public void deleteReportsByReportedPostId(int reportedPostId) {
+        reportDao.deleteReportsByReportedPostId(reportedPostId);
+    }
+
+    public void deleteReportsByReportedCommentId(int reportedCommentId) {
+        reportDao.deleteReportsByReportedCommentId(reportedCommentId);
+    }
+
     public List<ReportVo> getReportTypes() {
         return reportDao.selectReportTypes();
     }
 
-    public List<ReportVo> getReportsByContentType(String reportContentType) {
+    public List<ReportVo> selectReportsByContentType(String reportContentType) {
         return reportDao.selectReportsByContentType(reportContentType);
     }
 }

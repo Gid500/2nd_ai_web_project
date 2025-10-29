@@ -1,15 +1,15 @@
 :root {
   /* Colors */
-  --mypage-primary-color: #6b4a2f; /* Dark brown */
-  --mypage-secondary-color: #7b5a3d; /* Medium brown */
-  --mypage-tertiary-color: #4b2f1b; /* Darker brown for text */
-  --mypage-light-bg: #f5eee7; /* Light background for elements */
+  --mypage-primary-color: #7A5230; /* intro.css의 텍스트 색상 */
+  --mypage-secondary-color: #CAA27A; /* intro.css의 호버 색상 */
+  --mypage-tertiary-color: #7A5230; /* intro.css의 텍스트 색상 */
+  --mypage-light-bg: #f8f4f0; /* intro.css의 배경색 */
   --mypage-white: #fff;
-  --mypage-border-light: #eadbcc; /* Light border */
-  --mypage-border-medium: #e2cdbb; /* Medium border */
-  --mypage-border-dark: #caa98a; /* Darker border/accent */
-  --mypage-placeholder-color: #b99a7f; /* Placeholder text color */
-  --mypage-hint-color: #a0846b; /* Hint text color */
+  --mypage-border-light: #d8c6b4; /* intro.css의 테두리 색상 */
+  --mypage-border-medium: #d8c6b4; /* intro.css의 테두리 색상 */
+  --mypage-border-dark: #caa27a; /* intro.css의 호버 테두리 색상 */
+  --mypage-placeholder-color: #a0a0a0; /* 회색 계열 */
+  --mypage-hint-color: #a0a0a0; /* 회색 계열 */
 
   /* Error/Success Colors */
   --mypage-error-text: #c2352c;
@@ -22,7 +22,7 @@
   /* Box Shadows */
   --mypage-shadow-light: 0 6px 18px rgba(0,0,0,0.06);
   --mypage-shadow-focus: 0 0 0 3px rgba(202,169,138,0.18);
-  --mypage-active-bg: #f1e5da;
+  --mypage-active-bg: #f0e4d8; /* 활성 배경색 */
 }
 
 .parents{
@@ -42,9 +42,7 @@
   color: var(--mypage-primary-color);
 }
 
-
-
-
+.mypage-row { margin-bottom: 16px; }
 .mypage-label {
   display: block;
   font-size: 13px;
@@ -60,7 +58,6 @@
   background: var(--mypage-light-bg);
   border: 1px solid var(--mypage-border-medium);
   flex: 0 0 auto;
-  margin-top: 20px;
 }
 
 .mypage-avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -70,19 +67,17 @@
   color: var(--mypage-placeholder-color); font-size: 12px;
 }
 
-.mypage-hint { margin: 5px 0px 0px 0px; font-size: 12px; color: var(--mypage-hint-color); }
+.mypage-actions { display: flex; flex-direction: row; gap: 8px; }
+.mypage-hint { margin: 0; font-size: 12px; color: var(--mypage-hint-color); }
 
 .mypage-input-button-group {
   display: flex;
-  
-  margin: 0 auto;
+  align-items: center;
   gap: 10px;
-  width: 340px;
 }
 
 .mypage-input-button-group .mypage-input {
   flex-grow: 1;
-  margin-bottom: 30px;
 }
 
 .mypage-input, .mypage-textarea {
@@ -110,8 +105,6 @@
   border-radius: 8px;
   padding: 8px 10px;
   cursor: pointer;
-  
-
 }
 .mypage-btn:hover { filter: brightness(0.98); }
 .mypage-ghost {
@@ -137,23 +130,17 @@
   background: var(--mypage-primary-color); color: var(--mypage-white);
   border: none; border-radius: 10px;
   padding: 10px 16px; cursor: pointer;
-  font-size: 14px;
-  height: 38px;
-  white-space: nowrap;
-  font-weight: bold;
- 
 }
 .mypage-submit:disabled { opacity: 0.6; cursor: default; }
 
-form.mypage-profile-form{
-
-  margin-top: 78px;
-  border: 1px solid #e0e0e0;
-  background-color: #fdfdfd;
-  border-radius: 20px;
-  
-  
-
+.mypage-profile-form{
+  border: 1px solid #d8c6b4; /* intro.css의 테두리 색상과 유사하게 조정 */
+  background-color: #ffffff; /* 흰색 유지 */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* intro.css의 그림자 스타일과 유사하게 조정 */
+  padding: 20px;
+  border-radius: 8px;
+  margin: 0 auto; /* 중앙 정렬 */
+  width: 100%; /* 부모의 너비를 따르도록 */
 }
 
 form.mypage-profile-form{
@@ -168,21 +155,10 @@ form.mypage-profile-form{
 .mypage-actions{
   display: flex;
   flex-direction: column;
-  margin-top: 10px;
-
-  
-
+  justify-content: center;
 }
 
-button.mypage-btn{
 
-  font-weight: bold;
-  font-size: 15px;
-  height:40px;
-  width: 340px;
-  margin-top: 10px;
-
-}
 
 
 
@@ -193,7 +169,7 @@ div.mypage-avatarRow{
   justify-content: center; /* 세로 */
   align-items: center;     /* 가로 */
   min-height: 200px;
-  margin-bottom: 10px;
+
 }
 
 .mypage-btn{
@@ -202,11 +178,12 @@ div.mypage-avatarRow{
 
 }
 
-.careAccountContent{
+.mypage-delete {
+  background: var(--mypage-error-text);
+  color: var(--mypage-white);
+  border: none;
+}
 
-  margin-top: 78px;
-  display:flex;
-  flex-direction: column;
-  justify-self: center;
-
+.mypage-delete:hover {
+  filter: brightness(0.9);
 }

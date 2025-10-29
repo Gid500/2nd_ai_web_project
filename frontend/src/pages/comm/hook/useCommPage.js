@@ -1,17 +1,21 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useCommPosts } from './useCommPosts'; // useCommPosts 훅 임포트
 import { getCommentsByPostId } from '../api/commCommentApi'; // 댓글 API 임포트 경로 수정
 
 const useCommPage = () => {
     const { postId } = useParams(); // URL에서 postId만 가져옴
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(10);
     const [currentPostDetail, setCurrentPostDetail] = useState(null); // 상세 게시글 데이터를 저장할 상태
     const [editingPostData, setEditingPostData] = useState(null); // 수정할 게시글 데이터를 저장할 상태
     const [comments, setComments] = useState([]); // 댓글 목록 상태 추가
+
+    const searchType = searchParams.get('searchType') || '';
+    const searchKeyword = searchParams.get('searchKeyword') || '';
 
     const {
         posts,
@@ -25,7 +29,7 @@ const useCommPage = () => {
         editPost,
         removePost,
         totalPosts
-    } = useCommPosts(currentPage, postsPerPage);
+    } = useCommPosts(currentPage, postsPerPage, searchType, searchKeyword);
 
     const fetchCommentsForPost = useCallback(async (id) => {
         try {
@@ -60,7 +64,7 @@ const useCommPage = () => {
             fetchPosts();
             fetchNotices(2); // CommPage가 로드될 때 공지사항도 가져오도록 추가
         }
-    }, [postId, fetchPostById, fetchCommentsForPost, fetchPosts, fetchNotices, currentPage, postsPerPage]);
+    }, [postId, fetchPostById, fetchCommentsForPost, fetchPosts, fetchNotices, currentPage, postsPerPage, searchType, searchKeyword]);
 
     const handleViewDetail = (id) => {
         navigate(`/comm/${id}`);
@@ -83,7 +87,7 @@ const useCommPage = () => {
             navigate(`/comm/${editingPostData.postId}`); // 수정 후 상세 페이지로 이동
         }
         else {
-            const newPost = await addPost(postData); // 새 게시글 추가 후 반환된 게시글 정보 사용
+            await addPost(postData); // 새 게시글 추가 후 반환된 게시글 정보 사용
             navigate('/comm'); // 작성 후 목록으로 이동
         }
         setEditingPostData(null); // 폼 제출 후 수정 데이터 초기화
@@ -101,10 +105,20 @@ const useCommPage = () => {
         setEditingPostData(null); // 폼 취소 후 수정 데이터 초기화
     };
 
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const paginate = (pageNumber) => {
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set('page', pageNumber);
+        setSearchParams(newSearchParams);
+        setCurrentPage(pageNumber);
+    };
 
     const handlePostsPerPageChange = (e) => {
-        setPostsPerPage(parseInt(e.target.value));
+        const newSize = parseInt(e.target.value);
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set('size', newSize);
+        newSearchParams.set('page', 1); // 페이지당 게시물 수 변경 시 1페이지로 리셋
+        setSearchParams(newSearchParams);
+        setPostsPerPage(newSize);
         setCurrentPage(1);
     };
 
@@ -126,6 +140,11 @@ const useCommPage = () => {
         handleCancelForm,
         paginate,
         handlePostsPerPageChange,
+        searchType,
+        searchKeyword,
+        setSearchParams,
+        setCurrentPage,
+        setPostsPerPage
     };
 };
 

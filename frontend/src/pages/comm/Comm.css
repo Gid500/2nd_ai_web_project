@@ -1,6 +1,8 @@
 /* Comm.css */
 .comm-container {
-    /* Styles for the main container */
+    background-color: #f8f4f0; /* intro.css의 배경색과 유사한 톤 */
+    padding: 20px;
+    min-height: calc(100vh - 80px); /* 헤더 높이 제외 */
 }
 
 .comm-loading-spinner-container {
@@ -8,11 +10,6 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-}
-
-.comm-header {
-    text-align: center;
-    margin-bottom: 20px;
 }
 
 /* .comm-create-post-button 스타일은 PostList.css로 이동했으므로 여기서는 제거 */
@@ -23,12 +20,15 @@
 
 .comm-posts-per-page-selector label {
     margin-right: 10px;
+    color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
 }
 
 .comm-posts-per-page-selector select {
     padding: 5px;
     border-radius: 3px;
-    border: 1px solid #ccc;
+    border: 1px solid #d8c6b4; /* intro.css의 테두리 색상과 유사하게 조정 */
+    color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
+    background-color: #ffffff; /* 배경색 */
 }
 
 /* 이전의 flexbox 관련 스타일 제거 */

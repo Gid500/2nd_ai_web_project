@@ -53,7 +53,7 @@ export const updatePost = async (postId, postData) => { // POST 요청으로 변
 
 export const deletePost = async (postId) => {
     try {
-        const response = await api.delete(`/api/posts/delete/${postId}`);
+        const response = await api.post(`/api/posts/delete/${postId}`);
         return response.data;
     } catch (error) {
         console.error(`Error deleting post with ID ${postId}:`, error);
@@ -67,6 +67,22 @@ export const createReport = async (reportData) => {
         return response.data;
     } catch (error) {
         console.error('Error creating report:', error);
+        throw error;
+    }
+};
+
+export const searchPosts = async (searchType, searchKeyword, page = 1, size = 10) => {
+    try {
+        const params = new URLSearchParams();
+        if (searchType) params.append('searchType', searchType);
+        if (searchKeyword) params.append('searchKeyword', searchKeyword);
+        params.append('page', page);
+        params.append('size', size);
+
+        const response = await api.get(`/api/posts/search?${params.toString()}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error searching posts:', error);
         throw error;
     }
 };

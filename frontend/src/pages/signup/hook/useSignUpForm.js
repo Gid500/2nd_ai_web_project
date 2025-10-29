@@ -70,7 +70,7 @@ const useSignUpForm = () => {
 
             await sendVerificationEmail(email.value);
             setEmailSent(true);
-            setCountdown(180); // 3 minutes
+            setCountdown(300); // 5 minutes
             setSuccess('인증 코드가 이메일로 전송되었습니다.');
         } catch (err) {
             setEmailError(err.response?.data?.message || '이메일 확인 및 인증 코드 전송 실패');
@@ -91,6 +91,7 @@ const useSignUpForm = () => {
             if (response.isVerified) {
                 setEmailVerified(true);
                 setEmailVerificationMessage('이메일이 성공적으로 인증되었습니다.');
+                setCountdown(0); // 인증 성공 시 카운트다운 중지 및 숨김
                 setEmailError('');
             } else {
                 setEmailError('인증 코드가 일치하지 않습니다.');

@@ -41,11 +41,10 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/org.springframework.data/spring-data-commons
 	implementation 'org.springframework.data:spring-data-commons:3.5.4'
-	
+
 	// Spring Boot Starter Mail for email sending
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-    implementation 'org.springframework.security:spring-security-crypto'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'

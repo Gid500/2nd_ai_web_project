@@ -7,7 +7,7 @@
 
 .spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #333;
+  border-left-color: #7A5230; /* intro.css의 텍스트 색상과 유사한 톤으로 조정 */
   border-radius: 50%;
   width: 24px;
   height: 24px;

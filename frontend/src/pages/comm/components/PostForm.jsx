@@ -3,20 +3,21 @@ import useInput from '../hook/useInput';
 import { useAuth } from '../../../common/hook/useAuth';
 import './PostForm.css';
 
-const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
-    const isEditMode = !!initialData.postId;
-    const { user, isAdmin } = useAuth(); // isAdmin 다시 가져오기
+const PostForm = ({ onSubmit, initialData, onCancel }) => {
+    const safeInitialData = initialData || {};
+    const isEditMode = !!safeInitialData.postId;
+    const { user, isAdmin } = useAuth();
 
-    const postTitle = useInput(initialData.postTitle || '');
-    const postContent = useInput(initialData.postContent || '');
-    const [postType, setPostType] = useState(initialData.isNotice ? 'notice' : 'general');
+    const postTitle = useInput(safeInitialData.postTitle || '');
+    const postContent = useInput(safeInitialData.postContent || '');
+    const [postType, setPostType] = useState(safeInitialData.isNotice ? 'notice' : 'general');
     const [selectedFiles, setSelectedFiles] = useState([]); // 새로 선택된 파일
-    const [existingFiles, setExistingFiles] = useState(isEditMode ? [] : initialData.files || []); // 기존 파일
+    const [existingFiles, setExistingFiles] = useState(isEditMode ? [] : safeInitialData.files || []); // 기존 파일
     const [deletedFileIds, setDeletedFileIds] = useState([]); // 삭제할 파일 ID 목록
 
     useEffect(() => {
-        setPostType(initialData.isNotice ? 'notice' : 'general');
-        setExistingFiles(isEditMode ? [] : initialData.files || []);
+        setPostType(safeInitialData.isNotice ? 'notice' : 'general');
+        setExistingFiles(isEditMode ? [] : safeInitialData.files || []);
         setDeletedFileIds([]); // 초기화
     }, [initialData, isEditMode]);
 
@@ -34,7 +35,7 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
 
         const formData = new FormData();
         const postData = {
-            postId: initialData.postId, // postId 추가
+            postId: safeInitialData.postId, // postId 추가
             postTitle: postTitle.value,
             postContent: postContent.value,
             isNotice: postType === 'notice',
@@ -52,7 +53,7 @@ const PostForm = ({ onSubmit, initialData = {}, onCancel }) => {
     };
 
     const postOptions = [];
-    if (isAdmin) { // isAdmin 조건 다시 추가
+    if (isAdmin) {
         postOptions.push({ value: 'notice', label: '공지사항' });
     }
     postOptions.push({ value: 'general', label: '일반' });

@@ -1,19 +1,21 @@
 .comment-form-container {
     margin-top: 20px;
     padding: 20px;
-    border: 1px solid #eee;
+    border: 1px solid #d8c6b4; /* intro.css의 테두리 색상과 유사하게 조정 */
     border-radius: 5px;
-    background-color: #fcfcfc;
+    background-color: #ffffff; /* 흰색 유지 */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* intro.css의 그림자 스타일과 유사하게 조정 */
 }
 
 .comment-textarea {
     width: calc(100% - 20px);
     padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #d8c6b4; /* intro.css의 테두리 색상과 유사하게 조정 */
     border-radius: 4px;
     font-size: 1em;
     resize: vertical;
+    color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
 }
 
 .comment-textarea::placeholder {
@@ -27,7 +29,7 @@
 
 .comment-submit-button,
 .comment-cancel-button {
-    background-color: #28a745;
+    background-color: #CAA27A; /* intro.css의 호버 색상과 유사한 톤으로 변경 */
     color: white;
     border: none;
     padding: 8px 15px;
@@ -35,16 +37,17 @@
     cursor: pointer;
     font-size: 0.9em;
     margin-left: 10px;
+    transition: background-color 0.2s ease;
 }
 
 .comment-submit-button:hover {
-    background-color: #218838;
+    background-color: #7A5230; /* intro.css의 텍스트 색상과 유사한 톤으로 변경 */
 }
 
 .comment-cancel-button {
-    background-color: #6c757d;
+    background-color: #a0a0a0; /* 회색 계열 유지하되 톤 조정 */
 }
 
 .comment-cancel-button:hover {
-    background-color: #5a6268;
+    background-color: #707070; /* 회색 계열 유지하되 톤 조정 */
 }

@@ -4,25 +4,27 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: #f0f2f5;
+    background-color: #f8f4f0; /* intro.css의 배경색과 일치 */
     padding: 20px;
 }
 
 .signin-form {
     background-color: #ffffff;
     padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px; /* intro.css의 border-radius와 유사하게 조정 */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06); /* intro.css의 box-shadow와 유사하게 조정 */
     width: 100%;
     max-width: 400px;
     box-sizing: border-box;
+    border: 1px solid #d8c6b4; /* intro.css의 테두리 색상과 유사하게 조정 */
 }
 
 .signin-title {
     font-size: 28px;
-    color: #333;
+    color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
     margin-bottom: 30px;
     text-align: center;
+    font-family: 'Gowun Dodum', sans-serif; /* intro.css의 폰트와 일치 */
 }
 
 .signin-form-group {
@@ -32,7 +34,7 @@
 .signin-label {
     display: block;
     font-size: 14px;
-    color: #555;
+    color: #7A5230; /* intro.css의 텍스트 색상과 유사한 톤으로 조정 */
     margin-bottom: 8px;
     font-weight: bold;
 }
@@ -40,25 +42,26 @@
 .signin-input {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid #d8c6b4; /* intro.css의 테두리 색상과 일치 */
+    border-radius: 8px; /* intro.css의 border-radius와 유사하게 조정 */
     font-size: 16px;
     box-sizing: border-box;
+    color: #7A5230; /* intro.css의 텍스트 색상과 일치 */
 }
 
 .signin-input:focus {
-    border-color: #007bff;
+    border-color: #caa27a; /* intro.css의 호버 테두리 색상과 일치 */
     outline: none;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 0 3px rgba(202,162,122,0.18); /* intro.css의 box-shadow와 유사하게 조정 */
 }
 
 .signin-button {
     width: 100%;
     padding: 12px 20px;
-    background-color: #007bff;
+    background-color: #CAA27A; /* intro.css의 호버 색상과 유사한 톤으로 변경 */
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px; /* intro.css의 border-radius와 유사하게 조정 */
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -68,7 +71,7 @@
 }
 
 .signin-button:hover {
-    background-color: #0056b3;
+    background-color: #7A5230; /* intro.css의 텍스트 색상과 유사한 톤으로 변경 */
 }
 
 .signin-button:disabled {
@@ -77,7 +80,7 @@
 }
 
 .signin-error {
-    color: #dc3545;
+    color: #dc3545; /* 에러 색상은 유지하되, 톤을 맞춤 */
     text-align: center;
     margin-top: 15px;
     font-size: 14px;
@@ -89,7 +92,7 @@
 }
 
 .signin-links .signin-link {
-    color: #007bff;
+    color: #7A5230; /* intro.css의 텍스트 색상과 유사한 톤으로 조정 */
     text-decoration: none;
     font-size: 14px;
     margin: 0 10px;
@@ -97,6 +100,7 @@
 
 .signin-links .signin-link:hover {
     text-decoration: underline;
+    color: #CAA27A; /* intro.css의 호버 색상과 유사한 톤으로 조정 */
 }
 
 .signin-links .signin-link.active {

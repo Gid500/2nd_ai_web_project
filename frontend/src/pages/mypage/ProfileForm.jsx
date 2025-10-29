@@ -2,6 +2,8 @@ import React from 'react';
 import './Mypage.css';
 import useProfileForm from './hook/useProfileForm'; // 새로 생성한 훅 임포트
 
+const BACKEND_BASE_URL = 'http://localhost:8080';
+
 function ProfileForm({ userId }) {
   const {
     fileRef,
@@ -16,19 +18,15 @@ function ProfileForm({ userId }) {
     handleSubmit,
   } = useProfileForm(userId);
 
-  
-
   return (
-    <form className="mypage-profile-form" onSubmit={handleSubmit}>
-      
-
+    <form onSubmit={handleSubmit}>
       {/* 아바타 업로드 */}
       <div className="mypage-row">
         <label className="mypage-label"></label>
         <div className="mypage-avatarRow">
           <div className="mypage-avatar">
             {avatarPreview ? (
-              <img src={avatarPreview} alt="미리보기" />
+              <img src={`${BACKEND_BASE_URL}${avatarPreview}`} alt="미리보기" />
             ) : (
               <div className="mypage-avatarPlaceholder">이미지 없음</div>
             )}
@@ -70,7 +68,7 @@ function ProfileForm({ userId }) {
         <div className="mypage-input-button-group">
           <input
             id="nickname"
-            className="mypage-input"
+          className="mypage-input"
             type="text"
             placeholder="표시할 이름"
             value={nickname}
@@ -91,3 +89,4 @@ function ProfileForm({ userId }) {
 }
 
 export default ProfileForm;
+

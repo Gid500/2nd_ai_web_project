@@ -116,6 +116,13 @@ public class MypageService {
             throw new IOException("Failed to store empty file.");
         }
 
+        // 1. Retrieve the current user's profile information
+        UserVO currentUser = mypageMapper.getUserById(userId);
+        String oldUserImgUrl = null;
+        if (currentUser != null) {
+            oldUserImgUrl = currentUser.getUserImgUrl();
+        }
+
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -127,14 +134,33 @@ public class MypageService {
         Path filePath = uploadPath.resolve(uniqueFileName);
         Files.copy(file.getInputStream(), filePath);
 
-        String userImgUrl = "http://localhost:8080/images/" + uniqueFileName;
+        String userImgUrl = "/images/" + uniqueFileName; // Store relative path in DB
 
         UserVO userVO = new UserVO();
         userVO.setUserId(userId);
         userVO.setUserImgUrl(userImgUrl);
         mypageMapper.updateUserImgUrl(userVO);
 
-        return userImgUrl;
+        // 2. Check if an old userImgUrl exists and is not null or empty
+        // 3. If an old image exists, extract the filename and construct the full path
+        // 4. Delete the old file
+        if (oldUserImgUrl != null && !oldUserImgUrl.isEmpty()) {
+            // Assuming oldUserImgUrl is stored as "/images/uniqueFileName.ext"
+            // Extract the filename from the URL
+            String oldFileName = oldUserImgUrl.substring(oldUserImgUrl.lastIndexOf("/") + 1);
+            Path oldFilePath = uploadPath.resolve(oldFileName);
+            if (Files.exists(oldFilePath)) {
+                try {
+                    Files.delete(oldFilePath);
+                    System.out.println("Old profile image deleted: " + oldFilePath);
+                } catch (IOException e) {
+                    System.err.println("Failed to delete old profile image: " + oldFilePath + " - " + e.getMessage());
+                    // Log the error but don't prevent the new image from being saved
+                }
+            }
+        }
+
+        return "http://localhost:8080" + userImgUrl; // Return full URL for frontend
     }
 
     public void requestDeleteAccountCode(String userEmail) throws MessagingException {

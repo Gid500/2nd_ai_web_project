@@ -118,12 +118,12 @@ const PostDetail = ({ post, onBackToList, onDelete, comments, fetchComments }) =
                 {post.postTitle}
             </h2>
             <p className="post-detail-meta-info">작성자: {post.userNickname || post.userId}</p> {/* userNickname 사용 */}
+            <p className="post-detail-meta-info">조회수: {post.postViewCunt}</p>
             <p className="post-detail-meta-info">작성일: {new Date(post.createdDate).toLocaleString()}</p>
             {post.updatedDate && new Date(post.updatedDate).getTime() !== new Date(post.createdDate).getTime() && (
                 <p className="post-detail-meta-info">수정일: {new Date(post.updatedDate).toLocaleString()}</p>
             )}
             <div className="post-detail-content-section">
-                <h3>내용:</h3>
                 <p>{decodedContent}</p>
             </div>
             {post.files && post.files.length > 0 && (
@@ -145,16 +145,18 @@ const PostDetail = ({ post, onBackToList, onDelete, comments, fetchComments }) =
                 </div>
             )}
             <div className="post-detail-actions">
-                <button onClick={onBackToList}>목록으로 돌아가기</button>
-                {(isAdmin || (user && user.userId === post.userId)) && (
-                    <> 
-                        <Link to={`/comm/${post.postId}/edit`} className="button">수정</Link>
-                        <button onClick={handleDeleteClick}>삭제</button>
-                    </>
-                )}
-                {user && user.userId !== post.userId && !isAdmin && (
-                    <button onClick={handleReportPost} className="report-button">신고</button>
-                )}
+                <button onClick={onBackToList} className="back-button">목록으로 돌아가기</button>
+                <div>
+                    {(isAdmin || (user && user.userId === post.userId)) && (
+                        <>
+                            <Link to={`/comm/${post.postId}/edit`} className="button">수정</Link>
+                            <button onClick={handleDeleteClick}>삭제</button>
+                        </>
+                    )}
+                    {user && user.userId !== post.userId && !isAdmin && (
+                        <button onClick={handleReportPost} className="report-button">신고</button>
+                    )}
+                </div>
             </div>
 
             {/* 댓글 섹션 추가 */}

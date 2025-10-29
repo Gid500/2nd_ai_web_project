@@ -78,13 +78,13 @@ public class MypageController {
     }
 
     @PostMapping("/profile-image/{userId}")
-    public ResponseEntity<String> uploadProfileImage(@PathVariable("userId") String userId,
-                                                     @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, String>> uploadProfileImage(@PathVariable("userId") String userId,
+                                                                  @RequestParam("file") MultipartFile file) {
         try {
             String userImgUrl = mypageService.uploadProfileImage(userId, file);
-            return ResponseEntity.ok("Profile image uploaded successfully: " + userImgUrl);
+            return ResponseEntity.ok(Map.of("userImgUrl", userImgUrl));
         } catch (IOException e) {
-            return new ResponseEntity<>("Failed to upload profile image: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(Map.of("message", "Failed to upload profile image: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

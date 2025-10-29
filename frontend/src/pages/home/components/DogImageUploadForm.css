@@ -1,0 +1,98 @@
+/* DogImageUploadForm.css */
+
+.dog-image-upload-form {
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.dog-image-upload-form-file-input {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.dog-image-upload-form-upload-button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dog-image-upload-form-upload-button:disabled {
+    opacity: 0.6;
+}
+
+.dog-image-upload-form-upload-button-text {
+    margin-left: 8px;
+}
+
+.dog-image-upload-form-error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.dog-image-upload-form-success-message {
+    color: green;
+    margin-top: 10px;
+}
+
+.dog-image-upload-form-image-preview-container {
+    margin-top: 20px;
+}
+
+.dog-image-upload-form-image-preview {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #eee;
+}
+
+.dog-image-upload-form-prediction-results {
+    margin-top: 20px;
+}
+
+.dog-image-upload-form-all-predictions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dog-image-upload-form-table-header {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.dog-image-upload-form-table-data {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.dog-image-upload-form-analysis-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.dog-image-upload-form-analysis-loading-text {
+    margin-left: 8px;
+}
+
+.dog-image-upload-form-analysis-error {
+    color: red;
+    margin-top: 10px;
+}
+
+.dog-image-upload-form-analysis-results {
+    margin-top: 20px;
+}
+
+.dog-image-upload-form-selected-file-info {
+    margin-top: 10px;
+}

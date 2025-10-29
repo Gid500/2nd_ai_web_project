@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getAllPosts, getPostById, createPost, updatePost, deletePost, getTopNotices } from '../api/commApi'; // commApi에서 함수 임포트
+import { getAllPosts, getPostById, createPost, updatePost, deletePost, getTopNotices, searchPosts } from '../api/commApi'; // commApi에서 함수 임포트
 
-export const useCommPosts = (page = 1, size = 10) => {
+export const useCommPosts = (page = 1, size = 10, searchType = '', searchKeyword = '') => {
     const [posts, setPosts] = useState([]);
     const [notices, setNotices] = useState([]); // 공지사항 상태 추가
     const [loading, setLoading] = useState(true);
@@ -12,7 +12,12 @@ export const useCommPosts = (page = 1, size = 10) => {
     const fetchPosts = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await getAllPosts(page, size); // commApi의 getAllPosts 사용
+            let response;
+            if (searchType && searchKeyword) {
+                response = await searchPosts(searchType, searchKeyword, page, size);
+            } else {
+                response = await getAllPosts(page, size); // commApi의 getAllPosts 사용
+            }
             setPosts(response.posts);
             setTotalPosts(response.totalPosts);
             setTotalPages(response.totalPages);
@@ -25,7 +30,7 @@ export const useCommPosts = (page = 1, size = 10) => {
         } finally {
             setLoading(false);
         }
-    }, [page, size]);
+    }, [page, size, searchType, searchKeyword]);
 
     const fetchNotices = useCallback(async (count) => {
         try {
@@ -85,7 +90,8 @@ export const useCommPosts = (page = 1, size = 10) => {
             await fetchNotices(2); // 공지사항도 새로고침
         } catch (err) {
             setError(err);
-        } finally {
+        }
+        finally {
             setLoading(false);
         }
     }, [fetchPosts, fetchNotices]);

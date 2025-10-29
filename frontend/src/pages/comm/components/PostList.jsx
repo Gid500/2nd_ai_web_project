@@ -41,14 +41,20 @@ const PostList = ({ posts, currentUser }) => {
                 <ul className="post-list-ul">
                     {sortedPosts.map(post => (
                         <li key={post.postId} className={`post-list-item ${post.isNotice ? 'notice' : ''}`}>
-                            <Link to={`/comm/${post.postId}`} className="post-list-item-title-link">
-                                <h3 className="post-list-item-title">
-                                    {post.isNotice && <span className="post-list-notice-tag">[공지]</span>}
-                                    {post.postTitle}
-                                </h3>
-                            </Link>
-                            <p className="post-list-meta-info">작성자: {post.anoyUserName || post.userId}</p>
-                            <p className="post-list-meta-info">작성일: {new Date(post.createdDate).toLocaleString()}</p>
+                            <div className="post-list-item-content">
+                                <Link to={`/comm/${post.postId}`} className="post-list-item-title-link">
+                                    <h3 className="post-list-item-title">
+                                        {post.isNotice && <span className="post-list-notice-tag">[공지]</span>}
+                                        {post.postTitle}
+                                    </h3>
+                                </Link>
+                                <div className="post-list-meta-group">
+                                    <span className="post-list-meta-info">작성자: {post.anoyUserName || post.userId}</span>
+                                    <span className="post-list-meta-info">조회수: {post.postViewCunt}</span>
+                                    <span className="post-list-meta-info">작성일: {new Date(post.createdDate).toLocaleString()}</span>
+                                    {post.updatedDate && <span className="post-list-meta-info">수정일: {new Date(post.updatedDate).toLocaleString()}</span>}
+                                </div>
+                            </div>
                             {(isAdmin || (user && user.userId === post.userId)) && (
                                 <div className="post-list-actions">
                                     {/* PostList에서는 수정/삭제 버튼을 직접 렌더링하지 않고 PostDetail에서 처리 */}

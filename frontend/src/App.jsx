@@ -2,8 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './common/Header';
 import Intro from './pages/intro/Intro';
 import SignIn from './pages/signin/SignIn';
-import Cat from './pages/home/cat';
-import Dog from './pages/home/dog';
+import Cat from './pages/home/Cat';
+import Dog from './pages/home/Dog';
 import './App.css';
 import SignUp from './pages/signup/SignUp';
 import Comm from './pages/comm/Comm';
@@ -16,6 +16,7 @@ import CareAccoount from './pages/mypage/CareAccount';
 import ProtectedRoute from './common/components/ProtectedRoute';
 import NewPostPage from './pages/comm/NewPostPage';
 import EditPostPage from './pages/comm/EditPostPage'; // EditPostPage 임포트
+import MapPage from './pages/home/MapPage'; // MapPage 임포트
 
 
 function App() {
@@ -26,7 +27,9 @@ function App() {
         <Route path="/" element={<Intro />} />
         <Route path="/cat" element={<Cat />} />
         <Route path="/dog" element={<Dog />} />
-        <Route path='/admin' element={<AdminRouteWrapper />} />
+        <Route path="/map" element={<MapPage />} /> {/* MapPage 라우트 추가 */}
+
+        <Route path='/admin/*' element={<AdminRouteWrapper />} />
         <Route path="/explain" element={<Explain/>} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
