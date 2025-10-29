@@ -26,7 +26,7 @@ function ProfileForm({ userId }) {
         <div className="mypage-avatarRow">
           <div className="mypage-avatar">
             {avatarPreview ? (
-              <img src={`${BACKEND_BASE_URL}${avatarPreview}`} alt="미리보기" />
+              <img src={`${avatarPreview}`} alt="미리보기" />
             ) : (
               <div className="mypage-avatarPlaceholder">이미지 없음</div>
             )}

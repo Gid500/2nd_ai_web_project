@@ -145,8 +145,13 @@ function CareAccoount() {
             <Mypagetab />
             <div className="mypage-profile-form">
                 <h2 className="mypage-title">계정 관리</h2>
+                
                 <p>이곳에서 계정 관련 설정을 관리할 수 있습니다.</p>
+                
+                <br/>
+                <br/>
 
+                <h2 className="mypage-title">계정 삭제</h2>
                 {error && <div className="mypage-error">{error}</div>}
                 {success && <div className="mypage-success">{success}</div>}
 
@@ -172,7 +177,7 @@ function CareAccoount() {
                         </div>
                     </div>
                 )}
-
+                <br/>
                 {step === 2 && (
                     <div className="mypage-row">
                         <label htmlFor="verificationCode" className="mypage-label">인증 코드</label>

@@ -3,9 +3,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
+    min-height: calc(100vh - 122px);
     background-color: #f8f4f0; /* intro.css의 배경색과 일치 */
-    padding: 20px;
+    
 }
 
 .signin-form {

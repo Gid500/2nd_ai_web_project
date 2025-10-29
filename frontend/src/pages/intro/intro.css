@@ -3,8 +3,8 @@
     flex-direction: column; /* 세로로 정렬 */
     align-items: center; /* 가로 중앙 정렬 */
     justify-content: center; /* 세로 중앙 정렬 */
-    min-height: calc(100vh - 80px); /* 헤더 높이 제외 */
-    padding: 20px;
+    min-height: calc(100vh - 122px); /* 헤더 높이 제외 */
+    
     background-color: #f8f4f0; /* 전체적인 배경색 */
 }
 

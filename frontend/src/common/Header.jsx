@@ -64,7 +64,7 @@ function Header() {
               <NavLink to="/comm" className={getNavLinkClass}>자랑해요!</NavLink>
               <NavLink to="/explain" className={getNavLinkClass}>사이트 소개</NavLink>
               <NavLink to="/map" className={getNavLinkClass}>주변 시설</NavLink>
-              {isAdmin && <NavLink to="/admin" className={getNavLinkClass}>관리자 페이지</NavLink>}
+              
             </nav>
           
 
@@ -83,29 +83,51 @@ function Header() {
 
   {/* 로그인 상태에서만 드롭다운 표시 */}
   {isLoggedIn && open && (
-    <div className="profile-menu" role="menu">
-      <button
-        className="menu-item"
-        role="menuitem"
-        onClick={() => {
-          setOpen(false);
-          navigate('/mypage');
-        }}
-      >
-        마이페이지
-      </button>
-      <div className="menu-sep" />
-      <button
-        className="menu-item danger"
-        role="menuitem"
-        onClick={handleLogout}
-        
-      >
-        로그아웃
-      </button>
-      <div className="menu-caret" aria-hidden="true" />
-    </div>
-  )}
+  <div className="profile-menu" role="menu">
+    {/* 관리자 메뉴 - 관리자일 때만 표시 */}
+    {isAdmin && (
+      <>
+        <button
+          className="menu-item"
+          role="menuitem"
+          onClick={() => {
+            setOpen(false);
+            navigate('/admin');
+          }}
+        >
+          관리자 페이지
+        </button>
+        <div className="menu-sep" />
+      </>
+    )}
+
+    {/* 마이페이지 */}
+    <button
+      className="menu-item"
+      role="menuitem"
+      onClick={() => {
+        setOpen(false);
+        navigate('/mypage');
+      }}
+    >
+      마이페이지
+    </button>
+
+    <div className="menu-sep" />
+
+    {/* 로그아웃 */}
+    <button
+      className="menu-item danger"
+      role="menuitem"
+      onClick={handleLogout}
+    >
+      로그아웃
+    </button>
+
+    <div className="menu-caret" aria-hidden="true" />
+  </div>
+)}
+
 
   {/* 비로그인: 아이콘 클릭 시 안내 후 /signin 이동 */}
   {!isLoggedIn && open && null}

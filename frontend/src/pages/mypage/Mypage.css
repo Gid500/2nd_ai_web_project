@@ -27,11 +27,21 @@
 
 .parents{
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* 세로로 정렬 */
+    align-items: center; /* 가로 중앙 정렬 */
+    justify-content: center; /* 세로 중앙 정렬 */
+    min-height: calc(90vh - 122px); /* 헤더 높이 제외 */
+    
+    background-color: #f8f4f0; /* 전체적인 배경색 */
 }
 
 .mypage-content-wrapper {
-  width: 600px;
+      display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(90vh - 122px);
+    background-color: #f8f4f0;
 }
 
 
@@ -67,13 +77,15 @@
   color: var(--mypage-placeholder-color); font-size: 12px;
 }
 
-.mypage-actions { display: flex; flex-direction: row; gap: 8px; }
+
 .mypage-hint { margin: 0; font-size: 12px; color: var(--mypage-hint-color); }
 
 .mypage-input-button-group {
   display: flex;
-  align-items: center;
+  justify-self: center;
   gap: 10px;
+  width:350px;
+
 }
 
 .mypage-input-button-group .mypage-input {
@@ -105,6 +117,7 @@
   border-radius: 8px;
   padding: 8px 10px;
   cursor: pointer;
+  font-size:15px;
 }
 .mypage-btn:hover { filter: brightness(0.98); }
 .mypage-ghost {
@@ -130,6 +143,7 @@
   background: var(--mypage-primary-color); color: var(--mypage-white);
   border: none; border-radius: 10px;
   padding: 10px 16px; cursor: pointer;
+  white-space: nowrap;
 }
 .mypage-submit:disabled { opacity: 0.6; cursor: default; }
 
@@ -137,10 +151,11 @@
   border: 1px solid #d8c6b4; /* intro.css의 테두리 색상과 유사하게 조정 */
   background-color: #ffffff; /* 흰색 유지 */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* intro.css의 그림자 스타일과 유사하게 조정 */
-  padding: 20px;
+  padding: 50px;
   border-radius: 8px;
   margin: 0 auto; /* 중앙 정렬 */
-  width: 100%; /* 부모의 너비를 따르도록 */
+  
+  
 }
 
 form.mypage-profile-form{
@@ -152,10 +167,14 @@ form.mypage-profile-form{
 
 
 
+
 .mypage-actions{
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 8px;
+  width: 350px;
+  margin-top: 25px;
 }
 
 
@@ -172,11 +191,7 @@ div.mypage-avatarRow{
 
 }
 
-.mypage-btn{
 
-  width: 90px;
-
-}
 
 .mypage-delete {
   background: var(--mypage-error-text);
@@ -186,4 +201,32 @@ div.mypage-avatarRow{
 
 .mypage-delete:hover {
   filter: brightness(0.9);
+}
+
+input#deleteEmail.mypage-input{
+
+    width: 233px;
+
+}
+
+input#resetEmail.mypage-input{
+
+     width: 233px;
+    
+}
+
+div.mypage-input-button-group{
+
+  height: 39px;
+}
+
+button.mypage-btn.mypage-submit{
+
+  font-size: 13px;
+
+}
+
+.profile-menu{
+
+  z-index: 1000;
 }

@@ -5,7 +5,7 @@
   position: fixed;
   top: 200px;          /* 원하는 세로 위치로 조절 */
   right: 25px;         /* 우측 여백 */
-  z-index: 1000;
+  z-index: 1;
 
   display: flex;
   flex-direction: column;

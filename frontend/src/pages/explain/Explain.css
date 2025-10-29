@@ -1,0 +1,72 @@
+.explain-page {
+  position: relative;
+  padding: 40px;
+}
+
+
+
+
+
+.explain-section {
+  margin-bottom: 80px;
+  scroll-margin-top: 100px; /* 헤더에 가리지 않도록 */
+}
+
+.explain-section img {
+  width: 100%;
+  max-width: 1000px;
+  display: block;
+  margin-bottom: 12px;
+  border-radius: 12px;
+}
+
+.mypage-tabs {
+  position: fixed;
+  top: 200px;
+  right: 25px;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  padding: 14px 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  border: 1px solid #d8c6b4;
+  min-width: 120px;
+}
+
+.mypage-tabs button.tab {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  text-decoration: none;
+  color: #7A5230;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mypage-tabs button.tab:hover {
+  background: #f8f4f0;
+}
+
+.mypage-tabs .active {
+  font-weight: 700;
+  background: #f0e4d8;
+  border: 1px solid #caa27a;
+}
+
+@media (max-width: 1024px) {
+  .mypage-tabs { right: 12px; top: 88px; }
+}
+@media (max-width: 640px) {
+  .mypage-tabs { display: none; }
+}
+

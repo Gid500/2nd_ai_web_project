@@ -32,3 +32,53 @@
 }
 
 /* 이전의 flexbox 관련 스타일 제거 */
+
+.select.comm-search-select{
+    
+
+
+}
+
+.input.comm-reset-input{
+
+
+
+
+}
+
+button.comm-search-button{
+
+    background: var(--mypage-primary-color);
+    color: var(--mypage-white);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
+    white-space: nowrap;
+
+}
+
+button.comm-reset-button{
+
+    background: var(--mypage-primary-color);
+    color: var(--mypage-white);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
+    white-space: nowrap;
+
+}
+
+form.comm-search-form{
+    display: flex;
+    gap:10px;
+    margin-bottom: 10px;
+}
+
+.comm-create-post-button{
+
+    text-decoration: none;
+    font-size:13px
+
+}

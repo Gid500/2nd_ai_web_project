@@ -7,8 +7,8 @@ import os
 IMAGE_WIDTH, IMAGE_HEIGHT = 224, 224
 
 # Define model path
-CAT_MODEL_PATH = "/home/qod110/Documents/Project/2nd_ai_web_project/ai_model/cat_emotion_mobilenet_v2_v1_test.h5"
-# CAT_MODEL_PATH = "C:/Users/admin/Desktop/project/2nd_ai_web_project/ai_model/cat_emotion_mobilenet_v2.h5"
+# CAT_MODEL_PATH = "/home/qod110/Documents/Project/2nd_ai_web_project/ai_model/cat_emotion_mobilenet_v2_v1_test.h5"
+CAT_MODEL_PATH = "C:/Users/admin/Desktop/project/ai_model/cat_emotion_mobilenet_v2_v1_test.h5"
 
 # Define class labels for the cat model
 CAT_CLASS_LABELS = ['Angry', 'Disgusted', 'Happy', 'Normal', 'Sad', 'Scared', 'Surprised']
