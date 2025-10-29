@@ -4,7 +4,7 @@ import { useCommPosts } from './useCommPosts'; // useCommPosts 훅 임포트
 import { getCommentsByPostId } from '../api/commCommentApi'; // 댓글 API 임포트 경로 수정
 
 const useCommPage = () => {
-    const { postId } = useParams(); // URL에서 postId를 직접 가져옴
+    const { postId } = useParams(); // URL에서 postId만 가져옴
     const navigate = useNavigate();
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -40,12 +40,19 @@ const useCommPage = () => {
     // postId가 변경될 때마다 상세 게시글 데이터와 댓글 데이터를 가져옴
     useEffect(() => {
         if (postId) {
-            const getPostAndCommentsDetail = async () => {
+            const getPostData = async () => {
                 const post = await fetchPostById(parseInt(postId));
-                setCurrentPostDetail(post);
-                fetchCommentsForPost(parseInt(postId)); // 댓글도 함께 가져옴
+                // If we are on an edit page, set editingPostData
+                // This logic is now primarily for EditPostPage to consume
+                // Comm component will only set currentPostDetail
+                if (window.location.pathname.includes('/edit')) {
+                    setEditingPostData(post);
+                } else {
+                    setCurrentPostDetail(post);
+                    fetchCommentsForPost(parseInt(postId));
+                }
             };
-            getPostAndCommentsDetail();
+            getPostData();
         } else {
             setCurrentPostDetail(null);
             setEditingPostData(null); // postId가 없으면 수정 데이터도 초기화
@@ -59,17 +66,12 @@ const useCommPage = () => {
         navigate(`/comm/${id}`);
     };
 
-    const handleEditPost = (post) => {
-        setEditingPostData(post); // 수정할 게시글 데이터 설정
-        navigate(`/comm/${post.postId}/edit`);
-    };
-
     const handleDeletePost = async (id) => {
         if (window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
             await removePost(id);
             navigate('/comm'); // 삭제 후 목록으로 이동
             fetchPosts();
-            fetchNotices(2); // 공지사항도 새로고침
+            fetchNotices(2);
         }
     };
 
@@ -86,13 +88,14 @@ const useCommPage = () => {
         }
         setEditingPostData(null); // 폼 제출 후 수정 데이터 초기화
         fetchPosts();
-        fetchNotices(2); // 공지사항도 새로고침
+        fetchNotices(2);
     };
 
     const handleCancelForm = () => {
         if (postId) {
             navigate(`/comm/${postId}`); // 상세 페이지에서 취소 시 상세 페이지로 돌아감
-        } else {
+        }
+        else {
             navigate('/comm'); // 목록에서 취소 시 목록으로 돌아감
         }
         setEditingPostData(null); // 폼 취소 후 수정 데이터 초기화
@@ -108,17 +111,16 @@ const useCommPage = () => {
     return {
         posts,
         notices,
-        currentPostDetail, // 상세 게시글 데이터 반환
-        editingPostData, // 수정할 게시글 데이터 반환
-        comments, // 댓글 목록 반환
-        fetchCommentsForPost, // 댓글 갱신 함수 반환
+        currentPostDetail,
+        editingPostData,
+        comments,
+        fetchCommentsForPost,
         loading,
         error,
         totalPosts,
         currentPage,
         postsPerPage,
         handleViewDetail,
-        handleEditPost,
         handleDeletePost,
         handleSubmitForm,
         handleCancelForm,

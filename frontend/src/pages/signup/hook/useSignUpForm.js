@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useInput from '../../../common/hook/useInput';
 import { useSignupApi } from '../api/signupApi';
@@ -194,14 +194,22 @@ const useSignUpForm = () => {
                 userNickname: nickname.value,
             });
             if (response.status === 200) {
-                setSuccess('회원가입 성공! 자동으로 로그인됩니다.');
-                await login();
-                setTimeout(() => {
-                    navigate('/');
-                }, 2000);
+                console.log('Signup successful, response status: ', response.status);
+                setSuccess('회원가입 성공! 홈으로 이동합니다.');
+                console.log('Navigating to /');
+                navigate('/');
             }
         } catch (err) {
-            setGeneralError(err.response?.data?.message || '회원가입 실패');
+            const errorMessage = err.response?.data;
+            if (errorMessage === '이미 사용중인 이메일입니다.') {
+                setEmailError(errorMessage);
+            } else if (errorMessage === '이미 사용중인 닉네임입니다.') {
+                setNicknameError(errorMessage);
+            } else if (errorMessage === '이미 사용중인 아이디입니다.') {
+                setIdError(errorMessage);
+            } else {
+                setGeneralError(errorMessage || '회원가입 실패');
+            }
         }
     };
 

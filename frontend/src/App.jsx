@@ -15,6 +15,8 @@ import Mypage from './pages/mypage/Mypage';
 import CareAccoount from './pages/mypage/CareAccount';
 import ProtectedRoute from './common/components/ProtectedRoute';
 import NewPostPage from './pages/comm/NewPostPage';
+import EditPostPage from './pages/comm/EditPostPage'; // EditPostPage 임포트
+
 
 function App() {
   return (
@@ -34,7 +36,7 @@ function App() {
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/comm/new" element={<NewPostPage />} /> {/* 새 게시글 작성 */}
-          <Route path="/comm/:postId/edit" element={<Comm/>} /> {/* 게시글 수정 */}
+          <Route path="/comm/:postId/edit" element={<EditPostPage/>} /> {/* 게시글 수정 */}
           <Route path="/mypage" element={<Mypage/>} />
           <Route path="/care" element={<CareAccoount />} />
         </Route>
