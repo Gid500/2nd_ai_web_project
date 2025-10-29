@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `lastdance`.`tb_report_type` (
-  `report_type_id` INT NOT NULL AUTO_INCREMENT,
-  `type_name` VARCHAR(64) NOT NULL,
+  `report_type_id` INT NOT NULL AUTO_INCREMENT, -- 신고 유형 ID
+  `type_name` VARCHAR(64) NOT NULL -- 유형 이름
   PRIMARY KEY (`report_type_id`))
 ENGINE = InnoDB
 

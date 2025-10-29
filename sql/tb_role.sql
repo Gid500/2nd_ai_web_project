@@ -2,8 +2,8 @@
 -- Table `lastdance`.`tb_role`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `lastdance`.`tb_role` (
-  `role_id` INT NOT NULL AUTO_INCREMENT,
-  `role_type` VARCHAR(128) NOT NULL,
+  `role_id` INT NOT NULL AUTO_INCREMENT, -- 역할 ID
+  `role_type` VARCHAR(128) NOT NULL -- 역할 타입
   PRIMARY KEY (`role_id`))
 ENGINE = InnoDB;
 
