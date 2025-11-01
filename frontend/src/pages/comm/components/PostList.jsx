@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../../../common/hook/useAuth';
+import { useAuth } from '../../../common/hook/AuthProvider';
 import './PostList.css';
 import { useNavigate, Link } from 'react-router-dom'; // useNavigate, Link 임포트
 

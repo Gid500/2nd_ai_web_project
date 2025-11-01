@@ -1,6 +1,6 @@
 import './Mypagetab.css';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from './hook/useAuth';
+import { useAuth } from './hook/AuthProvider';
 
 function Mypagetab() {
   const { logout } = useAuth();

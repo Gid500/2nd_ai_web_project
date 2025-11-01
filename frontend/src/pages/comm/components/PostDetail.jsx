@@ -1,5 +1,5 @@
 import React, { useState } from 'react'; // useState 추가
-import { useAuth } from '../../../common/hook/useAuth';
+import { useAuth } from '../../../common/hook/AuthProvider';
 import './PostDetail.css';
 import { Link, useNavigate } from 'react-router-dom'; // Link, useNavigate 임포트
 // CommentList와 CommentForm 컴포넌트 import

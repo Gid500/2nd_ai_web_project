@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import useInput from '../hook/useInput';
-import { useAuth } from '../../../common/hook/useAuth';
+import { useAuth } from '../../../common/hook/AuthProvider';
 import './PostForm.css';
 
 const PostForm = ({ onSubmit, initialData, onCancel }) => {

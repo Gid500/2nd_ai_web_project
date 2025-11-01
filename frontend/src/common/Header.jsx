@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Header.css';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from './hook/useAuth';
+import { useAuth } from './hook/AuthProvider';
 
 function Header() {
   const { isLoggedIn, isAdmin, logout } = useAuth();

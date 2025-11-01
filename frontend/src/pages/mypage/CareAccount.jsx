@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Mypagetab from '../../common/Mypagetab';
 import './Mypage.css'; // Import Mypage.css for styling
-import { useAuth } from '../../common/hook/useAuth';
+import { useAuth } from '../../common/hook/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import api from '../../common/api/api';
 import PasswordResetForm from './components/PasswordResetForm';
