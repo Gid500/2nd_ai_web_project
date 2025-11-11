@@ -7,7 +7,7 @@ import os
 IMAGE_WIDTH, IMAGE_HEIGHT = 128, 128
 
 # Define model path
-DOG_MODEL_PATH = "/home/qod110/Documents/Project/2nd_ai_web_project/dog_emotion_mobilenet_finetuned_v2.h5"
+DOG_MODEL_PATH = "ai_model/dog_emotion_mobilenet_finetuned_v2.h5c"
 # DOG_MODEL_PATH = "C:/Users/admin/Desktop/project/ai_model/dog_emotion_mobilenet_finetuned_v2.h5"
 
 # Define class labels for the dog model
@@ -39,7 +39,6 @@ def preprocess_image(image_input):
     img_array = np.expand_dims(img_array, axis=0)  # 배치 차원 추가
     img_array = img_array / 255.0  # 정규화
     return img_array
-
 
 def predict_dog_emotion(image_input):
     """

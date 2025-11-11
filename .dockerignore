@@ -1,0 +1,27 @@
+# Common
+.git
+.gitignore
+.vscode
+*.md
+*.drawio
+*.mwb
+*.mwb.bak
+*.mwb.beforefix
+*.png
+
+# Frontend
+frontend/node_modules
+frontend/build
+
+# Backend
+backend/.gradle
+backend/build
+backend/bin
+backend/gradle
+
+# AI Backend
+ai_backend/__pycache__
+ai_backend/ai_model/*.ipynb
+
+# SQL
+sql/mysql_command.sql

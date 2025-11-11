@@ -35,4 +35,4 @@ if __name__ == '__main__':
     print(f"Flask 서버를 http://127.0.0.1:5000 에서 실행합니다.")
     print(f"업로드 대상 폴더: {UPLOAD_FOLDER}")
     # app.run()을 사용하여 서버를 실행합니다.
-    app.run(debug=True, port=5000)
+    app.run(host='0.0.0.0', debug=True, port=5000)

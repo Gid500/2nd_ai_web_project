@@ -1,6 +1,8 @@
 -- cmd에서 root으로 mysql 접속
 mysql -u root -p
 
+mysql -u lastdance -p
+
 -- mysql 스키마 조회
 SHOW SCHEMAS;
 

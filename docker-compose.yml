@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    networks:
+      - app-network
+
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/lastdance
+      - SPRING_DATASOURCE_USERNAME=lastdance
+      - SPRING_DATASOURCE_PASSWORD=0001
+      - FLASK_API_BASE_URL=http://ai-backend:5000
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  ai-backend:
+    build: ./ai_backend
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: lastdance
+      MYSQL_USER: lastdance
+      MYSQL_PASSWORD: "0001"
+      MYSQL_ROOT_PASSWORD: "rootpassword"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:

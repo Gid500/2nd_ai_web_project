@@ -3,6 +3,7 @@ package com.revia.lastdance.flask.service;
 import com.revia.lastdance.flask.dao.FlaskImgMapper;
 import com.revia.lastdance.flask.vo.FlaskImgVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,10 +30,11 @@ public class FileUploadService {
     @Autowired
     private RestTemplate restTemplate; // Assuming RestTemplate is configured
 
-    private final String UPLOAD_DIR = "/home/qod110/Documents/Project/2nd_ai_web_project/ai_model/uploaded_img";
-    // private final String UPLOAD_DIR = "C:/Users/admin/Desktop/project/backend/uploaded_img";
-    private final String FLASK_AI_CAT_PREDICT_URL = "http://localhost:5000/upload-cat-image"; // Flask AI backend URL for cat
-    private final String FLASK_AI_DOG_PREDICT_URL = "http://localhost:5000/upload-dog-image"; // Flask AI backend URL for dog
+    @Value("${file.upload-dir}")
+    private String UPLOAD_DIR;
+
+    @Value("${flask.api.base-url}")
+    private String flaskApiBaseUrl;
 
     private Map<String, Object> sendImageToFlask(MultipartFile file, String flaskUrl) throws Exception {
         HttpHeaders headers = new HttpHeaders();
@@ -62,6 +64,7 @@ public class FileUploadService {
         String originalFilename = file.getOriginalFilename();
         String uniqueFilename = UUID.randomUUID().toString() + "_" + originalFilename;
         Path filePath = Paths.get(UPLOAD_DIR, uniqueFilename);
+        Files.createDirectories(filePath.getParent()); // Ensure the directory exists
         Files.write(filePath, file.getBytes());
 
         // Save image info to database
@@ -70,7 +73,7 @@ public class FileUploadService {
         flaskImgVO.setFlaskImgName(originalFilename);
         flaskImgMapper.insertFlaskImg(flaskImgVO);
 
-        return sendImageToFlask(file, FLASK_AI_CAT_PREDICT_URL);
+        return sendImageToFlask(file, flaskApiBaseUrl + "/upload-cat-image");
     }
 
     public Map<String, Object> uploadDogImageAndGetPrediction(MultipartFile file) throws Exception {
@@ -78,6 +81,7 @@ public class FileUploadService {
         String originalFilename = file.getOriginalFilename();
         String uniqueFilename = UUID.randomUUID().toString() + "_" + originalFilename;
         Path filePath = Paths.get(UPLOAD_DIR, uniqueFilename);
+        Files.createDirectories(filePath.getParent()); // Ensure the directory exists
         Files.write(filePath, file.getBytes());
 
         // Save image info to database
@@ -86,6 +90,6 @@ public class FileUploadService {
         flaskImgVO.setFlaskImgName(originalFilename);
         flaskImgMapper.insertFlaskImg(flaskImgVO);
 
-        return sendImageToFlask(file, FLASK_AI_DOG_PREDICT_URL);
+        return sendImageToFlask(file, flaskApiBaseUrl + "/upload-dog-image");
     }
 }
