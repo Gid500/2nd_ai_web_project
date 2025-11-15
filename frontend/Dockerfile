@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Serve the application with Nginx
-FROM nginx:1.21.0-alpine
+FROM docker.io/library/nginx:1.21.0-alpine
 
 # Copy the built application from the build stage
 COPY --from=build /app/build /usr/share/nginx/html
